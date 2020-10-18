@@ -1,7 +1,7 @@
 {
   "name": "cv-project-manager",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -36,6 +36,21 @@
     "less-loader": "^5.0.0",
     "vue-cli-plugin-electron-builder": "~2.0.0-rc.4",
     "vue-template-compiler": "^2.6.11"
+  },
+  "build": {
+    "appId": "com.github.naveenraina.cv-project-manager",
+    "mac": {
+      "category": "your.app.category.type",
+      "target": [
+        "zip",
+        "dmg"
+      ]
+    },
+    "publish": [{
+        "provider": "github",
+        "owner": "naveenraina",
+        "repo": "cv-project-manager"
+    }]
   },
   "eslintConfig": {
     "root": true,
