@@ -27,10 +27,12 @@ yarn lint
 
 ### Publish
 Increment version in package.json, commit and push your changes.
+
+```
 yarn gh-publish
+```
 
-
-note - On a new machine, make sure you set environment variable GH_TOKEN as given in electron-auto-updater docs -
+Note - On a new machine, make sure you set environment variable GH_TOKEN as given in electron-auto-updater docs -
 link - https://github.com/iffy/electron-updater-example (Point 4)
 
 ```
