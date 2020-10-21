@@ -1,18 +1,23 @@
 <template>
   <div class="md-alignment-center-center">
-    <div class="main-div">
-      <h3>Login</h3>
-        <md-field md-clearable>
-        <label>User name</label>
-        <md-input v-model="username"></md-input>
-        </md-field>
+    <form novalidate @submit.stop.prevent="login">
+      <div class="main-div">
+        <h3>Login</h3>
+          <md-field md-clearable>
+          <label>User name</label>
+          <md-input v-model="username"></md-input>
+          </md-field>
 
-        <md-field>
-        <label>Password</label>
-        <md-input v-model="password" type="password"></md-input>
-        </md-field>
-        <md-button class="md-primary" v-on:click="login">Submit</md-button>
-    </div>
+          <md-field>
+          <label>Password</label>
+          <md-input v-model="password" type="password"></md-input>
+          </md-field>
+          <md-button type="submit" class="md-primary">Submit</md-button>
+      </div>
+    </form>
+    <md-snackbar md-position="center" :md-duration="4000" :md-active.sync="showSnackbar" md-persistent>
+      <span>Login failed</span>
+    </md-snackbar>
   </div>
 </template>
 
@@ -23,7 +28,8 @@ const ipcRenderer = require('electron').ipcRenderer
     name: 'login',
     data: () => ({
       username: '',
-      password: ''
+      password: '',
+      showSnackbar: false
     }),
     methods: {
         login(){            
@@ -34,8 +40,11 @@ const ipcRenderer = require('electron').ipcRenderer
         
         //Register IPC Renderer event handles once for this control
         ipcRenderer.on('login:success', (e, status) => {
-            console.log(status)
-        
+            if(status === 'error'){
+              this.showSnackbar = true;
+            } else {
+              this.$router.replace('/home');
+            }        
         })
     }
   }
