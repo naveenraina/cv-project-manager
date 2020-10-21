@@ -21,6 +21,14 @@ function connect(){
     });
 }
 
+function endConnection(callback){
+    // Close the connection
+    connectionPool.end(function(){
+        if(!!callback) { callback() };
+    });
+}
+
+
 function saveTask(){
     // Perform a query
     let query = 'INSERT INTO `tasks`(Description, CreatedDate) VALUES(?, ?)';
@@ -54,13 +62,31 @@ function getTasks(callback){
           
 }
 
-function endConnection(callback){
-    // Close the connection
-    connectionPool.end(function(){
-        if(!!callback) { callback() };
+function login(username, password, callback){ 
+   
+    // Perform a query
+    let query = "SELECT user, password FROM `users` where user=? and password=?";
+
+    console.log(query)
+    connectionPool.query(query,[username, password], function(err, rows, fields) {
+        if(err){
+            console.log("An error ocurred performing the query.");
+            console.log(err);
+            return;
+        }
+        if(rows.length > 0){
+            callback('success')
+        } else {
+            callback('error')
+        }
+        
+        
     });
+          
 }
 
+
+
 export default {
-    connect, saveTask, getTasks, endConnection
+    connect, endConnection, saveTask, getTasks, login
 }

@@ -8,10 +8,6 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 const { autoUpdater } = require("electron-updater")
 autoUpdater.checkForUpdatesAndNotify()
 
-const mysqlhelper = require('@/db/mysqlhelper');
-
-
-
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
@@ -95,12 +91,19 @@ if (isDevelopment) {
   }
 }
 
+
+const mysqlhelper = require('@/db/mysqlhelper');
+
 ipcMain.on('tasks:get', function(e, callback){
-  // mysqlhelper.default.connect()
-  mysqlhelper.default.getTasks(function(tasks){
-    win.webContents.send('tasks:send', tasks)
-    // mysqlhelper.default.endConnection()
-  })
-  
+    mysqlhelper.default.getTasks(function(tasks){
+        win.webContents.send('tasks:send', tasks)
+    })
+
 })
 
+ipcMain.on('login:submit', function(e, data){    
+    mysqlhelper.default.login(data.username, data.password, function(status){
+      win.webContents.send('login:success', status)
+    })
+
+})
