@@ -1,6 +1,6 @@
 var mysql = require('mysql');
 // Add the credentials to access your database
-var connection = mysql.createConnection({
+var connectionPool = mysql.createPool({
     host     : '182.50.133.92',
     port     : '3306',
     user     : 'cvtaskmanager',
@@ -12,7 +12,7 @@ var connection = mysql.createConnection({
 function connect(){
     
     // connect to mysql
-    connection.connect(function(err) {
+    connectionPool.connect(function(err) {
         // in case of error
         if(err){
             console.log(err.code);
@@ -25,7 +25,7 @@ function saveTask(){
     // Perform a query
     let query = 'INSERT INTO `tasks`(Description, CreatedDate) VALUES(?, ?)';
 
-    connection.query(query, ['TEST DESC', getdate()], function(err, rows, fields) {
+    connectionPool.query(query, ['TEST DESC', getdate()], function(err, rows, fields) {
         if(err){
             console.log("An error ocurred performing the query.");
             console.log(err);
@@ -36,25 +36,27 @@ function saveTask(){
     });
 }
 
-function getTasks(){    
+function getTasks(callback){ 
+   
     // Perform a query
     let query = 'SELECT ID, DESCRIPTION, CREATEDDATE FROM `tasks`';
 
-    connection.query(query, function(err, rows, fields) {
+    connectionPool.query(query, function(err, rows, fields) {
         if(err){
             console.log("An error ocurred performing the query.");
             console.log(err);
             return;
         }
 
-        console.log("Query succesfully executed", rows);
+        callback(rows)
         
     });
+          
 }
 
 function endConnection(callback){
     // Close the connection
-    connection.end(function(){
+    connectionPool.end(function(){
         if(!!callback) { callback() };
     });
 }

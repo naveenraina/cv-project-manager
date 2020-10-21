@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, protocol, BrowserWindow, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
@@ -9,9 +9,7 @@ const { autoUpdater } = require("electron-updater")
 autoUpdater.checkForUpdatesAndNotify()
 
 const mysqlhelper = require('@/db/mysqlhelper');
-mysqlhelper.default.connect()
-mysqlhelper.default.getTasks()
-mysqlhelper.default.endConnection();
+
 
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -79,7 +77,7 @@ app.on('ready', async () => {
       console.error('Vue Devtools failed to install:', e.toString())
     }
   }
-  createWindow()
+  createWindow()  
 })
 
 // Exit cleanly on request from parent process in development mode.
@@ -96,3 +94,13 @@ if (isDevelopment) {
     })
   }
 }
+
+ipcMain.on('tasks:get', function(e, callback){
+  // mysqlhelper.default.connect()
+  mysqlhelper.default.getTasks(function(tasks){
+    win.webContents.send('tasks:send', tasks)
+    // mysqlhelper.default.endConnection()
+  })
+  
+})
+
