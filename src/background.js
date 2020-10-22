@@ -102,8 +102,8 @@ ipcMain.on('tasks:get', function(e, callback){
 })
 
 ipcMain.on('login:submit', function(e, data){    
-    mysqlhelper.default.login(data.username, data.password, function(status){
-      win.webContents.send('login:success', status)
+    mysqlhelper.default.login(data.username, data.password, function(data){
+      win.webContents.send('login:success', data)
     })
 
 })

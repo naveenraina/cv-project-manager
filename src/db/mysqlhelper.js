@@ -65,7 +65,7 @@ function getTasks(callback){
 function login(username, password, callback){ 
    
     // Perform a query
-    let query = "SELECT user, password FROM `users` where user=? and password=?";
+    let query = "SELECT id, user, password FROM `users` where user=? and password=?";
 
     console.log(query)
     connectionPool.query(query,[username, password], function(err, rows, fields) {
@@ -75,7 +75,7 @@ function login(username, password, callback){
             return;
         }
         if(rows.length > 0){
-            callback('success')
+            callback(rows[0])
         } else {
             callback('error')
         }
