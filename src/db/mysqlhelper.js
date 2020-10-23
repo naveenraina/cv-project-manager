@@ -62,11 +62,9 @@ function getTasks(callback){
           
 }
 
-function login(username, password, callback){ 
-   
+function login(username, password, callback){
     // Perform a query
     let query = "SELECT id, user, password FROM `users` where user=? and password=?";
-
     console.log(query)
     connectionPool.query(query,[username, password], function(err, rows, fields) {
         if(err){
@@ -78,15 +76,25 @@ function login(username, password, callback){
             callback(rows[0])
         } else {
             callback('error')
+        } 
+    });          
+}
+
+function savedailystatus(data, callback){
+    // Perform a query
+    let query = "INSERT INTO `dailystatus`(`didyesterday`, `willdotoday`, `anyroadblocks`, `createddate`, `UserId`) VALUES(?, ?, ?, ?, ?)";
+    console.log(query)
+    connectionPool.query(query,[data.didyesterday, data.willdotoday, data.anyroadblocks, new Date(), data.userId], function(err, rows, fields) {
+        if(err){
+            console.log("An error ocurred performing the query.");
+            console.log(err);
+            return;
         }
-        
-        
-    });
-          
+        callback('success')
+    });          
 }
 
 
-
 export default {
-    connect, endConnection, saveTask, getTasks, login
+    connect, endConnection, saveTask, getTasks, login, savedailystatus
 }

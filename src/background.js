@@ -107,3 +107,10 @@ ipcMain.on('login:submit', function(e, data){
     })
 
 })
+
+ipcMain.on('dailystatus:submit', function(e, data){    
+  mysqlhelper.default.savedailystatus(data, function(data){
+    win.webContents.send('dailystatus:success', data)
+  })
+
+})

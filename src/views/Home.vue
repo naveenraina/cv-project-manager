@@ -3,25 +3,30 @@
     <div class="md-layout-item md-size-20"></div> 
     <div class="md-layout-item">
       <h3>Daily Status for {{user.user}}<md-button type="button" style="height:16px;" class="md-default" v-on:click="logmeout">LOGOUT</md-button></h3> 
-      <md-field :class="messageClass">
-        <label>What I did yesterday?</label>
-        <md-textarea v-model="didyesterday" required></md-textarea>
-        <span class="md-helper-text">Finished some feature</span>
-        <span class="md-error">Required field</span>
-      </md-field>
-      <md-field :class="messageClass">
-        <label>What I will do today?</label>
-        <md-textarea v-model="willdotoday" required></md-textarea>
-        <span class="md-helper-text">Will work on some feature</span>
-        <span class="md-error">Required field</span>
-      </md-field>
+      <form novalidate @submit.stop.prevent="submit" class="">
+        <md-field :class="messageClass">
+          <label>What I did yesterday?</label>
+          <md-textarea v-model="didyesterday" required></md-textarea>
+          <span class="md-helper-text">Finished some feature</span>
+          <span class="md-error">Required field</span>
+        </md-field>
+        <md-field :class="messageClass">
+          <label>What I will do today?</label>
+          <md-textarea v-model="willdotoday" required></md-textarea>
+          <span class="md-helper-text">Will work on some feature</span>
+          <span class="md-error">Required field</span>
+        </md-field>
 
-      <md-field :class="messageClass">
-        <label>Any roadblocks faced</label>
-        <md-input v-model="anyroadblocks" required></md-input>
-        <span class="md-error">Required field</span>
-      </md-field>
-      <md-button type="submit" class="md-primary">Submit</md-button>
+        <md-field :class="messageClass">
+          <label>Any roadblocks faced</label>
+          <md-input v-model="anyroadblocks" required></md-input>
+          <span class="md-error">Required field</span>
+        </md-field>
+        <md-button type="submit" class="md-primary">Submit</md-button>
+      </form>
+      <md-snackbar md-position="center" :md-duration="4000" :md-active.sync="showSnackbar" md-persistent>
+        <span>Daily status saved successfully</span>
+      </md-snackbar>
     </div>
     <div class="md-layout-item md-size-20"></div>
   </div>
@@ -39,7 +44,8 @@ export default {
     return {
       didyesterday: '',
       willdotoday: '',
-      anyroadblocks: ''
+      anyroadblocks: '',
+      showSnackbar: false
     }
   },
   components: {
@@ -52,6 +58,14 @@ export default {
     logmeout(){
       this.logout()
       this.$router.replace('/')
+    },
+    submit(){
+      ipcRenderer.send('dailystatus:submit', {
+        didyesterday: this.didyesterday, 
+        willdotoday: this.willdotoday, 
+        anyroadblocks: this.anyroadblocks,
+        userId: this.user.id
+      })
     }
   },
   computed: {
@@ -64,13 +78,9 @@ export default {
       return this.$store.state.user
     }
   },
-  mounted(){
-    // ipcRenderer.send('tasks:get')
-    
-    //Register IPC Renderer event handles once for this control
-    ipcRenderer.on('tasks:send', (e, tasks) => {
-      console.log(tasks)
-      this.tasks = tasks
+  mounted(){    
+    ipcRenderer.on('dailystatus:success', () => {
+      this.showSnackbar = true;
     })
   }
 }
