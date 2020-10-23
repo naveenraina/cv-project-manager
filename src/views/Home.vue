@@ -1,8 +1,6 @@
-<template>
-  <div class="md-layout">   
-    <div class="md-layout-item md-size-20"></div> 
-    <div class="md-layout-item">
-      <h3>Daily Status for {{user.user}}<md-button type="button" style="height:16px;" class="md-default" v-on:click="logmeout">LOGOUT</md-button></h3> 
+<template>  
+    <div>
+      <h3>Daily Status for {{user.user}}</h3> 
       <form novalidate @submit.stop.prevent="submit" class="">
         <md-field :class="messageClass">
           <label>What I did yesterday?</label>
@@ -23,13 +21,12 @@
           <span class="md-error">Required field</span>
         </md-field>
         <md-button type="submit" class="md-primary">Submit</md-button>
+        <md-button type="button" class="md-primary" to="/dashboard">Dashboard</md-button>
       </form>
       <md-snackbar md-position="center" :md-duration="4000" :md-active.sync="showSnackbar" md-persistent>
         <span>Daily status saved successfully</span>
       </md-snackbar>
     </div>
-    <div class="md-layout-item md-size-20"></div>
-  </div>
 </template>
 
 <script>
@@ -81,6 +78,7 @@ export default {
   mounted(){    
     ipcRenderer.on('dailystatus:success', () => {
       this.showSnackbar = true;
+      this.$router.replace('/dashboard')
     })
   }
 }

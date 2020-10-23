@@ -1,7 +1,5 @@
-<template>
-  <div class="md-layout md-alignment-center-center">   
-    <div class="md-layout-item md-size-30"></div> 
-    <div class="md-layout-item">
+<template>  
+    <div>
       <form novalidate @submit.stop.prevent="login" class="">
         <div>
           <h3>Login</h3>          
@@ -20,9 +18,7 @@
       <md-snackbar md-position="center" :md-duration="4000" :md-active.sync="showSnackbar" md-persistent>
         <span>Login failed</span>
       </md-snackbar>
-    </div>
-    <div class="md-layout-item md-size-30"></div>
-  </div>
+    </div>    
 </template>
 
 <script>
