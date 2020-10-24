@@ -29,24 +29,35 @@ function endConnection(callback){
 }
 
 
-function saveTask(){
-    // Perform a query
-    let query = 'INSERT INTO `tasks`(Description, CreatedDate) VALUES(?, ?)';
-
-    connectionPool.query(query, ['TEST DESC', new Date()], function(err, rows) {
-        if(err){
-            console.log("An error ocurred performing the query.");
-            console.log(err);
-            return;
-        }
-
-        console.log("Query succesfully executed", rows);
-    });
+function saveTask(task, callback){
+    if(task.id === 0){
+        let query = 'INSERT INTO `tasks`(taskname, description, userid, projectid, startedon, completedon, status, createdDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?)';
+        connectionPool.query(query, [task.taskName, task.description, task.userId, task.projectId, task.startDate, task.endDate, task.status, task.createdDate], function(err, rows) {
+            if(err){
+                console.log("An error ocurred performing the query.");
+                console.log(err);
+                return;
+            } else {
+                callback(rows)
+            }
+        });
+    } else {
+        // let query = 'INSERT INTO `tasks`(Description, CreatedDate) VALUES(?, ?)';
+        // connectionPool.query(query, ['TEST DESC', new Date()], function(err, rows) {
+        //     if(err){
+        //         console.log("An error ocurred performing the query.");
+        //         console.log(err);
+        //         return;
+        //     } else {
+        //         console.log("Query succesfully executed", rows);
+        //     }
+        // });
+    }
 }
 
 function getTasks(callback){
     // Perform a query
-    let query = 'SELECT t.id, t.taskName, t.description, u.user, p.projectName, t.startedOn, t.completedOn, t.createdDate, t.status FROM tasks t left join users u on t.userid = u.id left join projects p on p.id = t.projectid';
+    let query = 'SELECT t.id, t.taskName, t.description, t.userId, u.user, t.projectId, p.projectName, t.startedOn, t.completedOn, t.createdDate, t.status FROM tasks t left join users u on t.userid = u.id left join projects p on p.id = t.projectid';
     connectionPool.query(query, function(err, rows) {
         if(err){
             console.log("An error ocurred performing the query.");
@@ -60,6 +71,19 @@ function getTasks(callback){
 function getProjects(callback){
     // Perform a query
     let query = 'SELECT id, projectname FROM `projects`';
+    connectionPool.query(query, function(err, rows) {
+        if(err){
+            console.log("An error ocurred performing the query.");
+            console.log(err);
+            return;
+        }
+        callback(rows)        
+    });          
+}
+
+function getUsers(callback){
+    // Perform a query
+    let query = 'SELECT id, user FROM `users`';
     connectionPool.query(query, function(err, rows) {
         if(err){
             console.log("An error ocurred performing the query.");
@@ -147,5 +171,6 @@ export default {
     login,
     saveTask, getTasks,  
     savedailystatus, saveproject, 
-    getProjects, editProject, deleteProject
+    getProjects, editProject, deleteProject,
+    getUsers
 }

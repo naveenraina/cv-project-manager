@@ -31,7 +31,78 @@
           </md-table-cell>
           
         </md-table-row>
-      </md-table>      
+      </md-table> 
+      <md-button class="md-default md-raised" @click="onCreateTask">Create New Task</md-button>
+
+      <md-dialog :md-active.sync="showDialog">
+        <md-dialog-title>Task</md-dialog-title>
+
+        <div class="md-dialog-content md-layout">      
+          <div class="md-layout-item" style="width:600px">
+            <md-field md-clearable>
+              <label>Task name</label>
+              <md-input v-model="selectedTask.taskName"></md-input>
+            </md-field>
+
+            <md-field md-clearable>
+              <label>Description</label>
+              <md-textarea v-model="selectedTask.description"></md-textarea>
+            </md-field>
+
+            <div class="md-layout">
+              <div class="md-layout-item" style="padding-right:25px">
+                <div class="block">
+                  <div>Start Date</div>
+                  <md-datepicker v-model="selectedTask.startdDate" md-immediately/>
+                </div>
+              </div>
+              <div class="md-layout-item">
+                <div class="block">
+                  <div>End Date</div>
+                  <md-datepicker v-model="selectedTask.enddDate" md-immediately/>
+                </div>
+              </div>
+            </div>
+
+            <div class="md-layout">
+              <div class="md-layout-item md-size-33" style="padding-right:15px">
+                <md-field>
+                  <md-select v-model="selectedTask.status" placeholder="Status">
+                    <md-option value="New">New</md-option>
+                    <md-option value="InProgress">In Progress</md-option>
+                    <md-option value="Complete">Complete</md-option>
+                  </md-select>
+                </md-field>
+              </div>
+              <div class="md-layout-item md-size-33" style="padding-right:15px">
+                <md-field>
+                  <md-select v-model="selectedTask.userId" placeholder="Assigned to">
+                    <md-option v-for="option in users" :value="option.id" v-bind:key="option.id">{{option.user}}</md-option>
+                  </md-select>
+                </md-field>
+              </div>
+              <div class="md-layout-item md-size-33">
+                <md-field>
+                  <md-select v-model="selectedTask.projectId" placeholder="Project">
+                    <md-option v-for="option in projects" :value="option.id" v-bind:key="option.id">{{option.projectname}}</md-option>
+                  </md-select>
+                </md-field>
+              </div>
+            </div>
+            
+            
+          </div>
+        </div>
+
+        <md-dialog-actions>
+          <md-button class="md-primary" @click="showDialog = false">Cancel</md-button>
+          <md-button class="md-primary" @click="createTask">Save</md-button>
+        </md-dialog-actions>
+      </md-dialog>
+
+      <md-snackbar md-position="center" :md-duration="4000" :md-active.sync="showSnackbar" md-persistent>
+        <span>{{statusMessage}}</span>
+      </md-snackbar>
     </div>
   </div>    
 </template>
@@ -39,7 +110,6 @@
 <script>
   
   const ipcRenderer = require('electron').ipcRenderer
-  import { mapMutations } from 'vuex'
 
   const toLower = text => {
     return text.toString().toLowerCase()
@@ -56,43 +126,69 @@
   export default {
     name: 'dashboard',
     data: () => ({
+      showSnackbar: false,
+      statusMessage: '',
+      showDialog: false,
       search: null,
       searched: [],
-      tasks: [{ taskName: ''}]
+      tasks: [{ taskName: ''}],
+      projects: [{id: 0, projectname: ''}],
+      users: [{id: 0, user: ''}],
+      newTask: {
+        id: 0,
+        taskName: '',
+        description: '',
+        createdDate: '',
+        status: 'New',
+        startDate: '',
+        endDate: '',
+        userId: 0,
+        projectId: 0
+      },
+      selectedTask: {}
     }),
     methods: {
-      ...mapMutations([
-        'setUser',
-      ]),
-      login(){            
-          ipcRenderer.send('login:submit', {username: this.username, password: this.password})
-      },
-      newTask () {
-        window.alert('Noop')
-      },
       searchOnTable () {
         this.searched = searchByName(this.tasks, this.search)
+      },
+      onCreateTask(){
+        this.selectedTask = this.newTask;
+        this.showDialog = true
+      },
+      createTask(){
+        ipcRenderer.send('task:submit', this.selectedTask)
+        this.showDialog = false
       }
     },
     created () {
       this.searched = this.tasks 
       ipcRenderer.send('tasks:get')
-
+      ipcRenderer.send('projects:get')
+      ipcRenderer.send('users:get')
     },
     mounted(){        
-        //Register IPC Renderer event handles once for this control
-        ipcRenderer.on('tasks:success', (e, data) => {
-          this.tasks = data
-          this.searched = data
-        })
+      //Register IPC Renderer event handles once for this control
+      ipcRenderer.on('tasks:success', (e, data) => {
+        this.tasks = data
+        this.searched = data
+      })
+      ipcRenderer.on('projects:success', (e, data) => {
+        this.projects = data
+      })
+      ipcRenderer.on('users:success', (e, data) => {
+        this.users = data
+      })
+      ipcRenderer.on('task:submitsuccess', () => {        
+        this.statusMessage = 'Task saved successfully'
+        this.showSnackbar = true
+        ipcRenderer.send('tasks:get')
+      })
     }
   }
 </script>
 
 <style lang="less" scoped>
-  .md-field:last-child {
-    margin-bottom: 40px;
-  }  
+   
   .main-div{
     margin-top: 40px;
   }

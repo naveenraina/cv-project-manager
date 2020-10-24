@@ -126,11 +126,22 @@ ipcMain.on('dailystatus:submit', function(e, data){
   mysqlhelper.default.savedailystatus(data, function(data){
     win.webContents.send('dailystatus:success', data)
   })
-
 })
 
 ipcMain.on('project:new', function(e, data){    
   mysqlhelper.default.saveproject(data, function(data){
     win.webContents.send('project:newsuccess', data)
+  })
+})
+
+ipcMain.on('users:get', function(e){
+  mysqlhelper.default.getUsers(function(users){
+      win.webContents.send('users:success', users)
+  })
+})
+
+ipcMain.on('task:submit', function(e, data){    
+  mysqlhelper.default.saveTask(data, function(data){
+    win.webContents.send('task:submitsuccess', data)
   })
 })
