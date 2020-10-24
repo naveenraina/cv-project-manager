@@ -148,7 +148,7 @@ function login(username, password, callback){
 function savedailystatus(data, callback){
     // Perform a query
     let query = "INSERT INTO `dailystatus`(`didyesterday`, `willdotoday`, `anyroadblocks`, `createddate`, `UserId`, taskId) VALUES(?, ?, ?, ?, ?, ?)";
-    console.log(query)
+    
     connectionPool.query(query,[data.didyesterday, data.willdotoday, data.anyroadblocks, new Date(), data.userId, data.taskId], function(err) {
         if(err){
             console.log("An error ocurred performing the query.");
