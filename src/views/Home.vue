@@ -35,7 +35,7 @@
                   </md-select>
                 </md-field>
 
-              <md-button :disabled="user.id === 0" type="submit" class="md-primary">Submit</md-button>        
+              <md-button :disabled="user.id === 0 || taskId === 0" type="submit" class="md-primary">Submit</md-button>        
             </form>
             <md-snackbar md-position="center" :md-duration="4000" :md-active.sync="showSnackbar" md-persistent>
               <span>Daily status saved successfully</span>
@@ -62,7 +62,7 @@ export default {
       anyroadblocks: '',
       taskId: 0,
       showSnackbar: false,
-      tasks: [{id: 0, taskName: ''}],
+      tasks: [],
     }
   },
   components: {
@@ -103,7 +103,7 @@ export default {
     if(this.user.id > 0){
       ipcRenderer.send('tasks:getuserassigned', this.user.id)
     }
-        
+
     ipcRenderer.on('dailystatus:success', () => {
       this.showSnackbar = true;
       this.$router.replace('/dashboard')
