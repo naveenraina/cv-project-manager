@@ -1,6 +1,6 @@
 <template>  
   <div class="md-layout">   
-    <div class="md-layout-item md-size-10"></div>    
+    <div class="md-layout-item md-size-5"></div>    
     <div class="md-layout-item">
       <md-table v-model="tasks" md-card md-fixed-header>
         <md-table-toolbar>
@@ -67,7 +67,7 @@
       </md-table>      
       
     </div>
-    <div class="md-layout-item md-size-10"></div>  
+    <div class="md-layout-item md-size-5"></div>  
   </div>    
 </template>
 
@@ -131,11 +131,8 @@
   .main-div{
     margin-top: 40px;
   }
-  .md-card {
-    width: 320px;
-  }
   .md-table{
-    width: 320px;
+    width: 30%;
     display: inline-block;
   }
 

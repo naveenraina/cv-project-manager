@@ -1,23 +1,35 @@
 <template>  
-    <div>
-      <form novalidate @submit.stop.prevent="login" class="">
-        <div>
-          <h3>Login</h3>          
-          <md-field md-clearable>
-          <label>User name</label>
-          <md-input v-model="username"></md-input>
-          </md-field>
+    <div class="md-layout">
+      <div class="md-layout-item md-size-30"></div>
+      <div class="md-layout-item">
+        <md-card>
+          <md-card-header>
+            <div class="md-title">LOGIN</div>
+          </md-card-header>
+           
+          <md-card-content>  
+            <form novalidate @submit.stop.prevent="login" class="">
+              <div>
+                <h3>Login</h3>          
+                <md-field md-clearable>
+                <label>User name</label>
+                <md-input v-model="username"></md-input>
+                </md-field>
 
-          <md-field>
-          <label>Password</label>
-          <md-input v-model="password" type="password"></md-input>
-          </md-field>
-          <md-button type="submit" class="md-primary">Submit</md-button>
-        </div>
-      </form>
-      <md-snackbar md-position="center" :md-duration="4000" :md-active.sync="showSnackbar" md-persistent>
-        <span>Login failed</span>
-      </md-snackbar>
+                <md-field>
+                <label>Password</label>
+                <md-input v-model="password" type="password"></md-input>
+                </md-field>
+                <md-button type="submit" class="md-primary">Submit</md-button>
+              </div>
+            </form>
+            <md-snackbar md-position="center" :md-duration="4000" :md-active.sync="showSnackbar" md-persistent>
+              <span>Login failed</span>
+            </md-snackbar>
+          </md-card-content>
+        </md-card>
+      </div>
+      <div class="md-layout-item md-size-30"></div>
     </div>    
 </template>
 
