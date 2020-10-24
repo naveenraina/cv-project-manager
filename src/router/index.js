@@ -5,6 +5,7 @@ import Home from '@/views/Home.vue'
 import Dashboard from '@/views/Dashboard.vue'
 import Projects from '@/views/Projects.vue'
 import Tasks from '@/views/Tasks.vue'
+import store from '@/store'
 
 Vue.use(VueRouter)
 
@@ -46,6 +47,11 @@ const routes = [
 
 const router = new VueRouter({
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.name !== 'Login' && store.state.user.id === 0) next({ name: 'Login' })
+  else next()
 })
 
 export default router
