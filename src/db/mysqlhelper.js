@@ -44,22 +44,30 @@ function saveTask(){
     });
 }
 
-function getTasks(callback){ 
-   
+function getTasks(callback){
     // Perform a query
     let query = 'SELECT id, taskname, description, CREATEDDATE FROM `tasks`';
-
     connectionPool.query(query, function(err, rows) {
         if(err){
             console.log("An error ocurred performing the query.");
             console.log(err);
             return;
         }
+        callback(rows)        
+    });          
+}
 
-        callback(rows)
-        
-    });
-          
+function getProjects(callback){
+    // Perform a query
+    let query = 'SELECT id, projectname FROM `projects`';
+    connectionPool.query(query, function(err, rows) {
+        if(err){
+            console.log("An error ocurred performing the query.");
+            console.log(err);
+            return;
+        }
+        callback(rows)        
+    });          
 }
 
 function login(username, password, callback){
@@ -94,7 +102,20 @@ function savedailystatus(data, callback){
     });          
 }
 
+function saveproject(data, callback){
+    // Perform a query
+    let query = "INSERT INTO `projects`(`ProjectName`) VALUES(?)";
+    console.log(query)
+    connectionPool.query(query,[data.name], function(err) {
+        if(err){
+            console.log("An error ocurred performing the query.");
+            console.log(err);
+            return;
+        }
+        callback('success')
+    });
+}
 
 export default {
-    connect, endConnection, saveTask, getTasks, login, savedailystatus
+    connect, endConnection, saveTask, getTasks, login, savedailystatus, saveproject, getProjects
 }

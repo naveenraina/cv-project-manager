@@ -15,15 +15,28 @@
         <md-table-empty-state
           md-label="No projects found"
           :md-description="`No project found for this query.`">
-          <md-button class="md-primary md-raised" @click="newProject">Create New Project</md-button>
+          <md-button class="md-primary md-raised" @click="showDialog = true">Create New Project</md-button>
         </md-table-empty-state>
 
         <md-table-row slot="md-table-row" slot-scope="{ item }">
           <!-- <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{ item.id }}</md-table-cell> -->
-          <md-table-cell md-label="Name" md-sort-by="name">{{ item.Name }}</md-table-cell>
+          <md-table-cell md-label="Name" md-sort-by="name">{{ item.projectname }}</md-table-cell>
         </md-table-row>
       </md-table>
-      
+      <md-button class="md-default md-raised" @click="showDialog = true">Create New Project</md-button>
+
+      <md-dialog-prompt
+      :md-active.sync="showDialog"
+      v-model="newProjectname"
+      md-title="Project name"
+      md-input-maxlength="45"
+      md-input-placeholder=""
+      md-confirm-text="Done" 
+      @md-confirm="createProject"/>
+
+      <md-snackbar md-position="center" :md-duration="4000" :md-active.sync="showSnackbar" md-persistent>
+        <span>Project saved successfully</span>
+      </md-snackbar>
     </div>
     <div class="md-layout-item md-size-10"></div>  
   </div>    
@@ -49,6 +62,9 @@
   export default {
     name: 'dashboard',
     data: () => ({
+      showSnackbar: false,
+      newProjectname: '',
+      showDialog: false,
       search: null,
       searched: [],
       projects: [{Name: ''}]
@@ -57,8 +73,8 @@
       ...mapMutations([
         'setUser',
       ]),
-      newProject () {
-        window.alert('Noop')
+      createProject () {
+        ipcRenderer.send('project:new', {name: this.newProjectname})
       },
       searchOnTable () {
         this.searched = searchByName(this.projects, this.search)
@@ -66,13 +82,16 @@
     },
     created () {      
       ipcRenderer.send('projects:get')
-
     },
     mounted(){        
         //Register IPC Renderer event handles once for this control
         ipcRenderer.on('projects:success', (e, data) => {
           this.projects = data
           this.searched = data
+        })
+        ipcRenderer.on('project:newsuccess', () => {
+          this.showSnackbar = true
+          ipcRenderer.send('projects:get')
         })
     }
   }

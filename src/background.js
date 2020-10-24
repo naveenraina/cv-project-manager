@@ -101,6 +101,13 @@ ipcMain.on('tasks:get', function(e, callback){
 
 })
 
+ipcMain.on('projects:get', function(e, callback){
+  mysqlhelper.default.getProjects(function(projects){
+      win.webContents.send('projects:success', projects)
+  })
+
+})
+
 ipcMain.on('login:submit', function(e, data){    
     mysqlhelper.default.login(data.username, data.password, function(data){
       win.webContents.send('login:success', data)
@@ -113,4 +120,10 @@ ipcMain.on('dailystatus:submit', function(e, data){
     win.webContents.send('dailystatus:success', data)
   })
 
+})
+
+ipcMain.on('project:new', function(e, data){    
+  mysqlhelper.default.saveproject(data, function(data){
+    win.webContents.send('project:newsuccess', data)
+  })
 })
