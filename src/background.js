@@ -145,3 +145,8 @@ ipcMain.on('task:submit', function(e, data){
     win.webContents.send('task:submitsuccess', data)
   })
 })
+ipcMain.on('task:delete', function(e, id){
+  mysqlhelper.default.deleteTask(id, function(response){
+      win.webContents.send('task:deletesuccess', response)
+  })
+})

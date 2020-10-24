@@ -100,6 +100,14 @@
         </md-dialog-actions>
       </md-dialog>
 
+      <md-dialog-confirm
+      :md-active.sync="showDialogDeleteConfirmaton"
+      md-title="Are you sure"
+      md-content="This will permanently delete this item"
+      md-confirm-text="Agree"
+      md-cancel-text="Disagree"
+      @md-confirm="deleteTask" />
+
       <md-snackbar md-position="center" :md-duration="4000" :md-active.sync="showSnackbar" md-persistent>
         <span>{{statusMessage}}</span>
       </md-snackbar>
@@ -126,6 +134,7 @@
   export default {
     name: 'dashboard',
     data: () => ({
+      showDialogDeleteConfirmaton: false,
       showSnackbar: false,
       statusMessage: '',
       showDialog: false,
@@ -158,6 +167,13 @@
       createTask(){
         ipcRenderer.send('task:submit', this.selectedTask)
         this.showDialog = false
+      },
+      ondelete(id){
+        this.selectedId = id
+        this.showDialogDeleteConfirmaton = true;
+      },
+      deleteTask(){
+        ipcRenderer.send('task:delete', {id: this.selectedId})
       }
     },
     created () {
@@ -183,6 +199,11 @@
         this.showSnackbar = true
         ipcRenderer.send('tasks:get')
       })
+      ipcRenderer.on('task:deletesuccess', () => {
+          this.statusMessage = 'Task removed successfully'
+          this.showSnackbar = true
+          ipcRenderer.send('tasks:get')
+        })
     }
   }
 </script>

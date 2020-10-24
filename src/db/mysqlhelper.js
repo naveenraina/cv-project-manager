@@ -166,10 +166,23 @@ function saveproject(data, callback){
     });
 }
 
+function deleteTask(data, callback){
+    let query = 'delete from `tasks` where id=?';
+    connectionPool.query(query, [data.id], function(err, rows) {
+        if(err){
+            console.log("An error ocurred performing the query.");
+            console.log(err);
+            return;
+        } else {
+            callback('success')    
+        }            
+    });  
+}
+
 export default {
     connect, endConnection, 
     login,
-    saveTask, getTasks,  
+    saveTask, getTasks, deleteTask,  
     savedailystatus, saveproject, 
     getProjects, editProject, deleteProject,
     getUsers
