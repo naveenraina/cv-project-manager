@@ -70,6 +70,32 @@ function getProjects(callback){
     });          
 }
 
+function editProject(data, callback){
+    let query = 'update `projects` set projectname=? where id=?';
+    connectionPool.query(query, [data.name, data.id], function(err, rows) {
+        if(err){
+            console.log("An error ocurred performing the query.");
+            console.log(err);
+            return;
+        } else {
+            callback('success')    
+        }            
+    });  
+}
+
+function deleteProject(data, callback){
+    let query = 'delete from `projects` where id=?';
+    connectionPool.query(query, [data.id], function(err, rows) {
+        if(err){
+            console.log("An error ocurred performing the query.");
+            console.log(err);
+            return;
+        } else {
+            callback('success')    
+        }            
+    });  
+}
+
 function login(username, password, callback){
     // Perform a query
     let query = "SELECT id, user, password FROM `users` where user=? and password=?";
@@ -117,5 +143,9 @@ function saveproject(data, callback){
 }
 
 export default {
-    connect, endConnection, saveTask, getTasks, login, savedailystatus, saveproject, getProjects
+    connect, endConnection, 
+    login,
+    saveTask, getTasks,  
+    savedailystatus, saveproject, 
+    getProjects, editProject, deleteProject
 }

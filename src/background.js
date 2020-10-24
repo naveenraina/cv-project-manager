@@ -94,25 +94,32 @@ if (isDevelopment) {
 
 const mysqlhelper = require('@/db/mysqlhelper');
 
-ipcMain.on('tasks:get', function(e, callback){
+ipcMain.on('tasks:get', function(e){
     mysqlhelper.default.getTasks(function(tasks){
         win.webContents.send('tasks:success', tasks)
     })
-
 })
 
-ipcMain.on('projects:get', function(e, callback){
+ipcMain.on('projects:get', function(e){
   mysqlhelper.default.getProjects(function(projects){
       win.webContents.send('projects:success', projects)
   })
-
+})
+ipcMain.on('project:edit', function(e, data){
+  mysqlhelper.default.editProject(data, function(response){
+      win.webContents.send('project:editsuccess', response)
+  })
+})
+ipcMain.on('project:delete', function(e, id){
+  mysqlhelper.default.deleteProject(id, function(response){
+      win.webContents.send('project:deletesuccess', response)
+  })
 })
 
 ipcMain.on('login:submit', function(e, data){    
     mysqlhelper.default.login(data.username, data.password, function(data){
       win.webContents.send('login:success', data)
     })
-
 })
 
 ipcMain.on('dailystatus:submit', function(e, data){    

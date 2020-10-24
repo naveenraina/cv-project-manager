@@ -20,22 +20,48 @@
 
         <md-table-row slot="md-table-row" slot-scope="{ item }">
           <!-- <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{ item.id }}</md-table-cell> -->
-          <md-table-cell md-label="Name" md-sort-by="name">{{ item.projectname }}</md-table-cell>
+          <md-table-cell md-label="Name" md-sort-by="name">
+            <div class="md-layout md-alignment-center-left">
+              <div class="md-layout-item pull-right">{{ item.projectname }}</div> 
+              <div class="md-layout-item md-size-20" style="float:right">
+                <md-chip md-clickable @click="onedit(item.id)"><md-icon>edit</md-icon></md-chip>
+               <md-chip md-clickable @click="ondelete(item.id)"><md-icon class="md-size-1x">delete</md-icon></md-chip>
+              </div>               
+            </div>
+          </md-table-cell>
         </md-table-row>
       </md-table>
       <md-button class="md-default md-raised" @click="showDialog = true">Create New Project</md-button>
 
       <md-dialog-prompt
       :md-active.sync="showDialog"
-      v-model="newProjectname"
-      md-title="Project name"
+      v-model="newProjectName"
+      md-title="Project Name"
       md-input-maxlength="45"
       md-input-placeholder=""
       md-confirm-text="Done" 
       @md-confirm="createProject"/>
 
+      <md-dialog-prompt
+      md-dialog-prompt
+      :md-active.sync="showDialogEdit"
+      v-model="editProjectName"
+      md-title="Edit Project"
+      md-input-maxlength="45"
+      md-input-placeholder=""
+      md-confirm-text="Done" 
+      @md-confirm="editProject"/>
+
+      <md-dialog-confirm
+      :md-active.sync="showDialogDeleteConfirmaton"
+      md-title="Are you sure"
+      md-content="This will permanently delete this item"
+      md-confirm-text="Agree"
+      md-cancel-text="Disagree"
+      @md-confirm="deleteProject" />
+
       <md-snackbar md-position="center" :md-duration="4000" :md-active.sync="showSnackbar" md-persistent>
-        <span>Project saved successfully</span>
+        <span>{{statusMessage}}</span>
       </md-snackbar>
     </div>
     <div class="md-layout-item md-size-10"></div>  
@@ -62,8 +88,13 @@
   export default {
     name: 'dashboard',
     data: () => ({
+      statusMessage: '',
+      showDialogDeleteConfirmaton: false,
+      showDialogEdit: false,
       showSnackbar: false,
-      newProjectname: '',
+      newProjectName: '',
+      editProjectName: '',
+      selectedId: 0,
       showDialog: false,
       search: null,
       searched: [],
@@ -74,10 +105,28 @@
         'setUser',
       ]),
       createProject () {
-        ipcRenderer.send('project:new', {name: this.newProjectname})
+        ipcRenderer.send('project:new', {name: this.newProjectName})
       },
       searchOnTable () {
         this.searched = searchByName(this.projects, this.search)
+      },
+      onedit(id){
+        this.selectedId = id
+        var found = this.projects.find(item => item.id === id)
+        this.editProjectName = found?.projectname
+        this.showDialogEdit = true;
+      },
+      editProject(){
+        ipcRenderer.send('project:edit', {name: this.editProjectName, id: this.selectedId})
+      },
+      ondelete(id){
+        this.selectedId = id
+        var found = this.projects.find(item => item.id === id)
+        this.editProjectName = found?.projectname
+        this.showDialogDeleteConfirmaton = true;
+      },
+      deleteProject(){
+        ipcRenderer.send('project:delete', {id: this.selectedId})
       }
     },
     created () {
@@ -91,6 +140,17 @@
           this.searched = data
         })
         ipcRenderer.on('project:newsuccess', () => {
+          this.statusMessage = 'Project saved successfully'
+          this.showSnackbar = true
+          ipcRenderer.send('projects:get')
+        })
+        ipcRenderer.on('project:editsuccess', () => {
+          this.statusMessage = 'Project saved successfully'
+          this.showSnackbar = true
+          ipcRenderer.send('projects:get')
+        })
+        ipcRenderer.on('project:deletesuccess', () => {
+          this.statusMessage = 'Project removed successfully'
           this.showSnackbar = true
           ipcRenderer.send('projects:get')
         })
