@@ -116,8 +116,7 @@
     },
     mounted(){        
         //Register IPC Renderer event handles once for this control
-        ipcRenderer.on('tasks:success', (e, data) => {
-          console.log(data)
+        ipcRenderer.on('tasks:success', (e, data) => {          
           this.tasks = data
         })
     }
