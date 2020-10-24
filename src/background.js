@@ -96,7 +96,7 @@ const mysqlhelper = require('@/db/mysqlhelper');
 
 ipcMain.on('tasks:get', function(e, callback){
     mysqlhelper.default.getTasks(function(tasks){
-        win.webContents.send('tasks:send', tasks)
+        win.webContents.send('tasks:success', tasks)
     })
 
 })

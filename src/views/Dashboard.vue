@@ -2,7 +2,7 @@
   <div class="md-layout">   
     <div class="md-layout-item md-size-10"></div>    
     <div class="md-layout-item">
-      <md-table v-model="searched" md-card md-fixed-header>
+      <md-table v-model="tasks" md-card md-fixed-header>
         <md-table-toolbar>
           <div class="md-toolbar-section-start">
             <h1 class="md-title">Tasks Assigned</h1>
@@ -13,17 +13,17 @@
         </md-table-toolbar>
 
         <md-table-empty-state
-          md-label="No users found"
-          :md-description="`No user found for this '${search}' query. Try a different search term or create a new user.`">
+          md-label="No tasks found"
+          :md-description="`No user found for this query.`">
           <md-button class="md-primary md-raised" @click="newUser">Create New User</md-button>
         </md-table-empty-state>
 
         <md-table-row slot="md-table-row" slot-scope="{ item }">
           <!-- <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{ item.id }}</md-table-cell> -->
-          <md-table-cell md-label="Name" md-sort-by="name">{{ item.name }}</md-table-cell>
+          <md-table-cell md-label="Name" md-sort-by="name">{{ item.TaskName }}</md-table-cell>
         </md-table-row>
       </md-table>
-      <md-table v-model="searched" md-card md-fixed-header>
+      <md-table v-model="tasks" md-card md-fixed-header>
         <md-table-toolbar>
           <div class="md-toolbar-section-start">
             <h1 class="md-title">Tasks In progress</h1>
@@ -34,17 +34,17 @@
         </md-table-toolbar>
 
         <md-table-empty-state
-          md-label="No users found"
-          :md-description="`No user found for this '${search}' query. Try a different search term or create a new user.`">
+          md-label="No tasks found"
+          :md-description="`No user found for this query.`">
           <md-button class="md-primary md-raised" @click="newUser">Create New User</md-button>
         </md-table-empty-state>
 
         <md-table-row slot="md-table-row" slot-scope="{ item }">
           <!-- <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{ item.id }}</md-table-cell> -->
-          <md-table-cell md-label="Name" md-sort-by="name">{{ item.name }}</md-table-cell>
+          <md-table-cell md-label="Name" md-sort-by="name">{{ item.TaskName }}</md-table-cell>
         </md-table-row>
       </md-table>      
-      <md-table v-model="searched" md-card md-fixed-header>
+      <md-table v-model="tasks" md-card md-fixed-header>
         <md-table-toolbar>
           <div class="md-toolbar-section-start">
             <h1 class="md-title">Tasks Completed</h1>
@@ -55,14 +55,14 @@
         </md-table-toolbar>
 
         <md-table-empty-state
-          md-label="No users found"
-          :md-description="`No user found for this '${search}' query. Try a different search term or create a new user.`">
+          md-label="No tasks found"
+          :md-description="`No user found for this query.`">
           <md-button class="md-primary md-raised" @click="newUser">Create New User</md-button>
         </md-table-empty-state>
 
         <md-table-row slot="md-table-row" slot-scope="{ item }">
           <!-- <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{ item.id }}</md-table-cell> -->
-          <md-table-cell md-label="Name" >{{ item.name }}</md-table-cell>
+          <md-table-cell md-label="Name" >{{ item.TaskName }}</md-table-cell>
         </md-table-row>
       </md-table>      
       
@@ -72,49 +72,31 @@
 </template>
 
 <script>
+  
   const ipcRenderer = require('electron').ipcRenderer
   import { mapMutations } from 'vuex'
 
-  const toLower = text => {
-    return text.toString().toLowerCase()
-  }
+  // const toLower = text => {
+  //   return text.toString().toLowerCase()
+  // }
 
-  const searchByName = (items, term) => {
-    if (term) {
-      return items.filter(item => toLower(item.name).includes(toLower(term)))
-    }
+  // const searchByName = (items, term) => {
+  //   if (term) {
+  //     return items.filter(item => toLower(item.name).includes(toLower(term)))
+  //   }
 
-    return items
-  }
+  //   return items
+  // }
 
   export default {
     name: 'dashboard',
     data: () => ({
-      search: null,
-      searched: [],
-      users: [
+      tasks: [
         {
-          id: 1,
-          name: "Shawna Dubbin",
-          email: "sdubbin0@geocities.com",
-          gender: "Male",
-          title: "Assistant Media Planner"
-        },
-        {
-          id: 2,
-          name: "Odette Demageard",
-          email: "odemageard1@spotify.com",
-          gender: "Female",
-          title: "Account Coordinator"
-        },
-        {
-          id: 3,
-          name: "Vera Taleworth",
-          email: "vtaleworth2@google.ca",
-          gender: "Male",
-          title: "Community Outreach Specialist"
-        },
-        
+          ID: 0,
+          TaskName: "",
+          DESCRIPTION: ""
+        }        
       ]
     }),
     methods: {
@@ -126,24 +108,17 @@
       },
       newUser () {
         window.alert('Noop')
-      },
-      searchOnTable () {
-        this.searched = searchByName(this.users, this.search)
       }
     },
-    created () {
-      this.searched = this.users
+    created () {      
+      ipcRenderer.send('tasks:get')
+
     },
-    mounted(){
-        
+    mounted(){        
         //Register IPC Renderer event handles once for this control
-        ipcRenderer.on('login:success', (e, data) => {
-            if(data === 'error'){
-              this.showSnackbar = true;
-            } else {
-              this.setUser(data)
-              this.$router.replace('/home')
-            }        
+        ipcRenderer.on('tasks:success', (e, data) => {
+          console.log(data)
+          this.tasks = data
         })
     }
   }

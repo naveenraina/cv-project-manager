@@ -24,7 +24,7 @@ function connect(){
 function endConnection(callback){
     // Close the connection
     connectionPool.end(function(){
-        if(!!callback) { callback() };
+        if(callback) { callback() }
     });
 }
 
@@ -33,7 +33,7 @@ function saveTask(){
     // Perform a query
     let query = 'INSERT INTO `tasks`(Description, CreatedDate) VALUES(?, ?)';
 
-    connectionPool.query(query, ['TEST DESC', getdate()], function(err, rows, fields) {
+    connectionPool.query(query, ['TEST DESC', new Date()], function(err, rows) {
         if(err){
             console.log("An error ocurred performing the query.");
             console.log(err);
@@ -47,9 +47,9 @@ function saveTask(){
 function getTasks(callback){ 
    
     // Perform a query
-    let query = 'SELECT ID, DESCRIPTION, CREATEDDATE FROM `tasks`';
+    let query = 'SELECT id, taskname, description, CREATEDDATE FROM `tasks`';
 
-    connectionPool.query(query, function(err, rows, fields) {
+    connectionPool.query(query, function(err, rows) {
         if(err){
             console.log("An error ocurred performing the query.");
             console.log(err);
@@ -66,7 +66,7 @@ function login(username, password, callback){
     // Perform a query
     let query = "SELECT id, user, password FROM `users` where user=? and password=?";
     console.log(query)
-    connectionPool.query(query,[username, password], function(err, rows, fields) {
+    connectionPool.query(query,[username, password], function(err, rows) {
         if(err){
             console.log("An error ocurred performing the query.");
             console.log(err);
@@ -84,7 +84,7 @@ function savedailystatus(data, callback){
     // Perform a query
     let query = "INSERT INTO `dailystatus`(`didyesterday`, `willdotoday`, `anyroadblocks`, `createddate`, `UserId`) VALUES(?, ?, ?, ?, ?)";
     console.log(query)
-    connectionPool.query(query,[data.didyesterday, data.willdotoday, data.anyroadblocks, new Date(), data.userId], function(err, rows, fields) {
+    connectionPool.query(query,[data.didyesterday, data.willdotoday, data.anyroadblocks, new Date(), data.userId], function(err) {
         if(err){
             console.log("An error ocurred performing the query.");
             console.log(err);
