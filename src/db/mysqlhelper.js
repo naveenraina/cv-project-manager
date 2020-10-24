@@ -1,13 +1,7 @@
 var mysql = require('mysql');
+const mysqlconfig = require('@/db/mysqlconfig');
 // Add the credentials to access your database
-var connectionPool = mysql.createPool({
-    host     : '182.50.133.92',
-    port     : '3306',
-    user     : 'cvtaskmanager',
-    password : 'cvtaskmanager',
-    database : 'cvtaskmanager'
-});
-
+var connectionPool = mysql.createPool(mysqlconfig.default);
 
 function connect(){
     
