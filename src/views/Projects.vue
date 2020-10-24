@@ -53,7 +53,7 @@
 
   const searchByName = (items, term) => {
     if (term) {
-      return items.filter(item => toLower(item.Name).includes(toLower(term)))
+      return items.filter(item => toLower(item.projectname).includes(toLower(term)))
     }
 
     return items
@@ -67,7 +67,7 @@
       showDialog: false,
       search: null,
       searched: [],
-      projects: [{Name: ''}]
+      projects: [{projectname: ''}]
     }),
     methods: {
       ...mapMutations([
@@ -80,7 +80,8 @@
         this.searched = searchByName(this.projects, this.search)
       }
     },
-    created () {      
+    created () {
+      this.searched = this.projects
       ipcRenderer.send('projects:get')
     },
     mounted(){        

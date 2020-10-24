@@ -5,7 +5,7 @@
       <md-table v-model="searched" md-card md-fixed-header>
         <md-table-toolbar>
           <div class="md-toolbar-section-start">
-            <h1 class="md-title">Tasks Backlog</h1>
+            <h1 class="md-title">Task Backlog</h1>
           </div>
           <md-field md-clearable class="md-toolbar-section-end">
             <md-input placeholder="Search by name..." v-model="search" @input="searchOnTable" />

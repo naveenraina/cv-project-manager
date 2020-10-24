@@ -46,7 +46,7 @@ function saveTask(){
 
 function getTasks(callback){
     // Perform a query
-    let query = 'SELECT id, taskname, description, CREATEDDATE FROM `tasks`';
+    let query = 'SELECT id, TaskName, description, CREATEDDATE FROM `tasks`';
     connectionPool.query(query, function(err, rows) {
         if(err){
             console.log("An error ocurred performing the query.");
