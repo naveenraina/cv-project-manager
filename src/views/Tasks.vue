@@ -1,7 +1,6 @@
 <template>  
-  <div class="md-layout">   
-    <div class="md-layout-item md-size-10"></div>    
-    <div class="md-layout-item">
+  <div class="md-layout">
+    <div class="md-layout-item md-alignment-top-left">
       <md-table v-model="searched" md-card md-fixed-header>
         <md-table-toolbar>
           <div class="md-toolbar-section-start">
@@ -20,12 +19,20 @@
 
         <md-table-row slot="md-table-row" slot-scope="{ item }">
           <!-- <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{ item.id }}</md-table-cell> -->
-          <md-table-cell md-label="Name" md-sort-by="name">{{ item.TaskName }}</md-table-cell>
+          <md-table-cell md-label="Name" md-sort-by="taskName">{{ item.taskName }}</md-table-cell>
+          <md-table-cell md-label="Assigned to" md-sort-by="user">{{ item.user }}</md-table-cell>
+          <md-table-cell md-label="Project" md-sort-by="projectName">{{ item.projectName }}</md-table-cell>
+          <md-table-cell md-label="Status" md-sort-by="status">{{ item.status }}</md-table-cell>
+          <md-table-cell md-label="">
+            
+              <md-chip md-clickable @click="onedit(item.id)"><md-icon>edit</md-icon></md-chip>
+              <md-chip md-clickable @click="ondelete(item.id)"><md-icon class="md-size-1x">delete</md-icon></md-chip>
+           
+          </md-table-cell>
+          
         </md-table-row>
-      </md-table>
-      
+      </md-table>      
     </div>
-    <div class="md-layout-item md-size-10"></div>  
   </div>    
 </template>
 
@@ -40,7 +47,7 @@
 
   const searchByName = (items, term) => {
     if (term) {
-      return items.filter(item => toLower(item.TaskName).includes(toLower(term)))
+      return items.filter(item => toLower(item.taskName).includes(toLower(term)))
     }
 
     return items
@@ -51,7 +58,7 @@
     data: () => ({
       search: null,
       searched: [],
-      tasks: [{ TaskName: ''}]
+      tasks: [{ taskName: ''}]
     }),
     methods: {
       ...mapMutations([
@@ -88,6 +95,9 @@
   }  
   .main-div{
     margin-top: 40px;
+  }
+  .md-chip{
+    background-color: rgba(0,0,0,0) !important;
   }
   
 </style>

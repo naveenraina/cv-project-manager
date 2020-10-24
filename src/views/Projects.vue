@@ -22,7 +22,7 @@
           <!-- <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{ item.id }}</md-table-cell> -->
           <md-table-cell md-label="Name" md-sort-by="name">
             <div class="md-layout md-alignment-center-left">
-              <div class="md-layout-item pull-right">{{ item.projectname }}</div> 
+              <div class="md-layout-item">{{ item.projectname }}</div> 
               <div class="md-layout-item md-size-20" style="float:right">
                 <md-chip md-clickable @click="onedit(item.id)"><md-icon>edit</md-icon></md-chip>
                <md-chip md-clickable @click="ondelete(item.id)"><md-icon class="md-size-1x">delete</md-icon></md-chip>
@@ -163,5 +163,7 @@
   .main-div{
     margin-top: 40px;
   }
-  
+  .md-chip{
+    background-color: rgba(0,0,0,0) !important;
+  }
 </style>
