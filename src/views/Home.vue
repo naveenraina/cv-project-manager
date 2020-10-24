@@ -20,8 +20,7 @@
           <md-input v-model="anyroadblocks" required></md-input>
           <span class="md-error">Required field</span>
         </md-field>
-        <md-button type="submit" class="md-primary">Submit</md-button>
-        <md-button type="button" class="md-primary" to="/dashboard">Dashboard</md-button>
+        <md-button type="submit" class="md-primary">Submit</md-button>        
       </form>
       <md-snackbar md-position="center" :md-duration="4000" :md-active.sync="showSnackbar" md-persistent>
         <span>Daily status saved successfully</span>
