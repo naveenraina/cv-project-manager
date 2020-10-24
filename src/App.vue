@@ -9,8 +9,8 @@
           <md-menu md-size="small" style="margin-top:6px">
             <md-button md-menu-trigger>Admin</md-button>
             <md-menu-content>
-              <md-menu-item to="/">Tasks</md-menu-item>
-              <md-menu-item to="/">Projects</md-menu-item>
+              <md-menu-item to="/tasks">Tasks</md-menu-item>
+              <md-menu-item to="/projects">Projects</md-menu-item>
             </md-menu-content>
           </md-menu>    
           <md-button v-show="user.id !== 0" v-on:click="logmeout">LOGOUT({{user.user}})</md-button>
