@@ -3,9 +3,9 @@
     <div class="md-layout md-alignment-top-right">   
       <div class="md-layout-item md-size-5"></div>    
       <div class="md-layout-item"> 
-        <div id="nav">
-          <md-button to="/dashboard">Dashboard</md-button>
+        <div id="nav">          
           <md-button to="/home">Daily Status</md-button>
+          <md-button to="/dashboard">Dashboard</md-button>
           <md-menu md-size="small" style="margin-top:6px">
             <md-button md-menu-trigger>Admin</md-button>
             <md-menu-content>

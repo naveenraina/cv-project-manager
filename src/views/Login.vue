@@ -60,7 +60,7 @@
               this.showSnackbar = true;
             } else {
               this.setUser(data)
-              this.$router.replace('/dashboard')
+              this.$router.replace('/home')
             }        
         })
     }
