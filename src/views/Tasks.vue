@@ -19,10 +19,10 @@
 
         <md-table-row slot="md-table-row" slot-scope="{ item }">
           <!-- <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{ item.id }}</md-table-cell> -->
-          <md-table-cell md-label="Name" md-sort-by="taskName">{{ item.taskName }}</md-table-cell>
-          <md-table-cell md-label="Assigned to" md-sort-by="user">{{ item.user }}</md-table-cell>
-          <md-table-cell md-label="Project" md-sort-by="projectName">{{ item.projectName }}</md-table-cell>
-          <md-table-cell md-label="Status" md-sort-by="status">{{ item.status }}</md-table-cell>
+          <md-table-cell md-label="Name" width="300px" md-sort-by="taskName">{{ item.taskName }}</md-table-cell>
+          <md-table-cell md-label="Assigned to" width="200px" md-sort-by="user">{{ item.user }}</md-table-cell>
+          <md-table-cell md-label="Project" width="200px" md-sort-by="projectName">{{ item.projectName }}</md-table-cell>
+          <md-table-cell md-label="Status" width="200px" md-sort-by="status">{{ item.status }}</md-table-cell>
           <md-table-cell md-label="">
             
               <md-chip md-clickable @click="onedit(item.id)"><md-icon>edit</md-icon></md-chip>
