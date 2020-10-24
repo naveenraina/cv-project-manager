@@ -53,13 +53,13 @@
               <div class="md-layout-item" style="padding-right:25px">
                 <div class="block">
                   <div>Start Date</div>
-                  <md-datepicker v-model="selectedTask.startdDate" md-immediately/>
+                  <md-datepicker v-model="selectedTask.startedOn" md-immediately/>
                 </div>
               </div>
               <div class="md-layout-item">
                 <div class="block">
                   <div>End Date</div>
-                  <md-datepicker v-model="selectedTask.enddDate" md-immediately/>
+                  <md-datepicker v-model="selectedTask.completedOn" md-immediately/>
                 </div>
               </div>
             </div>
@@ -147,10 +147,11 @@
         id: 0,
         taskName: '',
         description: '',
-        createdDate: '',
+        createdDate: new Date(),
+        updatedDate: new Date(),
         status: 'New',
-        startDate: '',
-        endDate: '',
+        startedOn: '',
+        completedOn: '',
         userId: 0,
         projectId: 0
       },

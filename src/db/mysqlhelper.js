@@ -31,8 +31,8 @@ function endConnection(callback){
 
 function saveTask(task, callback){
     if(task.id === 0){
-        let query = 'INSERT INTO `tasks`(taskname, description, userid, projectid, startedon, completedon, status, createdDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?)';
-        connectionPool.query(query, [task.taskName, task.description, task.userId, task.projectId, task.startDate, task.endDate, task.status, task.createdDate], function(err, rows) {
+        let query = 'INSERT INTO `tasks`(taskname, description, userid, projectid, startedOn, completedOn, status, createdDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?)';
+        connectionPool.query(query, [task.taskName, task.description, task.userId, task.projectId, task.startedOn, task.completedOn, task.status, task.createdDate], function(err, rows) {
             if(err){
                 console.log("An error ocurred performing the query.");
                 console.log(err);
@@ -42,14 +42,14 @@ function saveTask(task, callback){
             }
         });
     } else {
-        let query = 'update `tasks` set taskname=?, description=?, userid=?, projectid=?, startedon=?, completedon=?, status=?, updateddate=? where id=? ';
-        connectionPool.query(query, [task.taskName, task.description, task.userId, task.projectId, task.startDate, task.endDate, task.status, task.updateddate, task.id], function(err, rows) {
+        let query = 'update `tasks` set taskname=?, description=?, userid=?, projectid=?, startedOn=?, completedOn=?, status=?, updatedDate=? where id=? ';
+        connectionPool.query(query, [task.taskName, task.description, task.userId, task.projectId, task.startedOn, task.completedOn, task.status, new Date(), task.id], function(err, rows) {
             if(err){
                 console.log("An error ocurred performing the query.");
                 console.log(err);
                 return;
             } else {
-                console.log("Query succesfully executed", rows);
+                callback(rows)
             }
         });
     }
@@ -57,7 +57,7 @@ function saveTask(task, callback){
 
 function getTasks(callback){
     // Perform a query
-    let query = 'SELECT t.id, t.taskName, t.description, t.userId, u.user, t.projectId, p.projectName, t.startedOn, t.completedOn, t.createdDate, t.status FROM tasks t left join users u on t.userid = u.id left join projects p on p.id = t.projectid';
+    let query = 'SELECT t.id, t.taskName, t.description, t.userId, u.user, t.projectId, p.projectName, t.startedOn, t.completedOn, t.createdDate, t.updatedDate, t.status FROM tasks t left join users u on t.userid = u.id left join projects p on p.id = t.projectid';
     connectionPool.query(query, function(err, rows) {
         if(err){
             console.log("An error ocurred performing the query.");
