@@ -96,7 +96,7 @@
 
         <md-dialog-actions>
           <md-button class="md-primary" @click="showDialog = false">Cancel</md-button>
-          <md-button class="md-primary" @click="createTask">Save</md-button>
+          <md-button class="md-primary" @click="saveTask">Save</md-button>
         </md-dialog-actions>
       </md-dialog>
 
@@ -164,16 +164,23 @@
         this.selectedTask = this.newTask;
         this.showDialog = true
       },
-      createTask(){
+      saveTask(){
         ipcRenderer.send('task:submit', this.selectedTask)
         this.showDialog = false
       },
+      onedit(id){
+        var found = this.tasks.find(item => item.id === id)
+        console.log(found)
+        this.selectedTask = found
+        this.showDialog = true;
+      },
       ondelete(id){
-        this.selectedId = id
+        var found = this.tasks.find(item => item.id === id)
+        this.selectedTask = found
         this.showDialogDeleteConfirmaton = true;
       },
       deleteTask(){
-        ipcRenderer.send('task:delete', {id: this.selectedId})
+        ipcRenderer.send('task:delete', {id: this.selectedTask.id})
       }
     },
     created () {

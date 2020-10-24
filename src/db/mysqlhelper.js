@@ -42,16 +42,16 @@ function saveTask(task, callback){
             }
         });
     } else {
-        // let query = 'INSERT INTO `tasks`(Description, CreatedDate) VALUES(?, ?)';
-        // connectionPool.query(query, ['TEST DESC', new Date()], function(err, rows) {
-        //     if(err){
-        //         console.log("An error ocurred performing the query.");
-        //         console.log(err);
-        //         return;
-        //     } else {
-        //         console.log("Query succesfully executed", rows);
-        //     }
-        // });
+        let query = 'update `tasks` set taskname=?, description=?, userid=?, projectid=?, startedon=?, completedon=?, status=?, updateddate=? where id=? ';
+        connectionPool.query(query, [task.taskName, task.description, task.userId, task.projectId, task.startDate, task.endDate, task.status, task.updateddate, task.id], function(err, rows) {
+            if(err){
+                console.log("An error ocurred performing the query.");
+                console.log(err);
+                return;
+            } else {
+                console.log("Query succesfully executed", rows);
+            }
+        });
     }
 }
 
