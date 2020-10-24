@@ -4,7 +4,7 @@ var connectionPool = mysql.createPool({
     host     : '182.50.133.92',
     port     : '3306',
     user     : 'cvtaskmanager',
-    password : 'cvtaskmanager1!',
+    password : 'cvtaskmanager',
     database : 'cvtaskmanager'
 });
 
@@ -66,6 +66,19 @@ function getTasks(callback){
         }
         callback(rows)        
     });          
+}
+
+function getTasksAssignedToUser(userId, callback){
+    // Perform a query
+    let query = 'SELECT t.id, t.taskName from tasks t where t.userId = ?';
+    connectionPool.query(query,[userId], function(err, rows) {
+        if(err){
+            console.log("An error ocurred performing the query.");
+            console.log(err);
+            return;
+        }
+        callback(rows)        
+    });
 }
 
 function getProjects(callback){
@@ -140,9 +153,9 @@ function login(username, password, callback){
 
 function savedailystatus(data, callback){
     // Perform a query
-    let query = "INSERT INTO `dailystatus`(`didyesterday`, `willdotoday`, `anyroadblocks`, `createddate`, `UserId`) VALUES(?, ?, ?, ?, ?)";
+    let query = "INSERT INTO `dailystatus`(`didyesterday`, `willdotoday`, `anyroadblocks`, `createddate`, `UserId`, taskId) VALUES(?, ?, ?, ?, ?, ?)";
     console.log(query)
-    connectionPool.query(query,[data.didyesterday, data.willdotoday, data.anyroadblocks, new Date(), data.userId], function(err) {
+    connectionPool.query(query,[data.didyesterday, data.willdotoday, data.anyroadblocks, new Date(), data.userId, data.taskId], function(err) {
         if(err){
             console.log("An error ocurred performing the query.");
             console.log(err);
@@ -182,7 +195,7 @@ function deleteTask(data, callback){
 export default {
     connect, endConnection, 
     login,
-    saveTask, getTasks, deleteTask,  
+    saveTask, getTasks, getTasksAssignedToUser, deleteTask,  
     savedailystatus, saveproject, 
     getProjects, editProject, deleteProject,
     getUsers

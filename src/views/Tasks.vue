@@ -150,8 +150,8 @@
         createdDate: new Date(),
         updatedDate: new Date(),
         status: 'New',
-        startedOn: '',
-        completedOn: '',
+        startedOn: new Date(),
+        completedOn: new Date(),
         userId: 0,
         projectId: 0
       },

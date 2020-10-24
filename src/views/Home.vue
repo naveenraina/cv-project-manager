@@ -28,6 +28,13 @@
                 <md-input v-model="anyroadblocks" required></md-input>
                 <span class="md-error">Required field</span>
               </md-field>
+
+              <md-field :class="messageClass">
+                  <md-select v-model="taskId" placeholder="Task">
+                    <md-option v-for="option in tasks" :value="option.id" v-bind:key="option.id">{{option.taskName}}</md-option>
+                  </md-select>
+                </md-field>
+
               <md-button :disabled="user.id === 0" type="submit" class="md-primary">Submit</md-button>        
             </form>
             <md-snackbar md-position="center" :md-duration="4000" :md-active.sync="showSnackbar" md-persistent>
@@ -53,7 +60,9 @@ export default {
       didyesterday: '',
       willdotoday: '',
       anyroadblocks: '',
-      showSnackbar: false
+      taskId: 0,
+      showSnackbar: false,
+      tasks: [{id: 0, taskName: ''}],
     }
   },
   components: {
@@ -72,7 +81,8 @@ export default {
         didyesterday: this.didyesterday, 
         willdotoday: this.willdotoday, 
         anyroadblocks: this.anyroadblocks,
-        userId: this.user.id
+        userId: this.user.id,
+        taskId: this.taskId
       })
     }
   },
@@ -86,11 +96,21 @@ export default {
       return this.$store.state.user
     }
   },
-  mounted(){    
+  created(){    
+    
+  },
+  mounted(){
+    if(this.user.id > 0){
+      ipcRenderer.send('tasks:getuserassigned', this.user.id)
+    }
+        
     ipcRenderer.on('dailystatus:success', () => {
       this.showSnackbar = true;
       this.$router.replace('/dashboard')
     })
+    ipcRenderer.on('tasks:userassignedsuccess', (e, data) => {
+        this.tasks = data
+      })
   }
 }
 </script>

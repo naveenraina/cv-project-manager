@@ -99,6 +99,21 @@ ipcMain.on('tasks:get', function(e){
         win.webContents.send('tasks:success', tasks)
     })
 })
+ipcMain.on('tasks:getuserassigned', function(e, userId){
+  mysqlhelper.default.getTasksAssignedToUser(userId, function(tasks){
+      win.webContents.send('tasks:userassignedsuccess', tasks)
+  })
+})
+ipcMain.on('task:submit', function(e, data){    
+  mysqlhelper.default.saveTask(data, function(data){
+    win.webContents.send('task:submitsuccess', data)
+  })
+})
+ipcMain.on('task:delete', function(e, id){
+  mysqlhelper.default.deleteTask(id, function(response){
+      win.webContents.send('task:deletesuccess', response)
+  })
+})
 
 ipcMain.on('projects:get', function(e){
   mysqlhelper.default.getProjects(function(projects){
@@ -140,13 +155,3 @@ ipcMain.on('users:get', function(e){
   })
 })
 
-ipcMain.on('task:submit', function(e, data){    
-  mysqlhelper.default.saveTask(data, function(data){
-    win.webContents.send('task:submitsuccess', data)
-  })
-})
-ipcMain.on('task:delete', function(e, id){
-  mysqlhelper.default.deleteTask(id, function(response){
-      win.webContents.send('task:deletesuccess', response)
-  })
-})
