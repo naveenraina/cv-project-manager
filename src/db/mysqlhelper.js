@@ -199,6 +199,24 @@ function gettodaysdailystatus(userId, callback){
     });          
 }
 
+function getyesterdaysdailystatus(userId, callback){
+    var date = new Date();
+    date.setDate(date.getDate() - 1);
+    let yesterday = date.toISOString().slice(0, 10)
+    let query = "select id, `didyesterday`, `willdotoday`, `anyroadblocks`, `createddate`, `UserId`, taskId from `dailystatus` where DATE(createddate) = ? and userId=?";
+    
+    connectionPool.query(query,[yesterday, userId], function(err, rows) {
+        if(err){
+            console.log("An error ocurred performing the query.");
+            console.log(err);
+            return;
+        } else {
+            callback(rows)
+        }
+        
+    });          
+}
+
 function saveproject(data, callback){
     // Perform a query
     let query = "INSERT INTO `projects`(`ProjectName`) VALUES(?)";
@@ -230,7 +248,7 @@ export default {
     connect, endConnection, 
     login,
     saveTask, getTasks, getTasksAssignedToUser, deleteTask,  
-    savedailystatus, saveproject, gettodaysdailystatus,
+    savedailystatus, saveproject, gettodaysdailystatus, getyesterdaysdailystatus,
     getProjects, editProject, deleteProject,
     getUsers
 }

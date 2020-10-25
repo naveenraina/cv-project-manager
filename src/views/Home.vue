@@ -4,7 +4,13 @@
       <div class="md-layout-item">
         <md-card>
           <md-card-header>
-            <div class="md-title">Daily Status for {{user.user}}</div>
+            <div class="md-layout md-gutter">
+              <div class="md-title md-layout-item md-size-90">Daily Status for {{user.user}}</div>
+              <div class="md-layout-item" style="text-align:right" @click="copyYesterdays" title="Yesterday's status">
+                <md-icon>content_copy</md-icon>
+              </div>
+            </div>
+            
           </md-card-header>
            
           <md-card-content>          
@@ -84,6 +90,9 @@ export default {
         userId: this.user.id,
         taskId: this.taskId
       })
+    },
+    copyYesterdays(){
+      ipcRenderer.send('yesterdaysdailystatus:get', this.user.id)
     }
   },
   computed: {
@@ -112,6 +121,14 @@ export default {
       this.tasks = data
     })
     ipcRenderer.on('todaysdailystatus:success', (e, data) => {
+      if(data.length > 0){
+        this.didyesterday = data[0].didyesterday
+        this.willdotoday = data[0].willdotoday
+        this.anyroadblocks = data[0].anyroadblocks
+        this.taskId = data[0].taskId
+      }
+    })
+    ipcRenderer.on('yesterdaysdailystatus:success', (e, data) => {
       if(data.length > 0){
         this.didyesterday = data[0].didyesterday
         this.willdotoday = data[0].willdotoday
