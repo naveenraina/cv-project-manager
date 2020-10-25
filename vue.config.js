@@ -13,6 +13,9 @@ module.exports = {
             // },
             "nsis": {
               "perMachine": true
+            },
+            win: {
+              icon: './icon.ico'
             }
         },
         chainWebpackMainProcess: (config) => {
