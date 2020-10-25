@@ -130,7 +130,6 @@ function deleteProject(data, callback){
 function login(username, password, callback){
     // Perform a query
     let query = "SELECT id, user, password FROM `users` where user=? and password=?";
-    console.log(query)
     connectionPool.query(query,[username, password], function(err, rows) {
         if(err){
             console.log("An error ocurred performing the query.");
@@ -146,6 +145,17 @@ function login(username, password, callback){
 }
 
 function savedailystatus(data, callback){
+    gettodaysdailystatus(data.userId, (found)=>{
+        console.log(found.length)
+        if(found.length > 0){
+            updatedailystatus(data, found[0].id, callback)
+        } else {
+            createdailystatus(data, callback)
+        }
+    })   
+}
+
+function createdailystatus(data, callback){
     // Perform a query
     let query = "INSERT INTO `dailystatus`(`didyesterday`, `willdotoday`, `anyroadblocks`, `createddate`, `UserId`, taskId) VALUES(?, ?, ?, ?, ?, ?)";
     
@@ -156,6 +166,36 @@ function savedailystatus(data, callback){
             return;
         }
         callback('success')
+    });          
+}
+
+function updatedailystatus(data, id, callback){
+    // Perform a query
+    let query = "update `dailystatus` set `didyesterday`=?, `willdotoday`=?, `anyroadblocks`=?, `updateddate`=?, `UserId`=?, taskId=? where id=?";
+    
+    connectionPool.query(query,[data.didyesterday, data.willdotoday, data.anyroadblocks, new Date(), data.userId, data.taskId, id], function(err) {
+        if(err){
+            console.log("An error ocurred performing the query.");
+            console.log(err);
+            return;
+        }
+        callback('success')
+    });          
+}
+
+function gettodaysdailystatus(userId, callback){
+    let today = new Date().toISOString().slice(0, 10)
+    let query = "select id, `didyesterday`, `willdotoday`, `anyroadblocks`, `createddate`, `UserId`, taskId from `dailystatus` where DATE(createddate) = ? and userId=?";
+    
+    connectionPool.query(query,[today, userId], function(err, rows) {
+        if(err){
+            console.log("An error ocurred performing the query.");
+            console.log(err);
+            return;
+        } else {
+            callback(rows)
+        }
+        
     });          
 }
 
