@@ -1,7 +1,7 @@
 export default {
-  host     : '182.50.133.92',
-  port     : '3306',
-  user     : 'cvtaskmanager',
-  password : 'cvtaskmanager',
-  database : 'cvtaskmanager'
+  host     : 'XXXXXXXXXXXXX',
+  port     : 'XXXX',
+  user     : 'XXXXXXXXXXXX',
+  password : 'XXXXXXXXXXXXXXXX',
+  database : 'XXXXXXXXXXXXXXXXXX'
 }

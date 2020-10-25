@@ -58,8 +58,8 @@
 // import HelloWorld from '@/components/HelloWorld.vue'
 const ipcRenderer = require('electron').ipcRenderer
 import { mapMutations } from 'vuex'
-const fetch = require('node-fetch');
-const slackToken = 'xoxb-338165613381-1448564868309-dMfnx8r8eABmnfDPP0gG31BX'
+const fetch = require('node-fetch')
+const config = require('@/config')
 
 
 export default {
@@ -125,7 +125,7 @@ export default {
           }),
           headers: { 
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + slackToken
+            'Authorization': 'Bearer ' + config.default.slackToken
           }
       })
 
