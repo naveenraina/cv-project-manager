@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, ipcMain } from 'electron'
+import { app, protocol, BrowserWindow, ipcMain, Menu } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
@@ -43,6 +43,11 @@ function createWindow() {
   win.on('closed', () => {
     win = null
   })
+
+  // Build menu from template
+  const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
+  Menu.setApplicationMenu(mainMenu);    
+
 }
 
 // Quit when all windows are closed.
@@ -92,6 +97,34 @@ if (isDevelopment) {
   }
 }
 
+// Create a menu template
+const mainMenuTemplate = [
+  {
+      label: 'File',
+      submenu: [
+        { role: 'quit' }
+      ]
+    },
+];
+
+// Add developer tools item if not in prod
+if(process.env.NODE_ENV !== "production"){
+  mainMenuTemplate.push({
+      label: "Developer Tools",
+      submenu: [
+          {
+              label: "Toggle devtools",
+              click(item, focussedWindow){
+                  focussedWindow.toggleDevTools();
+              }
+          },
+          {
+              role: "reload"
+          }
+      ]
+      
+  });
+}
 
 const mysqlhelper = require('@/db/mysqlhelper');
 
