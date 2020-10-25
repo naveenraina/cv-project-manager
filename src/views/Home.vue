@@ -58,6 +58,9 @@
 // import HelloWorld from '@/components/HelloWorld.vue'
 const ipcRenderer = require('electron').ipcRenderer
 import { mapMutations } from 'vuex'
+const fetch = require('node-fetch');
+const slackToken = 'xoxb-338165613381-1448564868309-dMfnx8r8eABmnfDPP0gG31BX'
+
 
 export default {
   name: 'Home',
@@ -114,8 +117,22 @@ export default {
     }
 
     ipcRenderer.on('dailystatus:success', () => {
+      fetch('https://slack.com/api/chat.postMessage', {
+          method: 'post',
+          body: JSON.stringify({
+            "channel": "C9Z21JH9D",
+            "text": this.user.user + "'s status" + "\n What I did yesterday? \n" + this.didyesterday + "\n What I will do today? \n" + this.willdotoday + "\n Any roadblocks? \n" + this.anyroadblocks
+     
+          }),
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + slackToken
+          }
+      })
+
       this.showSnackbar = true;
       this.$router.replace('/dashboard')
+      
     })
     ipcRenderer.on('tasks:userassignedsuccess', (e, data) => {
       this.tasks = data
