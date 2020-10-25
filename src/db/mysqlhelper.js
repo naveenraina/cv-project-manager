@@ -146,7 +146,6 @@ function login(username, password, callback){
 
 function savedailystatus(data, callback){
     gettodaysdailystatus(data.userId, (found)=>{
-        console.log(found.length)
         if(found.length > 0){
             updatedailystatus(data, found[0].id, callback)
         } else {
