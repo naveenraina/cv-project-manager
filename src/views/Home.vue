@@ -97,7 +97,7 @@ export default {
     }
   },
   created(){    
-    
+    ipcRenderer.send('todaysdailystatus:get', this.user.id)
   },
   mounted(){
     if(this.user.id > 0){
@@ -109,8 +109,16 @@ export default {
       this.$router.replace('/dashboard')
     })
     ipcRenderer.on('tasks:userassignedsuccess', (e, data) => {
-        this.tasks = data
-      })
+      this.tasks = data
+    })
+    ipcRenderer.on('todaysdailystatus:success', (e, data) => {
+      if(data.length > 0){
+        this.didyesterday = data[0].didyesterday
+        this.willdotoday = data[0].willdotoday
+        this.anyroadblocks = data[0].anyroadblocks
+        this.taskId = data[0].taskId
+      }
+    })
   }
 }
 </script>

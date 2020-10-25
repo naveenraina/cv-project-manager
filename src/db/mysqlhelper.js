@@ -230,7 +230,7 @@ export default {
     connect, endConnection, 
     login,
     saveTask, getTasks, getTasksAssignedToUser, deleteTask,  
-    savedailystatus, saveproject, 
+    savedailystatus, saveproject, gettodaysdailystatus,
     getProjects, editProject, deleteProject,
     getUsers
 }

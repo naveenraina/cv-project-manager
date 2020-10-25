@@ -137,6 +137,12 @@ ipcMain.on('login:submit', function(e, data){
     })
 })
 
+ipcMain.on('todaysdailystatus:get', function(e, userId){    
+  mysqlhelper.default.gettodaysdailystatus(userId, function(data){
+    win.webContents.send('todaysdailystatus:success', data)
+  })
+})
+
 ipcMain.on('dailystatus:submit', function(e, data){    
   mysqlhelper.default.savedailystatus(data, function(data){
     win.webContents.send('dailystatus:success', data)
