@@ -120,9 +120,8 @@ export default {
       fetch('https://slack.com/api/chat.postMessage', {
           method: 'post',
           body: JSON.stringify({
-            "channel": "C9Z21JH9D",
-            "text": this.user.user + "'s status" + "\n What I did yesterday? \n" + this.didyesterday + "\n What I will do today? \n" + this.willdotoday + "\n Any roadblocks? \n" + this.anyroadblocks
-     
+            "channel": "CGZNB2XRA", //daily-status //"C9Z21JH9D" - random
+            "text": this.user.user + "'s status" + "\n What I did yesterday? \n" + this.didyesterday + "\n What I will do today? \n" + this.willdotoday + "\n Any roadblocks? \n" + this.anyroadblocks     
           }),
           headers: { 
             'Content-Type': 'application/json',
