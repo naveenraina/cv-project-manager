@@ -133,7 +133,7 @@ export default {
       this.$router.replace('/dashboard').catch(()=>{})      
     })
     ipcRenderer.on('tasks:userassignedsuccess', (e, data) => {
-      this.tasks = data
+      this.tasks = data.filter(x=> x.status === 'InProgress' || x.status === 'New')
     })
     ipcRenderer.on('todaysdailystatus:success', (e, data) => {
       if(data.length > 0){
