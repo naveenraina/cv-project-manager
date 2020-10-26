@@ -128,8 +128,8 @@ if(process.env.NODE_ENV !== "production"){
 
 const mysqlhelper = require('@/db/mysqlhelper');
 
-ipcMain.on('tasks:get', function(e){
-    mysqlhelper.default.getTasks(function(tasks){
+ipcMain.on('tasks:get', function(e, includeCompleted){
+    mysqlhelper.default.getTasks(includeCompleted, function(tasks){
         win.webContents.send('tasks:success', tasks)
     })
 })

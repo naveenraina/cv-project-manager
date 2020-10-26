@@ -5,6 +5,7 @@
         <md-table-toolbar>
           <div class="md-toolbar-section-start">
             <h1 class="md-title">Task Backlog</h1>
+            <md-checkbox v-model="includeCompleted" @change="onLoadTasks" class="md-primary">Completed</md-checkbox>
           </div>
           <md-field md-clearable class="md-toolbar-section-end">
             <md-input placeholder="Search by name..." v-model="search" @input="searchOnTable" />
@@ -134,6 +135,7 @@
   export default {
     name: 'dashboard',
     data: () => ({
+      includeCompleted: false,
       showDialogDeleteConfirmaton: false,
       showSnackbar: false,
       statusMessage: '',
@@ -182,11 +184,17 @@
       },
       deleteTask(){
         ipcRenderer.send('task:delete', {id: this.selectedTask.id})
+      },
+      onLoadTasks(){
+        this.loadTasks(this.includeCompleted)
+      },
+      loadTasks(includeCompleted){
+        ipcRenderer.send('tasks:get', includeCompleted)
       }
     },
     created () {
       this.searched = this.tasks 
-      ipcRenderer.send('tasks:get')
+      this.loadTasks(false)
       ipcRenderer.send('projects:get')
       ipcRenderer.send('users:get')
     },

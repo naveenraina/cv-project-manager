@@ -69,15 +69,15 @@
       }
     },
     created () {      
-      ipcRenderer.send('tasks:get')
+      ipcRenderer.send('tasks:getuserassigned', this.user.id)
 
     },
     mounted(){        
         //Register IPC Renderer event handles once for this control
-        ipcRenderer.on('tasks:success', (e, data) => {          
-          this.tasksNew = data.filter(x=> x.status === 'New' && x.userId === this.user.id)
-          this.tasksInProgress = data.filter(x=> x.status === 'InProgress' && x.userId === this.user.id)
-          this.tasksCompleted = data.filter(x=> x.status === 'Complete' && x.userId === this.user.id)
+        ipcRenderer.on('tasks:userassignedsuccess', (e, data) => {          
+          this.tasksNew = data.filter(x=> x.status === 'New')
+          this.tasksInProgress = data.filter(x=> x.status === 'InProgress')
+          this.tasksCompleted = data.filter(x=> x.status === 'Complete')
         })
     }
   }

@@ -128,13 +128,9 @@ export default {
       ipcRenderer.send('tasks:getuserassigned', this.user.id)
     }
 
-    ipcRenderer.on('dailystatus:success', () => {
-      
-      console.log('dailystatus:success')     
-      
+    ipcRenderer.on('dailystatus:success', () => {      
       this.showSnackbar = true;
-      this.$router.replace('/dashboard').catch(()=>{})
-      
+      this.$router.replace('/dashboard').catch(()=>{})      
     })
     ipcRenderer.on('tasks:userassignedsuccess', (e, data) => {
       this.tasks = data
