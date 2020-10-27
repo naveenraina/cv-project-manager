@@ -3,6 +3,11 @@
 import { app, protocol, BrowserWindow, ipcMain, Menu } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
+import ipcTaskEvents from '@/db/ipcEvents/ipcTaskEvents'
+import ipcUserEvents from '@/db/ipcEvents/ipcUserEvents'
+import ipcProjectEvents from '@/db/ipcEvents/ipcProjectEvents'
+import ipcDailyStatusEvents from '@/db/ipcEvents/ipcDailyStatusEvents'
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 const { autoUpdater } = require("electron-updater")
@@ -46,8 +51,13 @@ function createWindow() {
 
   // Build menu from template
   const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
-  Menu.setApplicationMenu(mainMenu);    
+  Menu.setApplicationMenu(mainMenu);
 
+  new ipcTaskEvents().init(ipcMain, win)
+  new ipcProjectEvents().init(ipcMain, win)
+  new ipcUserEvents().init(ipcMain, win)
+  new ipcDailyStatusEvents().init(ipcMain, win)
+  
 }
 
 // Quit when all windows are closed.
@@ -65,6 +75,7 @@ app.on('activate', () => {
   if (win === null) {
     createWindow()
   }
+  
 })
 
 // This method will be called when Electron has finished
@@ -125,79 +136,3 @@ if(process.env.NODE_ENV !== "production"){
       
   });
 }
-
-const mysqlhelper = require('@/db/mysqlhelper');
-
-ipcMain.on('tasks:get', function(e, includeCompleted){
-    mysqlhelper.default.getTasks(includeCompleted, function(tasks){
-        win.webContents.send('tasks:success', tasks)
-    })
-})
-ipcMain.on('tasks:getuserassigned', function(e, userId){
-  mysqlhelper.default.getTasksAssignedToUser(userId, function(tasks){
-      win.webContents.send('tasks:userassignedsuccess', tasks)
-  })
-})
-ipcMain.on('task:submit', function(e, data){    
-  mysqlhelper.default.saveTask(data, function(data){
-    win.webContents.send('task:submitsuccess', data)
-  })
-})
-ipcMain.on('task:delete', function(e, id){
-  mysqlhelper.default.deleteTask(id, function(response){
-      win.webContents.send('task:deletesuccess', response)
-  })
-})
-
-ipcMain.on('projects:get', function(e){
-  mysqlhelper.default.getProjects(function(projects){
-      win.webContents.send('projects:success', projects)
-  })
-})
-ipcMain.on('project:edit', function(e, data){
-  mysqlhelper.default.editProject(data, function(response){
-      win.webContents.send('project:editsuccess', response)
-  })
-})
-ipcMain.on('project:delete', function(e, id){
-  mysqlhelper.default.deleteProject(id, function(response){
-      win.webContents.send('project:deletesuccess', response)
-  })
-})
-
-ipcMain.on('login:submit', function(e, data){    
-    mysqlhelper.default.login(data.username, data.password, function(data){
-      win.webContents.send('login:success', data)
-    })
-})
-
-ipcMain.on('todaysdailystatus:get', function(e, userId){    
-  mysqlhelper.default.gettodaysdailystatus(userId, function(data){
-    win.webContents.send('todaysdailystatus:success', data)
-  })
-})
-
-ipcMain.on('yesterdaysdailystatus:get', function(e, userId){    
-  mysqlhelper.default.getyesterdaysdailystatus(userId, function(data){
-    win.webContents.send('yesterdaysdailystatus:success', data)
-  })
-})
-
-ipcMain.on('dailystatus:submit', function(e, data){    
-  mysqlhelper.default.savedailystatus(data, function(data){
-    win.webContents.send('dailystatus:success', data)
-  })
-})
-
-ipcMain.on('project:new', function(e, data){    
-  mysqlhelper.default.saveproject(data, function(data){
-    win.webContents.send('project:newsuccess', data)
-  })
-})
-
-ipcMain.on('users:get', function(e){
-  mysqlhelper.default.getUsers(function(users){
-      win.webContents.send('users:success', users)
-  })
-})
-
