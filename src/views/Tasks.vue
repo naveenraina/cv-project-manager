@@ -5,7 +5,9 @@
         <md-table-toolbar>
           <div class="md-toolbar-section-start">
             <h1 class="md-title">Task Backlog</h1>
-            <md-checkbox v-model="includeCompleted" @change="onLoadTasks" class="md-primary">Completed</md-checkbox>
+            <md-checkbox v-model="showNew" @change="loadTasks" class="md-primary">New</md-checkbox>
+            <md-checkbox v-model="showInProgress" @change="loadTasks" class="md-primary">InProgress</md-checkbox>
+            <md-checkbox v-model="showComplete" @change="loadTasks" class="md-primary">Complete</md-checkbox>
           </div>
           <md-field md-clearable class="md-toolbar-section-end">
             <md-input placeholder="Search by name..." v-model="search" @input="searchOnTable" />
@@ -15,7 +17,7 @@
         <md-table-empty-state
           md-label="No tasks found"
           :md-description="`No task found for this query.`">
-          <md-button class="md-primary md-raised" @click="newTask">Create New Task</md-button>
+          <md-button class="md-primary md-raised" @click="onCreateTask">Create New Task</md-button>
         </md-table-empty-state>
 
         <md-table-row slot="md-table-row" slot-scope="{ item }">
@@ -137,7 +139,9 @@
   export default {
     name: 'dashboard',
     data: () => ({
-      includeCompleted: false,
+      showNew: true,
+      showInProgress: true,
+      showComplete: false,
       showDialogDeleteConfirmaton: false,
       showSnackbar: false,
       statusMessage: '',
@@ -187,16 +191,14 @@
       deleteTask(){
         ipcRenderer.send('task:delete', {id: this.selectedTask.id})
       },
-      onLoadTasks(){
-        this.loadTasks(this.includeCompleted)
-      },
-      loadTasks(includeCompleted){
-        ipcRenderer.send('tasks:get', includeCompleted)
+      loadTasks(){
+        let filter = {showNew: this.showNew, showInProgress: this.showInProgress, showComplete: this.showComplete}
+        ipcRenderer.send('tasks:get', filter)
       }
     },
     created () {
       this.searched = this.tasks 
-      this.loadTasks(false)
+      this.loadTasks()
       ipcRenderer.send('projects:get')
       ipcRenderer.send('users:get')
     },

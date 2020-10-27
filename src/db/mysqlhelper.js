@@ -49,11 +49,15 @@ function saveTask(task, callback){
     }
 }
 
-function getTasks(includeCompleted, callback){
+function getTasks(filter, callback){
     // Perform a query
     let query = 'SELECT t.id, t.taskName, t.description, t.userId, u.user, t.projectId, p.projectName, t.startedOn, t.completedOn, t.createdDate, t.updatedDate, t.status FROM tasks t left join users u on t.userid = u.id left join projects p on p.id = t.projectid where t.status in (?,?,?)';
-    
-    connectionPool.query(query,['New', 'InProgress', includeCompleted===true ? 'Complete' : ''], function(err, rows) {
+    let inClause = [
+        filter.showNew===true ? 'New' : '',
+        filter.showInProgress===true ? 'InProgress' : '', 
+        filter.showComplete===true ? 'Complete' : ''
+    ]   
+    connectionPool.query(query,inClause, function(err, rows) {
         if(err){
             console.log("An error ocurred performing the query.");
             console.log(err);
