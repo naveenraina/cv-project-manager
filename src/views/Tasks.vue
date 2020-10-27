@@ -126,7 +126,7 @@
 
   const searchByName = (items, term) => {
     if (term) {
-      return items.filter(item => toLower(item.taskName).includes(toLower(term)))
+      return items.filter(item => toLower(item.taskName).includes(toLower(term)) || toLower(item.user).includes(toLower(term)))
     }
 
     return items
