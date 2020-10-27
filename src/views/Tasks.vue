@@ -217,12 +217,12 @@
       ipcRenderer.on('task:submitsuccess', () => {        
         this.statusMessage = 'Task saved successfully'
         this.showSnackbar = true
-        ipcRenderer.send('tasks:get')
+        this.loadTasks()
       })
       ipcRenderer.on('task:deletesuccess', () => {
           this.statusMessage = 'Task removed successfully'
           this.showSnackbar = true
-          ipcRenderer.send('tasks:get')
+          this.loadTasks()
         })
     }
   }
