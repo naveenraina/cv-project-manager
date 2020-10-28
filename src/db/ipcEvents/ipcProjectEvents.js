@@ -6,6 +6,12 @@ export default class ipcProjectEvents {
 
   init(ipcMain, win){
     
+    ipcMain.on('project:new', function(e, data){    
+      mysqlhelper.default.saveproject(data, function(data){
+        win.webContents.send('project:newsuccess', data)
+      })
+    })
+    
     ipcMain.on('projects:get', function(e){
       mysqlhelper.default.getProjects(function(projects){
           win.webContents.send('projects:success', projects)

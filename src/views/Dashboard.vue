@@ -1,7 +1,7 @@
 <template>  
   <div class="md-layout">   
     <div class="md-layout-item md-size-5"></div>    
-    <div class="md-layout-item">
+    <div class="md-layout-item">      
       <md-table v-model="tasksNew" md-card md-fixed-header>
         <md-table-toolbar>
           <div class="md-toolbar-section-start">
@@ -37,10 +37,15 @@
           <!-- <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{ item.id }}</md-table-cell> -->
           <md-table-cell md-label="Name" >{{ item.taskName }}</md-table-cell>
         </md-table-row>
-      </md-table>      
-      
+      </md-table>
     </div>
-    <div class="md-layout-item md-size-5"></div>  
+    <div class="md-layout-item md-size-10 md-layout md-alignment-top-left">
+      <md-field>
+        <md-select v-model="selectedUserId" placeholder="User" @md-selected="loadUserDashboard">
+          <md-option v-for="option in users" :value="option.id" v-bind:key="option.id" >{{option.user}}</md-option>
+        </md-select>
+      </md-field>
+    </div>  
   </div>    
 </template>
 
@@ -56,12 +61,16 @@
   export default {
     name: 'dashboard',
     data: () => ({
+      selectedUserId: 0,
+      users: [{id: 0, user: ''}],
       tasksNew: [blankTask],
       tasksInProgress: [blankTask],
       tasksCompleted: [blankTask]
     }),
     methods: {
-      
+      loadUserDashboard(){
+        ipcRenderer.send('tasks:getuserassigned', this.selectedUserId)
+      }
     },
     computed: {
       user () {
@@ -70,7 +79,8 @@
     },
     created () {      
       ipcRenderer.send('tasks:getuserassigned', this.user.id)
-
+      ipcRenderer.send('users:get')
+      this.selectedUserId = this.user.id
     },
     mounted(){        
         //Register IPC Renderer event handles once for this control
@@ -79,6 +89,10 @@
           this.tasksInProgress = data.filter(x=> x.status === 'InProgress')
           this.tasksCompleted = data.filter(x=> x.status === 'Complete')
         })
+
+        ipcRenderer.on('users:success', (e, data) => {
+        this.users = data
+      })
     }
   }
 </script>
