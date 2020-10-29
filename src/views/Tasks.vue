@@ -62,7 +62,7 @@
               <div class="md-layout-item">
                 <div class="block">
                   <div>End Date</div>
-                  <md-datepicker v-model="selectedTask.completedOn" md-immediately/>
+                  <md-datepicker v-model="selectedTask.tocompleteon" md-immediately/>
                 </div>
               </div>
             </div>
@@ -159,7 +159,7 @@
         updatedDate: new Date(),
         status: 'New',
         startedOn: new Date(),
-        completedOn: new Date(),
+        tocompleteon: new Date(),
         userId: 0,
         projectId: 0
       },
@@ -179,7 +179,6 @@
       },
       onedit(id){
         var found = this.tasks.find(item => item.id === id)
-        console.log(found)
         this.selectedTask = found
         this.showDialog = true;
       },

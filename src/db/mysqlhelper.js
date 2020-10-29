@@ -24,9 +24,14 @@ function endConnection(callback){
 
 
 function saveTask(task, callback){
+    if(task.status === 'Complete'){
+        task.completedon = new Date();
+    } else {
+        task.completedon = null;
+    }
     if(task.id === 0){
-        let query = 'INSERT INTO `tasks`(taskname, description, userid, projectid, startedOn, completedOn, status, createdDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?)';
-        connectionPool.query(query, [task.taskName, task.description, task.userId, task.projectId, task.startedOn, task.completedOn, task.status, task.createdDate], function(err, rows) {
+        let query = 'INSERT INTO `tasks`(taskname, description, userid, projectid, startedOn, tocompleteon, completedon, status, createdDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?)';
+        connectionPool.query(query, [task.taskName, task.description, task.userId, task.projectId, task.startedOn, task.tocompleteon, task.completedon, task.status, task.createdDate], function(err, rows) {
             if(err){
                 console.log("An error ocurred performing the query.");
                 console.log(err);
@@ -36,8 +41,8 @@ function saveTask(task, callback){
             }
         });
     } else {
-        let query = 'update `tasks` set taskname=?, description=?, userid=?, projectid=?, startedOn=?, completedOn=?, status=?, updatedDate=? where id=? ';
-        connectionPool.query(query, [task.taskName, task.description, task.userId, task.projectId, task.startedOn, task.completedOn, task.status, new Date(), task.id], function(err, rows) {
+        let query = 'update `tasks` set taskname=?, description=?, userid=?, projectid=?, startedOn=?, tocompleteon=?, completedon =?, status=?, updatedDate=? where id=? ';
+        connectionPool.query(query, [task.taskName, task.description, task.userId, task.projectId, task.startedOn, task.tocompleteon, task.completedon, task.status, new Date(), task.id], function(err, rows) {
             if(err){
                 console.log("An error ocurred performing the query.");
                 console.log(err);
@@ -51,7 +56,7 @@ function saveTask(task, callback){
 
 function getTasks(filter, callback){
     // Perform a query
-    let query = 'SELECT t.id, t.taskName, t.description, t.userId, u.user, t.projectId, p.projectName, t.startedOn, t.completedOn, t.createdDate, t.updatedDate, t.status FROM tasks t left join users u on t.userid = u.id left join projects p on p.id = t.projectid where t.status in (?,?,?)';
+    let query = 'SELECT t.id, t.taskName, t.description, t.userId, u.user, t.projectId, p.projectName, t.startedOn, t.tocompleteon, t.completedOn, t.createdDate, t.updatedDate, t.status FROM tasks t left join users u on t.userid = u.id left join projects p on p.id = t.projectid where t.status in (?,?,?)';
     let inClause = [
         filter.showNew===true ? 'New' : '',
         filter.showInProgress===true ? 'InProgress' : '', 
@@ -69,7 +74,7 @@ function getTasks(filter, callback){
 
 function getTasksAssignedToUser(userId, callback){
     // Perform a query
-    let query = 'SELECT t.id, t.taskName, t.status from tasks t where t.userId = ?';
+    let query = 'SELECT t.id, t.taskName, t.status, t.startedon, t.tocompleteon, t.completedon from tasks t where t.userId = ?';
     connectionPool.query(query,[userId], function(err, rows) {
         if(err){
             console.log("An error ocurred performing the query.");
