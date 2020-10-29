@@ -24,6 +24,7 @@
         <md-table-row slot="md-table-row" slot-scope="{ item }">
           <!-- <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{ item.id }}</md-table-cell> -->
           <md-table-cell md-label="Name" md-sort-by="name">{{ item.taskName }}</md-table-cell>
+          <md-table-cell md-label="Due on" md-sort-by="tocompleteon">{{ item.tocompleteon && item.tocompleteon.toDateString() }}</md-table-cell>
         </md-table-row>
       </md-table>      
       <md-table v-model="tasksCompleted" md-card md-fixed-header>
@@ -36,6 +37,8 @@
         <md-table-row slot="md-table-row" slot-scope="{ item }">
           <!-- <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{ item.id }}</md-table-cell> -->
           <md-table-cell md-label="Name" >{{ item.taskName }}</md-table-cell>
+          <md-table-cell v-if="!(item.completedon && item.startedon)" md-label="Duration">{{ item.completedon }}</md-table-cell>
+          <md-table-cell v-if="item.completedon && item.startedon" md-label="Duration(Days)">{{ item.completedon.getDate() - item.startedon.getDate() + 1 }}</md-table-cell>
         </md-table-row>
       </md-table>
     </div>
