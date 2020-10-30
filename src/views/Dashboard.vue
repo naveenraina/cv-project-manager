@@ -2,7 +2,7 @@
   <div class="md-layout">   
     <div class="md-layout-item md-size-5"></div>    
     <div class="md-layout-item">      
-      <md-table v-model="tasksNew" md-card md-fixed-header>
+      <md-table v-model="tasksNew" md-card md-fixed-header md-sort="createddate" md-sort-order="desc">
         <md-table-toolbar>
           <div class="md-toolbar-section-start">
             <h1 class="md-title">Tasks Assigned</h1>
@@ -11,10 +11,16 @@
 
         <md-table-row slot="md-table-row" slot-scope="{ item }">
           <!-- <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{ item.id }}</md-table-cell> -->
-          <md-table-cell md-label="Name" md-sort-by="name">{{ item.taskName }}</md-table-cell>
+          <md-table-cell md-label="Name" md-sort-by="taskName">{{ item.taskName }}</md-table-cell>
+          <md-tooltip md-direction="bottom">
+            Created on: {{item.createddate.toDateString()}} &nbsp;&nbsp;
+            <!-- Project: {{item.tocompleteon.toDateString()}} &nbsp;&nbsp;
+            Completed on: {{item.completedon.toDateString()}} -->
+          </md-tooltip>
         </md-table-row>
       </md-table>
-      <md-table v-model="tasksInProgress" md-card md-fixed-header>
+
+      <md-table v-model="tasksInProgress" md-card md-fixed-header md-sort="createddate" md-sort-order="desc">
         <md-table-toolbar>
           <div class="md-toolbar-section-start">
             <h1 class="md-title">Tasks In progress</h1>
@@ -23,15 +29,16 @@
 
         <md-table-row slot="md-table-row" slot-scope="{ item }">
           <!-- <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{ item.id }}</md-table-cell> -->
-          <md-table-cell md-label="Name" md-sort-by="name">{{ item.taskName }}</md-table-cell>
+          <md-table-cell md-label="Name" md-sort-by="taskName">{{ item.taskName }}</md-table-cell>
           <md-table-cell md-label="Due on" md-sort-by="tocompleteon">{{ item.tocompleteon && item.tocompleteon.toDateString() }}</md-table-cell>
           <md-tooltip md-direction="bottom">
             Started on: {{item.startedon && item.startedon.toDateString()}} &nbsp;&nbsp;
             Due on: {{item.tocompleteon && item.tocompleteon.toDateString()}}
           </md-tooltip>
         </md-table-row>
-      </md-table>      
-      <md-table v-model="tasksCompleted" md-card md-fixed-header>
+      </md-table>   
+
+      <md-table v-model="tasksCompleted" md-card md-fixed-header md-sort="createddate" md-sort-order="desc">
         <md-table-toolbar>
           <div class="md-toolbar-section-start">
             <h1 class="md-title">Tasks Completed</h1>
@@ -40,7 +47,7 @@
 
         <md-table-row slot="md-table-row" slot-scope="{ item }">
           <!-- <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{ item.id }}</md-table-cell> -->
-          <md-table-cell md-label="Name" >{{ item.taskName }}</md-table-cell>
+          <md-table-cell md-label="Name" md-sort-by="taskName">{{ item.taskName }}</md-table-cell>
           <md-table-cell v-if="item.completedon && item.startedon" md-label="Duration(Days)">{{ item.completedon.getDate() - item.startedon.getDate() + 1 }}</md-table-cell>
           <md-tooltip md-direction="bottom">
             Start on: {{item.startedon.toDateString()}} &nbsp;&nbsp;

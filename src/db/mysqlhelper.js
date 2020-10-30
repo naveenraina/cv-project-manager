@@ -74,7 +74,7 @@ function getTasks(filter, callback){
 
 function getTasksAssignedToUser(userId, callback){
     // Perform a query
-    let query = 'SELECT t.id, t.taskName, t.status, t.startedon, t.tocompleteon, t.completedon from tasks t where t.userId = ?';
+    let query = 'SELECT t.id, t.taskName, t.status, t.startedon, t.tocompleteon, t.completedon, t.createddate from tasks t where t.userId = ?';
     connectionPool.query(query,[userId], function(err, rows) {
         if(err){
             console.log("An error ocurred performing the query.");
