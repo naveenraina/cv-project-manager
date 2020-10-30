@@ -127,10 +127,11 @@
   }
 
   const searchByName = (items, term) => {
+
     if (term) {
       return items.filter(item => toLower(item.taskName).includes(toLower(term)) 
-      || toLower(item.user).includes(toLower(term))
-      || toLower(item.projectName).includes(toLower(term)))
+      || ( item.user && toLower(item.user).includes(toLower(term)))
+      ||( item.projectName &&  toLower(item.projectName).includes(toLower(term))))
     }
 
     return items
@@ -176,6 +177,18 @@
       saveTask(){
         ipcRenderer.send('task:submit', this.selectedTask)
         this.showDialog = false
+        this.newTask = {
+          id: 0,
+          taskName: '',
+          description: '',
+          createdDate: new Date(),
+          updatedDate: new Date(),
+          status: 'New',
+          startedOn: new Date(),
+          tocompleteon: new Date(),
+          userId: 0,
+          projectId: 0
+        }
       },
       onedit(id){
         var found = this.tasks.find(item => item.id === id)
@@ -206,6 +219,9 @@
       ipcRenderer.on('tasks:success', (e, data) => {
         this.tasks = data
         this.searched = data
+        if(this.search){
+          this.searchOnTable()
+        }
       })
       ipcRenderer.on('projects:success', (e, data) => {
         this.projects = data
