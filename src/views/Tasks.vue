@@ -171,24 +171,12 @@
         this.searched = searchByName(this.tasks, this.search)
       },
       onCreateTask(){
-        this.selectedTask = this.newTask;
+        this.selectedTask = {...this.newTask};
         this.showDialog = true
       },
       saveTask(){
         ipcRenderer.send('task:submit', this.selectedTask)
-        this.showDialog = false
-        this.newTask = {
-          id: 0,
-          taskName: '',
-          description: '',
-          createdDate: new Date(),
-          updatedDate: new Date(),
-          status: 'New',
-          startedOn: new Date(),
-          tocompleteon: new Date(),
-          userId: 0,
-          projectId: 0
-        }
+        this.showDialog = false        
       },
       onedit(id){
         var found = this.tasks.find(item => item.id === id)
