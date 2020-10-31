@@ -11,12 +11,25 @@
 
         <md-table-row slot="md-table-row" slot-scope="{ item }">
           <!-- <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{ item.id }}</md-table-cell> -->
-          <md-table-cell md-label="Name" md-sort-by="taskName">{{ item.taskName }}</md-table-cell>
-          <md-tooltip md-direction="bottom">
-            Created on: {{item.createddate.toDateString()}} &nbsp;&nbsp;
-            <!-- Project: {{item.tocompleteon.toDateString()}} &nbsp;&nbsp;
-            Completed on: {{item.completedon.toDateString()}} -->
-          </md-tooltip>
+          <md-table-cell md-label="Name" md-sort-by="taskName">
+            {{ item.taskName }}
+            <md-tooltip md-direction="bottom">
+              Created on: {{item.createddate.toDateString()}} &nbsp;&nbsp;
+              <!-- Project: {{item.tocompleteon.toDateString()}} &nbsp;&nbsp;
+              Completed on: {{item.completedon.toDateString()}} -->
+            </md-tooltip>
+          </md-table-cell>
+          <md-table-cell>
+            <md-menu md-size="small">
+              <md-button class="md-icon-button" md-menu-trigger>
+                <md-icon md-menu-trigger>keyboard_arrow_down</md-icon>
+              </md-button>              
+              <md-menu-content>
+                <md-menu-item @click="moveToInProgress(item.id)">InProgress</md-menu-item>
+                <md-menu-item @click="moveToComplete(item.id)">Complete</md-menu-item>
+              </md-menu-content>
+            </md-menu>
+          </md-table-cell>
         </md-table-row>
       </md-table>
 
@@ -29,12 +42,24 @@
 
         <md-table-row slot="md-table-row" slot-scope="{ item }">
           <!-- <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{ item.id }}</md-table-cell> -->
-          <md-table-cell md-label="Name" md-sort-by="taskName">{{ item.taskName }}</md-table-cell>
-          <md-table-cell md-label="Due on" md-sort-by="tocompleteon">{{ item.tocompleteon && item.tocompleteon.toDateString() }}</md-table-cell>
-          <md-tooltip md-direction="bottom">
-            Started on: {{item.startedon && item.startedon.toDateString()}} &nbsp;&nbsp;
-            Due on: {{item.tocompleteon && item.tocompleteon.toDateString()}}
-          </md-tooltip>
+          <md-table-cell md-label="Name" md-sort-by="taskName">
+            {{ item.taskName }}
+            <md-tooltip md-direction="bottom">
+              Started on: {{item.startedon && item.startedon.toDateString()}} &nbsp;&nbsp;
+              Due on: {{item.tocompleteon && item.tocompleteon.toDateString()}}
+            </md-tooltip>
+          </md-table-cell>
+          <md-table-cell>
+            <md-menu md-size="small">
+              <md-button class="md-icon-button" md-menu-trigger>
+                <md-icon md-menu-trigger>keyboard_arrow_down</md-icon>
+              </md-button>              
+              <md-menu-content>                
+                <md-menu-item @click="moveToComplete(item.id)">Complete</md-menu-item>
+                <md-menu-item @click="moveToNew(item.id)">New</md-menu-item>
+              </md-menu-content>
+            </md-menu>
+          </md-table-cell>
         </md-table-row>
       </md-table>   
 
@@ -47,13 +72,26 @@
 
         <md-table-row slot="md-table-row" slot-scope="{ item }">
           <!-- <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{ item.id }}</md-table-cell> -->
-          <md-table-cell md-label="Name" md-sort-by="taskName">{{ item.taskName }}</md-table-cell>
-          <md-table-cell v-if="item.completedon && item.startedon" md-label="Duration(Days)">{{ item.completedon.getDate() - item.startedon.getDate() + 1 }}</md-table-cell>
-          <md-tooltip md-direction="bottom">
-            Start on: {{item.startedon.toDateString()}} &nbsp;&nbsp;
-            Due on: {{item.tocompleteon.toDateString()}} &nbsp;&nbsp;
-            Completed on: {{item.completedon.toDateString()}}
-          </md-tooltip>
+          <md-table-cell md-label="Name" md-sort-by="taskName">
+            {{ item.taskName }}
+            <md-tooltip md-direction="bottom">
+              Start on: {{item.startedon && item.startedon.toDateString()}} &nbsp;&nbsp;
+              Due on: {{item.tocompleteon && item.tocompleteon.toDateString()}} &nbsp;&nbsp;
+              Completed on: {{item.completedon && item.completedon.toDateString()}}
+            </md-tooltip>
+          </md-table-cell>
+          <md-table-cell>            
+            <md-menu md-size="small">
+              <md-button class="md-icon-button" md-menu-trigger>
+                <md-icon md-menu-trigger>keyboard_arrow_down</md-icon>
+              </md-button>              
+              <md-menu-content>                
+                <md-menu-item @click="moveToInProgress(item.id)">InProgress</md-menu-item>    
+                <md-menu-item @click="moveToNew(item.id)">New</md-menu-item>            
+              </md-menu-content>
+            </md-menu>
+          </md-table-cell>
+         
         </md-table-row>
       </md-table>
     </div>
@@ -86,9 +124,44 @@
       tasksCompleted: [blankTask]
     }),
     methods: {
+      loadTasks(){
+        ipcRenderer.send('tasks:getuserassigned', this.user.id)
+        ipcRenderer.send('users:get')
+        this.selectedUserId = this.user.id
+      },
       loadUserDashboard(){
         ipcRenderer.send('tasks:getuserassigned', this.selectedUserId)
+      },
+      moveToInProgress(taskid){
+        ipcRenderer.send('task:move', {id: taskid, status: 'InProgress'})
+      },
+      moveToNew(taskid){
+        ipcRenderer.send('task:move', {id: taskid, status: 'New'})
+      },
+      moveToComplete(taskid){
+        ipcRenderer.send('task:move', {id: taskid, status: 'Complete'})
+      },
+      getTaskHealth(){
+        // return color - gree, orange, red based on if task was completed on time
+
       }
+    },
+    mounted(){        
+      //Register IPC Renderer event handles once for this control
+      ipcRenderer.on('tasks:userassignedsuccess', (e, data) => {          
+        this.tasksNew = data.filter(x=> x.status === 'New')
+        this.tasksInProgress = data.filter(x=> x.status === 'InProgress')
+        this.tasksCompleted = data.filter(x=> x.status === 'Complete')
+      })
+
+      ipcRenderer.on('users:success', (e, data) => {
+        this.users = data
+      })
+
+      ipcRenderer.on('task:movesuccess', () => {
+        this.loadTasks()
+      })
+
     },
     computed: {
       user () {
@@ -96,21 +169,7 @@
       }
     },
     created () {      
-      ipcRenderer.send('tasks:getuserassigned', this.user.id)
-      ipcRenderer.send('users:get')
-      this.selectedUserId = this.user.id
-    },
-    mounted(){        
-        //Register IPC Renderer event handles once for this control
-        ipcRenderer.on('tasks:userassignedsuccess', (e, data) => {          
-          this.tasksNew = data.filter(x=> x.status === 'New')
-          this.tasksInProgress = data.filter(x=> x.status === 'InProgress')
-          this.tasksCompleted = data.filter(x=> x.status === 'Complete')
-        })
-
-        ipcRenderer.on('users:success', (e, data) => {
-        this.users = data
-      })
+      this.loadTasks()
     }
   }
 </script>

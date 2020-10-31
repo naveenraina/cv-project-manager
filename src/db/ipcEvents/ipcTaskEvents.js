@@ -27,6 +27,12 @@ export default class ipcTaskEvents {
       })
     })
 
+    ipcMain.on('task:move', function(e, data){
+      mysqlhelper.default.moveTask(data, function(response){
+          win.webContents.send('task:movesuccess', response)
+      })
+    })
+
   }
 
 }

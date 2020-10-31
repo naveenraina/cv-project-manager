@@ -53,22 +53,20 @@
             </md-field>
 
             <div class="md-layout">
-              <div class="md-layout-item" style="padding-right:25px">
-                <div class="block">
-                  <div>Start Date</div>
-                  <md-datepicker v-model="selectedTask.startedOn" md-immediately/>
-                </div>
-              </div>
+              <md-field class="md-layout-item" style="margin-right:30px" md-clearable>
+                <label>Estimate (Days)</label>
+                <md-input v-model="selectedTask.estimateddays" type="number"></md-input>
+              </md-field>
               <div class="md-layout-item">
                 <div class="block">
-                  <div>End Date</div>
+                  <div>Complete by</div>
                   <md-datepicker v-model="selectedTask.tocompleteon" md-immediately/>
                 </div>
               </div>
             </div>
 
             <div class="md-layout">
-              <div class="md-layout-item md-size-33" style="padding-right:15px">
+              <!-- <div class="md-layout-item md-size-33" style="padding-right:15px">
                 <md-field>
                   <md-select v-model="selectedTask.status" placeholder="Status">
                     <md-option value="New">New</md-option>
@@ -76,15 +74,15 @@
                     <md-option value="Complete">Complete</md-option>
                   </md-select>
                 </md-field>
-              </div>
-              <div class="md-layout-item md-size-33" style="padding-right:15px">
+              </div> -->
+              <div class="md-layout-item" style="margin-right:30px">
                 <md-field>
                   <md-select v-model="selectedTask.userId" placeholder="Assigned to">
                     <md-option v-for="option in users" :value="option.id" v-bind:key="option.id">{{option.user}}</md-option>
                   </md-select>
                 </md-field>
               </div>
-              <div class="md-layout-item md-size-33">
+              <div class="md-layout-item">
                 <md-field>
                   <md-select v-model="selectedTask.projectId" placeholder="Project">
                     <md-option v-for="option in projects" :value="option.id" v-bind:key="option.id">{{option.projectname}}</md-option>
@@ -98,7 +96,7 @@
         </div>
 
         <md-dialog-actions>
-          <md-button class="md-primary" @click="showDialog = false">Cancel</md-button>
+          <md-button class="md-primary" @click="cancelDialog">Cancel</md-button>
           <md-button class="md-primary" @click="saveTask">Save</md-button>
         </md-dialog-actions>
       </md-dialog>
@@ -159,8 +157,7 @@
         createdDate: new Date(),
         updatedDate: new Date(),
         status: 'New',
-        startedOn: new Date(),
-        tocompleteon: new Date(),
+        estimateddays: 1,
         userId: 0,
         projectId: 0
       },
@@ -171,7 +168,7 @@
         this.searched = searchByName(this.tasks, this.search)
       },
       onCreateTask(){
-        this.selectedTask = {...this.newTask};
+        this.selectedTask = {...this.newTask}
         this.showDialog = true
       },
       saveTask(){
@@ -194,6 +191,11 @@
       loadTasks(){
         let filter = {showNew: this.showNew, showInProgress: this.showInProgress, showComplete: this.showComplete}
         ipcRenderer.send('tasks:get', filter)
+      },
+      cancelDialog(){
+        this.selectedTask = {...this.newTask}
+        this.showDialog = false
+
       }
     },
     created () {
