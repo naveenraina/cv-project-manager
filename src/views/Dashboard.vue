@@ -14,7 +14,7 @@
           <md-table-cell md-label="Name" md-sort-by="taskName">
             {{ item.taskName }}
             <md-tooltip md-direction="bottom">
-              Created on: {{item.createddate.toDateString()}} &nbsp;&nbsp;
+              Created on: {{item.createddate && item.createddate.toDateString()}} &nbsp;&nbsp;
               <!-- Project: {{item.tocompleteon.toDateString()}} &nbsp;&nbsp;
               Completed on: {{item.completedon.toDateString()}} -->
             </md-tooltip>

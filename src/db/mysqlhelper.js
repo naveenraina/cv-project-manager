@@ -254,8 +254,21 @@ function deleteTask(data, callback){
 }
 
 function moveTask(data, callback){
-    let query = 'update `tasks` set status=? where id=?';
-    connectionPool.query(query, [data.status, data.id], function(err, rows) {
+    let query = '';
+    let params = [];
+
+    if(data.status === "InProgress") {
+        query = 'update `tasks` set status=?, startedon=? where id=?';
+        params = [data.status, new Date(), data.id]
+    } else if(data.status === "Complete") {
+        query = 'update `tasks` set status=?, completedon=? where id=?';
+        params = [data.status, new Date(), data.id]
+    } else if(data.status === "New") {
+        query = 'update `tasks` set status=?, startedon=?, completedon=? where id=?';
+        params = [data.status, null, null, data.id]
+    }
+
+    connectionPool.query(query, params, function(err, rows) {
         if(err){
             console.log("An error ocurred performing the query.");
             console.log(err);
