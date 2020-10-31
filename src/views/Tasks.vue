@@ -119,7 +119,8 @@
 <script>
   
   const ipcRenderer = require('electron').ipcRenderer
-
+  const fetch = require('node-fetch')
+  const config = require('@/config')
   const toLower = text => {
     return text.toString().toLowerCase()
   }
@@ -173,7 +174,11 @@
       },
       saveTask(){
         ipcRenderer.send('task:submit', this.selectedTask)
-        this.showDialog = false        
+        this.showDialog = false
+        // if(this.selectedTask.id === 0) {
+        //   let project = this.projects.find(x=>x.id === this.selectedTask.projectId)?.projectname
+        //   this.notifySlack(this.selectedTask.taskName, project)
+        // }        
       },
       onedit(id){
         var found = this.tasks.find(item => item.id === id)
@@ -196,6 +201,24 @@
         this.selectedTask = {...this.newTask}
         this.showDialog = false
 
+      },
+      notifySlack(name, project){
+        fetch('https://slack.com/api/chat.postMessage', {
+          method: 'post',
+          body: JSON.stringify({
+            "channel": "CGZNB2XRA", //daily-status //"C9Z21JH9D" - random
+            "text": this.user.user + ' created a new task "' + name + '" for "' + project + '"'                
+          }),
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + config.default.slackToken
+          }
+        })
+      }
+    },
+    computed: {
+      user () {
+        return this.$store.state.user
       }
     },
     created () {

@@ -97,8 +97,7 @@ export default {
         taskId: this.taskId
       })
 
-      this.sendSlackNotification()
-        
+      this.sendSlackNotification()        
     },
     copyYesterdays(){
       ipcRenderer.send('yesterdaysdailystatus:get', this.user.id)

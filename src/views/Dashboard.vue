@@ -25,8 +25,8 @@
                 <md-icon md-menu-trigger>keyboard_arrow_down</md-icon>
               </md-button>              
               <md-menu-content>
-                <md-menu-item @click="moveToInProgress(item.id)">InProgress</md-menu-item>
-                <md-menu-item @click="moveToComplete(item.id)">Complete</md-menu-item>
+                <md-menu-item @click="moveToInProgress(item)">InProgress</md-menu-item>
+                <md-menu-item @click="moveToComplete(item)">Complete</md-menu-item>
               </md-menu-content>
             </md-menu>
           </md-table-cell>
@@ -55,8 +55,8 @@
                 <md-icon md-menu-trigger>keyboard_arrow_down</md-icon>
               </md-button>              
               <md-menu-content>                
-                <md-menu-item @click="moveToComplete(item.id)">Complete</md-menu-item>
-                <md-menu-item @click="moveToNew(item.id)">New</md-menu-item>
+                <md-menu-item @click="moveToComplete(item)">Complete</md-menu-item>
+                <md-menu-item @click="moveToNew(item)">New</md-menu-item>
               </md-menu-content>
             </md-menu>
           </md-table-cell>
@@ -86,8 +86,8 @@
                 <md-icon md-menu-trigger>keyboard_arrow_down</md-icon>
               </md-button>              
               <md-menu-content>                
-                <md-menu-item @click="moveToInProgress(item.id)">InProgress</md-menu-item>    
-                <md-menu-item @click="moveToNew(item.id)">New</md-menu-item>            
+                <md-menu-item @click="moveToInProgress(item)">InProgress</md-menu-item>    
+                <md-menu-item @click="moveToNew(item)">New</md-menu-item>            
               </md-menu-content>
             </md-menu>
           </md-table-cell>
@@ -106,7 +106,8 @@
 </template>
 
 <script>
-  
+  const fetch = require('node-fetch')
+  const config = require('@/config')
   const ipcRenderer = require('electron').ipcRenderer
   var blankTask = {
     id: 0,
@@ -132,18 +133,34 @@
       loadUserDashboard(){
         ipcRenderer.send('tasks:getuserassigned', this.selectedUserId)
       },
-      moveToInProgress(taskid){
-        ipcRenderer.send('task:move', {id: taskid, status: 'InProgress'})
+      moveToInProgress(task){
+        ipcRenderer.send('task:move', {id: task.id, status: 'InProgress'})
+        this.notifySlack(task.taskName, task.status, 'InProgress')
       },
-      moveToNew(taskid){
-        ipcRenderer.send('task:move', {id: taskid, status: 'New'})
+      moveToNew(task){
+        ipcRenderer.send('task:move', {id: task.id, status: 'New'})
+        this.notifySlack(task.taskName, task.status, 'New')
       },
-      moveToComplete(taskid){
-        ipcRenderer.send('task:move', {id: taskid, status: 'Complete'})
+      moveToComplete(task){
+        ipcRenderer.send('task:move', {id: task.id, status: 'Complete'})
+        this.notifySlack(task.taskName, task.status, 'Complete')
       },
       getTaskHealth(){
         // return color - gree, orange, red based on if task was completed on time
 
+      },
+      notifySlack(name, from, to){
+        fetch('https://slack.com/api/chat.postMessage', {
+          method: 'post',
+          body: JSON.stringify({
+            "channel": "CGZNB2XRA", //daily-status //"C9Z21JH9D" - random
+            "text": this.user.user + ' moved task "' + name + '" from ' + from + ' to ' + to                 
+          }),
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + config.default.slackToken
+          }
+        })
       }
     },
     mounted(){        
@@ -160,6 +177,7 @@
 
       ipcRenderer.on('task:movesuccess', () => {
         this.loadTasks()
+
       })
 
     },

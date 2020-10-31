@@ -30,7 +30,7 @@ function saveTask(task, callback){
         task.completedon = null;
     }
     if(task.id === 0){
-        let query = 'INSERT INTO `tasks`(taskname, description, userid, projectid, startedOn, tocompleteon, completedon, status, createdDate, estimateddays) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        let query = 'INSERT INTO `tasks`(taskname, description, userid, projectid, startedOn, tocompleteon, completedon, status, createdDate, estimateddays) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
         connectionPool.query(query, [task.taskName, task.description, task.userId, task.projectId, task.startedOn, task.tocompleteon, task.completedon, task.status, task.createdDate, task.estimateddays], function(err, rows) {
             if(err){
                 console.log("An error ocurred performing the query.");
