@@ -72,6 +72,21 @@ function getTasks(filter, callback){
     });          
 }
 
+function getTaskById(taskId, callback){
+    // Perform a query
+    let query = 'SELECT t.id, t.taskName, t.status, t.startedon, t.tocompleteon, t.completedon, t.createddate from tasks t where t.id = ?';
+    connectionPool.query(query,[taskId], function(err, rows) {
+        if(err){
+            console.log("An error ocurred performing the query.");
+            console.log(err);
+            return;
+        }
+        if(rows.length === 1){
+            callback(rows[0]) 
+        }               
+    });
+}
+
 function getTasksAssignedToUser(userId, callback){
     // Perform a query
     let query = 'SELECT t.id, t.taskName, t.status, t.startedon, t.tocompleteon, t.completedon, t.createddate from tasks t where t.userId = ?';
@@ -157,9 +172,13 @@ function login(username, password, callback){
 function savedailystatus(data, callback){
     gettodaysdailystatus(data.userId, (found)=>{
         if(found.length > 0){
-            updatedailystatus(data, found[0].id, callback)
+            updatedailystatus(data, found[0].id, () => {
+                moveTask({id: data.taskId, status: "InProgress"}, callback)
+            })
         } else {
-            createdailystatus(data, callback)
+            createdailystatus(data, () => {
+                moveTask({id: data.taskId, status: "InProgress"}, callback)
+            })
         }
     })   
 }
@@ -254,29 +273,37 @@ function deleteTask(data, callback){
 }
 
 function moveTask(data, callback){
-    let query = '';
-    let params = [];
+    let query = 'update `tasks` set status=?, startedon=?, completedon=? where id=?';
+    let params = []
 
-    if(data.status === "InProgress") {
-        query = 'update `tasks` set status=?, startedon=? where id=?';
-        params = [data.status, new Date(), data.id]
-    } else if(data.status === "Complete") {
-        query = 'update `tasks` set status=?, completedon=? where id=?';
-        params = [data.status, new Date(), data.id]
-    } else if(data.status === "New") {
-        query = 'update `tasks` set status=?, startedon=?, completedon=? where id=?';
-        params = [data.status, null, null, data.id]
-    }
+    getTaskById(data.id, (task) => {        
+        if(task.status === "New" && data.status === "InProgress" ) {
+            params = [data.status, new Date(), null, data.id]
+        } else  if(task.status === "Complete" && data.status === "InProgress" ) {
+            params = [data.status, task.startedon, null, data.id]
+        } else if(task.status === "New" && data.status === "Complete") {
+            params = [data.status, null, new Date(), data.id]
+        } else if(task.status === "InProgress" && data.status === "Complete") {
+            params = [data.status, task.startedon, new Date(), data.id]
+        } else if(data.status === "New") {
+            params = [data.status, null, null, data.id]
+        }
 
-    connectionPool.query(query, params, function(err, rows) {
-        if(err){
-            console.log("An error ocurred performing the query.");
-            console.log(err);
-            return;
-        } else {
-            callback('success')    
-        }            
-    });  
+        if(task.status === data.status){ // just return. no need to update status
+            callback('success');
+            return;   
+        }
+
+        connectionPool.query(query, params, function(err, rows) {
+            if(err){
+                console.log("An error ocurred performing the query.");
+                console.log(err);
+                return;
+            } else {
+                callback('success')    
+            }            
+        });  
+    })
 }
 
 export default {

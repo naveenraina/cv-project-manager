@@ -97,20 +97,29 @@ export default {
         taskId: this.taskId
       })
 
+      this.sendSlackNotification()
+        
+    },
+    copyYesterdays(){
+      ipcRenderer.send('yesterdaysdailystatus:get', this.user.id)
+    },
+    sendSlackNotification(){
       fetch('https://slack.com/api/chat.postMessage', {
           method: 'post',
           body: JSON.stringify({
             "channel": "CGZNB2XRA", //daily-status //"C9Z21JH9D" - random
-            "text": this.user.user + "'s status" + "\n What I did yesterday? \n" + this.didyesterday + "\n What I will do today? \n" + this.willdotoday + "\n Any roadblocks? \n" + this.anyroadblocks     
+            "text": this.user.user + "'s status" 
+            + "\n Working on task - " + this.tasks.find(x=>x.id === this.taskId).taskName 
+            + "\n What I did yesterday? \n" + this.didyesterday 
+            + "\n What I will do today? \n" + this.willdotoday 
+            + "\n Any roadblocks? \n" + this.anyroadblocks  
+                 
           }),
           headers: { 
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + config.default.slackToken
           }
-      })     
-    },
-    copyYesterdays(){
-      ipcRenderer.send('yesterdaysdailystatus:get', this.user.id)
+      })   
     }
   },
   computed: {
@@ -133,7 +142,7 @@ export default {
 
     ipcRenderer.on('dailystatus:success', () => {      
       this.showSnackbar = true;
-      this.$router.replace('/dashboard').catch(()=>{})      
+      this.$router.replace('/dashboard').catch(()=>{})
     })
     ipcRenderer.on('tasks:userassignedsuccess', (e, data) => {
       this.tasks = data.filter(x=> x.status === 'InProgress' || x.status === 'New')
