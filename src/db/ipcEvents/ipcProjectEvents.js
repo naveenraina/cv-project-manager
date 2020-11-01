@@ -1,4 +1,4 @@
-const mysqlhelper = require('@/db/mysqlhelper');
+const mysqlhelper = require('@/db/mysqlHelpers/mysqlProjectHelper');
 
 export default class ipcProjectEvents {
   constructor() {

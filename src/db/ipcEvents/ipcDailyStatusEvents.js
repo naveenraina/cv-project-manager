@@ -1,4 +1,4 @@
-const mysqlhelper = require('@/db/mysqlhelper');
+const mysqlhelper = require('@/db/mysqlHelpers/mysqlDailyStatusHelper');
 
 export default class ipcDailyStatusEvents {
   constructor() {
