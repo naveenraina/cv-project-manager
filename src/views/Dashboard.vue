@@ -87,7 +87,8 @@
               </md-button>              
               <md-menu-content>                
                 <md-menu-item @click="moveToInProgress(item)">InProgress</md-menu-item>    
-                <md-menu-item @click="moveToNew(item)">New</md-menu-item>            
+                <md-menu-item @click="moveToNew(item)">New</md-menu-item>
+                <md-menu-item @click="showDialog = true">Notes</md-menu-item>            
               </md-menu-content>
             </md-menu>
           </md-table-cell>
@@ -101,7 +102,98 @@
           <md-option v-for="option in users" :value="option.id" v-bind:key="option.id" >{{option.user}}</md-option>
         </md-select>
       </md-field>
-    </div>  
+    </div>
+
+    <md-dialog :md-active.sync="showDialog" md-close-on-esc>
+      <md-dialog-title>Notes</md-dialog-title>
+
+      <div class="md-dialog-content md-layout"> 
+          <md-list class="md-triple-line" style="padding-bottom:40px;width:100%">
+            <md-list-item>
+              <md-avatar>
+                <img src="https://placeimg.com/40/40/people/1" alt="People">
+              </md-avatar>
+
+              <div class="md-list-item-text">
+                <span>Ali Connors</span>
+                <span>Brunch this weekend?</span>
+                <p>I'll be in your neighborhood doing errands this week. Do you want to meet?</p>
+              </div>
+
+              <md-button class="md-icon-button md-list-action">
+                <md-icon class="md-primary">star</md-icon>
+              </md-button>
+            </md-list-item>
+
+            <md-divider class="md-inset"></md-divider>
+
+            <md-list-item>
+              <md-avatar>
+                <img src="https://placeimg.com/40/40/people/6" alt="People">
+              </md-avatar>
+
+              <div class="md-list-item-text">
+                <span>me, Scott, Jennifer</span>
+                <span>Summer BBQ</span>
+                <p>Wish I could come, but I'm out of town this week. :(</p>
+              </div>
+
+              <md-button class="md-icon-button md-list-action">
+                <md-icon>star_border</md-icon>
+              </md-button>
+            </md-list-item>
+
+            <md-divider class="md-inset"></md-divider>
+
+            <md-list-item>
+              <md-avatar>
+                <img src="https://placeimg.com/40/40/people/5" alt="People">
+              </md-avatar>
+
+              <div class="md-list-item-text">
+                <span>Sandra Adams</span>
+                <span>Oui oui</span>
+                <p>Do you have Paris recommendations? Have you visited good places?</p>
+              </div>
+
+              <md-button class="md-icon-button md-list-action">
+                <md-icon>star_border</md-icon>
+              </md-button>
+            </md-list-item>
+
+            <md-divider class="md-inset"></md-divider>
+
+            <md-list-item>
+              <md-avatar>
+                <img src="https://placeimg.com/40/40/people/8" alt="People">
+              </md-avatar>
+
+              <div class="md-list-item-text">
+                <span>Trevor Hansen</span>
+                <span>Order confirmation</span>
+                <p>Thank you for your recent order from Amazon</p>
+              </div>
+
+              <md-button class="md-icon-button md-list-action">
+                <md-icon>star_border</md-icon>
+              </md-button>
+            </md-list-item>
+          </md-list>
+          <md-field>
+              <label>Add Note</label>
+              <md-textarea md-autogrow></md-textarea>
+              <md-button class="md-icon-button">
+                <md-icon>send</md-icon>
+              </md-button>
+            </md-field>
+        
+      </div>
+
+      <md-dialog-actions>
+        <md-button class="md-primary" @click="showDialog = false">Cancel</md-button>
+      </md-dialog-actions>
+    </md-dialog>
+
   </div>    
 </template>
 
@@ -118,6 +210,7 @@
   export default {
     name: 'dashboard',
     data: () => ({
+      showDialog: false,
       selectedUserId: 0,
       users: [{id: 0, user: ''}],
       tasksNew: [blankTask],
