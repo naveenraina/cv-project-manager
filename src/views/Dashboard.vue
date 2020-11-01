@@ -25,6 +25,8 @@
                 <md-icon md-menu-trigger>keyboard_arrow_down</md-icon>
               </md-button>              
               <md-menu-content>
+                <md-menu-item @click="onLoadNotes(item)">Notes</md-menu-item>
+                <md-divider md-menu-item></md-divider>
                 <md-menu-item @click="moveToInProgress(item)">InProgress</md-menu-item>
                 <md-menu-item @click="moveToComplete(item)">Complete</md-menu-item>
               </md-menu-content>
@@ -54,7 +56,9 @@
               <md-button class="md-icon-button" md-menu-trigger>
                 <md-icon md-menu-trigger>keyboard_arrow_down</md-icon>
               </md-button>              
-              <md-menu-content>                
+              <md-menu-content>    
+                <md-menu-item @click="onLoadNotes(item)">Notes</md-menu-item>
+                <md-divider md-menu-item></md-divider>            
                 <md-menu-item @click="moveToComplete(item)">Complete</md-menu-item>
                 <md-menu-item @click="moveToNew(item)">New</md-menu-item>
               </md-menu-content>
@@ -86,7 +90,7 @@
                 <md-icon md-menu-trigger>keyboard_arrow_down</md-icon>
               </md-button>              
               <md-menu-content>   
-                <md-menu-item @click="showDialog = true">Notes</md-menu-item>
+                <md-menu-item @click="onLoadNotes(item)">Notes</md-menu-item>
                 <md-divider md-menu-item></md-divider>
                 <md-menu-item @click="moveToInProgress(item)">InProgress</md-menu-item>    
                 <md-menu-item @click="moveToNew(item)">New</md-menu-item>
@@ -106,9 +110,9 @@
     </div>
 
     <md-dialog :md-active.sync="showDialog" md-close-on-esc>
-      <md-dialog-title>Notes</md-dialog-title>
+      <md-dialog-title>Notes for ({{selectedTaskName}})</md-dialog-title>
 
-      <div class="md-dialog-content md-layout"> 
+      <div class="md-dialog-content md-layout" style="width:900px"> 
         <md-field style="margin-left:60px">
           <label>Add Note</label>
           <md-textarea md-autogrow v-model="noteText"></md-textarea>
@@ -119,16 +123,16 @@
         <md-list class="md-triple-line" style="padding-top:20px;width:100%">
           <template v-for="note in notes">
             <md-list-item :key="note.id">
-              <md-avatar :title="note.createdby">
-                {{note.createdby.substr(0,1).toUpperCase()}}
+              <md-avatar :title="note.user">
+                {{note.user && note.user.substr(0,1).toUpperCase()}}
               </md-avatar>
 
               <div class="md-list-item-text">
                 <span></span>
-                <span>Date: {{note.createddate}}</span>
-                <p style="padding-top:10px;white-space: pre-wrap;">{{note.description}}</p>
+                <span style="color:rgba(0,0,0,0.55)">{{note.createddate.toDateString()}} {{note.createddate.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}}</span>
+                <p style="padding-top:10px;white-space:pre-wrap;color:rgba(0,0,0,0.75)">{{note.description}}</p>
               </div>
-              <md-button v-if="note.createdbyid === user.id" class="md-icon-button md-list-action" @click="deleteNote(note.id)">
+              <md-button v-if="note.userid === user.id" class="md-icon-button md-list-action" @click="deleteNote(note.id)">
                 <md-icon class="">delete</md-icon>
               </md-button>
             </md-list-item>
@@ -136,6 +140,7 @@
             <md-divider class="md-inset" :key="note.id"></md-divider>
           </template>
         </md-list>
+        <div v-if="notes.length === 0" style="padding-left:60px;color:grey"><span> No notes found </span></div>
       </div>
 
       <md-dialog-actions style="">        
@@ -155,57 +160,47 @@
     taskName: "",
     description: ""
   } 
-
+  let blankNote = {
+    id: 0,
+    description: null,
+    taskid: 0,
+    userid: 0,
+    user: null,
+    createddate: new Date()
+  }
   export default {
     name: 'dashboard',
     data: () => ({
       noteText: "",
-      notes: [
-        {
-          id: 1,
-          taskid: 1,
-          description: 'this is a sample description',
-          createdby: 'Rahul',
-          createdbyid: 1,
-          createddate: '30 Oct 2020'
-        },
-        {
-          id: 1,
-          taskid: 1,
-          description: 'this is a sample description',
-          createdby: 'Rahul',
-          createdbyid: 2,
-          createddate: '30 Oct 2020'
-        },
-        {
-          id: 1,
-          taskid: 1,
-          description: 'this is a sample description this is a sample description this is a sample description this is a sample description this is a sample description this is a sample description this is a sample description ',
-          createdby: 'Rahul',
-          createdbyid: 1,
-          createddate: '30 Oct 2020'
-        }
-      ],
+      notes: [blankNote],
       showDialog: false,
       selectedUserId: 0,
       users: [{id: 0, user: ''}],
       tasksNew: [blankTask],
       tasksInProgress: [blankTask],
-      tasksCompleted: [blankTask]
+      tasksCompleted: [blankTask],
+      selectedTaskId: 0,
+      selectedTaskName: ''
     }),
     methods: {
+      onLoadNotes(task){
+        this.selectedTaskId = task.id
+        this.selectedTaskName = task.taskName
+        this.loadNotes(task.id)      
+      },
       deleteNote(noteid){
-        console.log(noteid)
+        ipcRenderer.send('note:delete', noteid)
       },
       addNote(){
-        this.notes.splice(0,0,{
-          id: 1,
-          taskid: 1,
-          description: this.noteText,
-          createdby: 'Rahul',
-          createddate: '30 Oct 2020'
-        })
-        this.noteText = ""
+       let newNote = {...blankNote}
+       newNote.description = this.noteText
+       newNote.userid = this.user.id
+       newNote.taskid = this.selectedTaskId
+       newNote.createddate = new Date()
+       ipcRenderer.send('note:save', newNote)
+      },
+      loadNotes(taskId){
+        ipcRenderer.send('notes:get', taskId)
       },
       loadTasks(){
         ipcRenderer.send('tasks:getuserassigned', this.user.id)
@@ -259,7 +254,20 @@
 
       ipcRenderer.on('task:movesuccess', () => {
         this.loadTasks()
+      })
 
+      ipcRenderer.on('notes:getsuccess', (e, data) => {
+        this.notes = data
+        this.showDialog = true
+      })
+
+      ipcRenderer.on('note:savesuccess', () => {
+        this.loadNotes(this.selectedTaskId)
+        this.noteText = ""        
+      })
+
+      ipcRenderer.on('note:deletesuccess', () => {
+        this.loadNotes(this.selectedTaskId)
       })
 
     },

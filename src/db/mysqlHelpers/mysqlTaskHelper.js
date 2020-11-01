@@ -126,6 +126,60 @@ function moveTask(data, callback){
     })
 }
 
+function getNotes(taskid, callback){
+    // Perform a query
+    let query = 'SELECT n.id, n.description, n.createddate, n.taskid, n.userid, u.user from notes n left join users u on n.userid = u.id where n.taskid = ? order by n.createddate desc';
+     
+    connectionPool.query(query, taskid, function(err, rows) {
+        if(err){
+            console.log("An error ocurred performing the query.");
+            console.log(err);
+            return;
+        }
+        callback(rows)        
+    });          
+}
+
+function saveNote(note, callback){    
+    if(note.id === 0){
+        let query = 'INSERT INTO notes(description, createddate, userid, taskid  ) VALUES(?, ?, ?, ?)';
+        connectionPool.query(query, [note.description, note.createddate, note.userid, note.taskid ], function(err, rows) {
+            if(err){
+                console.log("An error ocurred performing the query.");
+                console.log(err);
+                return;
+            } else {
+                callback(rows)
+            }
+        });
+    } else {
+        let query = 'update notes set description=?, createddate=?, userid=?, taskid=? where id=? ';
+        connectionPool.query(query, [note.description, note.createddate, note.userid, note.taskid, note.id], function(err, rows) {
+            if(err){
+                console.log("An error ocurred performing the query.");
+                console.log(err);
+                return;
+            } else {
+                callback(rows)
+            }
+        });
+    }
+}
+
+function deleteNote(id, callback){
+    let query = 'delete from notes where id=?';
+    connectionPool.query(query, [id], function(err, rows) {
+        if(err){
+            console.log("An error ocurred performing the query.");
+            console.log(err);
+            return;
+        } else {
+            callback('success')    
+        }            
+    });  
+}
+
 export default {    
-    saveTask, getTasks, getTasksAssignedToUser, deleteTask, moveTask
+    saveTask, getTasks, getTasksAssignedToUser, deleteTask, moveTask,
+    getNotes, saveNote, deleteNote
 }

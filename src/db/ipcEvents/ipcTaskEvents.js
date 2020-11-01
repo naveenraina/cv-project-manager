@@ -32,6 +32,24 @@ export default class ipcTaskEvents {
       })
     })
 
+    ipcMain.on('notes:get', function(e, taskid){
+      mysqlTaskHelper.default.getNotes(taskid, function(response){
+          win.webContents.send('notes:getsuccess', response)
+      })
+    })
+
+    ipcMain.on('note:save', function(e, note){
+      mysqlTaskHelper.default.saveNote(note, function(response){
+          win.webContents.send('note:savesuccess', response)
+      })
+    })
+
+    ipcMain.on('note:delete', function(e, id){
+      mysqlTaskHelper.default.deleteNote(id, function(response){
+          win.webContents.send('note:deletesuccess', response)
+      })
+    })
+
   }
 
 }
