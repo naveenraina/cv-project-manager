@@ -85,10 +85,11 @@
               <md-button class="md-icon-button" md-menu-trigger>
                 <md-icon md-menu-trigger>keyboard_arrow_down</md-icon>
               </md-button>              
-              <md-menu-content>                
+              <md-menu-content>   
+                <md-menu-item @click="showDialog = true">Notes</md-menu-item>
+                <md-divider md-menu-item></md-divider>
                 <md-menu-item @click="moveToInProgress(item)">InProgress</md-menu-item>    
                 <md-menu-item @click="moveToNew(item)">New</md-menu-item>
-                <md-menu-item @click="showDialog = true">Notes</md-menu-item>            
               </md-menu-content>
             </md-menu>
           </md-table-cell>
@@ -108,88 +109,36 @@
       <md-dialog-title>Notes</md-dialog-title>
 
       <div class="md-dialog-content md-layout"> 
-          <md-list class="md-triple-line" style="padding-bottom:40px;width:100%">
-            <md-list-item>
-              <md-avatar>
-                <img src="https://placeimg.com/40/40/people/1" alt="People">
+        <md-field style="margin-left:60px">
+          <label>Add Note</label>
+          <md-textarea md-autogrow v-model="noteText"></md-textarea>
+          <md-button class="md-icon-button" @click="addNote">
+            <md-icon>send</md-icon>
+          </md-button>
+        </md-field>
+        <md-list class="md-triple-line" style="padding-top:20px;width:100%">
+          <template v-for="note in notes">
+            <md-list-item :key="note.id">
+              <md-avatar :title="note.createdby">
+                {{note.createdby.substr(0,1).toUpperCase()}}
               </md-avatar>
 
               <div class="md-list-item-text">
-                <span>Ali Connors</span>
-                <span>Brunch this weekend?</span>
-                <p>I'll be in your neighborhood doing errands this week. Do you want to meet?</p>
+                <span></span>
+                <span>Date: {{note.createddate}}</span>
+                <p style="padding-top:10px;white-space: pre-wrap;">{{note.description}}</p>
               </div>
-
-              <md-button class="md-icon-button md-list-action">
-                <md-icon class="md-primary">star</md-icon>
+              <md-button v-if="note.createdbyid === user.id" class="md-icon-button md-list-action" @click="deleteNote(note.id)">
+                <md-icon class="">delete</md-icon>
               </md-button>
             </md-list-item>
 
-            <md-divider class="md-inset"></md-divider>
-
-            <md-list-item>
-              <md-avatar>
-                <img src="https://placeimg.com/40/40/people/6" alt="People">
-              </md-avatar>
-
-              <div class="md-list-item-text">
-                <span>me, Scott, Jennifer</span>
-                <span>Summer BBQ</span>
-                <p>Wish I could come, but I'm out of town this week. :(</p>
-              </div>
-
-              <md-button class="md-icon-button md-list-action">
-                <md-icon>star_border</md-icon>
-              </md-button>
-            </md-list-item>
-
-            <md-divider class="md-inset"></md-divider>
-
-            <md-list-item>
-              <md-avatar>
-                <img src="https://placeimg.com/40/40/people/5" alt="People">
-              </md-avatar>
-
-              <div class="md-list-item-text">
-                <span>Sandra Adams</span>
-                <span>Oui oui</span>
-                <p>Do you have Paris recommendations? Have you visited good places?</p>
-              </div>
-
-              <md-button class="md-icon-button md-list-action">
-                <md-icon>star_border</md-icon>
-              </md-button>
-            </md-list-item>
-
-            <md-divider class="md-inset"></md-divider>
-
-            <md-list-item>
-              <md-avatar>
-                <img src="https://placeimg.com/40/40/people/8" alt="People">
-              </md-avatar>
-
-              <div class="md-list-item-text">
-                <span>Trevor Hansen</span>
-                <span>Order confirmation</span>
-                <p>Thank you for your recent order from Amazon</p>
-              </div>
-
-              <md-button class="md-icon-button md-list-action">
-                <md-icon>star_border</md-icon>
-              </md-button>
-            </md-list-item>
-          </md-list>
-          <md-field>
-              <label>Add Note</label>
-              <md-textarea md-autogrow></md-textarea>
-              <md-button class="md-icon-button">
-                <md-icon>send</md-icon>
-              </md-button>
-            </md-field>
-        
+            <md-divider class="md-inset" :key="note.id"></md-divider>
+          </template>
+        </md-list>
       </div>
 
-      <md-dialog-actions>
+      <md-dialog-actions style="">        
         <md-button class="md-primary" @click="showDialog = false">Cancel</md-button>
       </md-dialog-actions>
     </md-dialog>
@@ -210,6 +159,33 @@
   export default {
     name: 'dashboard',
     data: () => ({
+      noteText: "",
+      notes: [
+        {
+          id: 1,
+          taskid: 1,
+          description: 'this is a sample description',
+          createdby: 'Rahul',
+          createdbyid: 1,
+          createddate: '30 Oct 2020'
+        },
+        {
+          id: 1,
+          taskid: 1,
+          description: 'this is a sample description',
+          createdby: 'Rahul',
+          createdbyid: 2,
+          createddate: '30 Oct 2020'
+        },
+        {
+          id: 1,
+          taskid: 1,
+          description: 'this is a sample description this is a sample description this is a sample description this is a sample description this is a sample description this is a sample description this is a sample description ',
+          createdby: 'Rahul',
+          createdbyid: 1,
+          createddate: '30 Oct 2020'
+        }
+      ],
       showDialog: false,
       selectedUserId: 0,
       users: [{id: 0, user: ''}],
@@ -218,6 +194,19 @@
       tasksCompleted: [blankTask]
     }),
     methods: {
+      deleteNote(noteid){
+        console.log(noteid)
+      },
+      addNote(){
+        this.notes.splice(0,0,{
+          id: 1,
+          taskid: 1,
+          description: this.noteText,
+          createdby: 'Rahul',
+          createddate: '30 Oct 2020'
+        })
+        this.noteText = ""
+      },
       loadTasks(){
         ipcRenderer.send('tasks:getuserassigned', this.user.id)
         ipcRenderer.send('users:get')
