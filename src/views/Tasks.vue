@@ -161,7 +161,7 @@
         estimateddays: 1,
         userId: 0,
         projectId: 0,
-        priority: 'Low'
+        priority: ''
       },
       selectedTask: {}
     }),
