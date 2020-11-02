@@ -26,7 +26,6 @@
               </md-button>              
               <md-menu-content>
                 <md-menu-item @click="onLoadNotes(item)">Notes</md-menu-item>
-                <md-divider md-menu-item></md-divider>
                 <md-menu-item>                  
                   <md-menu md-direction="bottom-end" md-offset-x="280">
                     <div md-menu-trigger style="cursor:pointer">
@@ -69,7 +68,6 @@
               </md-button>              
               <md-menu-content>    
                 <md-menu-item @click="onLoadNotes(item)">Notes</md-menu-item>
-                <md-divider md-menu-item></md-divider> 
                 <md-menu-item>                  
                   <md-menu md-direction="bottom-end" md-offset-x="280">
                     <div md-menu-trigger style="cursor:pointer">
@@ -113,7 +111,6 @@
               </md-button>              
               <md-menu-content>   
                 <md-menu-item @click="onLoadNotes(item)">Notes</md-menu-item>
-                <md-divider md-menu-item></md-divider>
                 <md-menu-item>                  
                   <md-menu md-direction="bottom-end" md-offset-x="280">
                     <div md-menu-trigger style="cursor:pointer">
