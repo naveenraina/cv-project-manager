@@ -42,18 +42,18 @@
 
         <div class="md-dialog-content md-layout">      
           <div class="md-layout-item" style="width:600px">
-            <md-field md-clearable>
+            <md-field>
               <label>Task name</label>
               <md-input v-model="selectedTask.taskName"></md-input>
             </md-field>
 
-            <md-field md-clearable>
+            <md-field>
               <label>Description</label>
               <md-textarea v-model="selectedTask.description"></md-textarea>
             </md-field>
 
             <div class="md-layout">
-              <md-field class="md-layout-item" style="margin-right:30px" md-clearable>
+              <md-field class="md-layout-item" style="margin-right:30px">
                 <label>Estimate (Days)</label>
                 <md-input v-model="selectedTask.estimateddays" type="number"></md-input>
               </md-field>

@@ -25,9 +25,10 @@
                 <md-icon md-menu-trigger>keyboard_arrow_down</md-icon>
               </md-button>              
               <md-menu-content>
+                <md-menu-item @click="showEditDialog(item)">Edit</md-menu-item>
                 <md-menu-item @click="onLoadNotes(item)">Notes</md-menu-item>
                 <md-menu-item>                  
-                  <md-menu md-direction="bottom-end" md-offset-x="280">
+                  <md-menu md-direction="bottom-end" md-offset-x=280>
                     <div md-menu-trigger style="cursor:pointer">
                       Move To
                       <md-icon md-menu-trigger>keyboard_arrow_right</md-icon>
@@ -66,10 +67,11 @@
               <md-button class="md-icon-button" md-menu-trigger>
                 <md-icon md-menu-trigger>keyboard_arrow_down</md-icon>
               </md-button>              
-              <md-menu-content>    
+              <md-menu-content>   
+                <md-menu-item @click="showEditDialog(item)">Edit</md-menu-item> 
                 <md-menu-item @click="onLoadNotes(item)">Notes</md-menu-item>
                 <md-menu-item>                  
-                  <md-menu md-direction="bottom-end" md-offset-x="280">
+                  <md-menu md-direction="bottom-end" md-offset-x=280>
                     <div md-menu-trigger style="cursor:pointer">
                       Move To
                       <md-icon md-menu-trigger>keyboard_arrow_right</md-icon>
@@ -109,10 +111,11 @@
               <md-button class="md-icon-button" md-menu-trigger>
                 <md-icon md-menu-trigger>keyboard_arrow_down</md-icon>
               </md-button>              
-              <md-menu-content>   
+              <md-menu-content>
+                <md-menu-item @click="showEditDialog(item)">Edit</md-menu-item>
                 <md-menu-item @click="onLoadNotes(item)">Notes</md-menu-item>
                 <md-menu-item>                  
-                  <md-menu md-direction="bottom-end" md-offset-x="280">
+                  <md-menu md-direction="bottom-end" md-offset-x=280>
                     <div md-menu-trigger style="cursor:pointer">
                       Move To
                       <md-icon md-menu-trigger>keyboard_arrow_right</md-icon>
@@ -124,7 +127,7 @@
                   </md-menu>
                 </md-menu-item>
                 
-              </md-menu-content>
+              </md-menu-content>  
             </md-menu>
           </md-table-cell>
          
@@ -140,16 +143,18 @@
     </div>
 
     <md-dialog :md-active.sync="showDialog" md-close-on-esc>
-      <md-dialog-title>Notes for ({{selectedTaskName}})</md-dialog-title>
+      <md-dialog-title>Notes for ({{selectedTask.taskName}})</md-dialog-title>
 
-      <div class="md-dialog-content md-layout" style="width:900px"> 
-        <md-field style="margin-left:60px">
+      <div class="md-dialog-content md-layout" style="width:800px"> 
+        
+        <md-field >
           <label>Add Note</label>
           <md-textarea md-autogrow v-model="noteText"></md-textarea>
           <md-button class="md-icon-button" @click="addNote">
             <md-icon>send</md-icon>
           </md-button>
         </md-field>
+        
         <md-list class="md-triple-line" style="padding-top:20px;width:100%">
           <template v-for="note in notes">
             <md-list-item :key="note.id">
@@ -167,16 +172,81 @@
               </md-button>
             </md-list-item>
 
-            <md-divider class="md-inset" :key="note.id"></md-divider>
+            <md-divider class="md-inset" :key="'divider_' + note.id"></md-divider>
           </template>
         </md-list>
-        <div v-if="notes.length === 0" style="padding-left:60px;color:grey"><span> No notes found </span></div>
+        <div v-if="notes.length === 0" style="color:grey"><span> No notes found </span></div>
       </div>
 
       <md-dialog-actions style="">        
         <md-button class="md-primary" @click="showDialog = false">Cancel</md-button>
       </md-dialog-actions>
     </md-dialog>
+
+
+    <md-dialog :md-active.sync="showDialogEdit" md-close-on-esc>
+      <md-dialog-title>Edit ({{selectedTask.taskName}})</md-dialog-title>
+
+      <div class="md-dialog-content md-layout">      
+          <div class="md-layout-item" style="width:600px">
+            <md-field>
+              <label>Task name</label>
+              <md-input v-model="selectedTask.taskName"></md-input>
+            </md-field>
+
+            <md-field>
+              <label>Description</label>
+              <md-textarea v-model="selectedTask.description"></md-textarea>
+            </md-field>
+
+            <div class="md-layout">
+              <md-field class="md-layout-item" style="margin-right:30px">
+                <label>Estimate (Days)</label>
+                <md-input v-model="selectedTask.estimateddays" type="number"></md-input>
+              </md-field>
+              <div class="md-layout-item">
+                <div class="block">
+                  <div>Complete by</div>
+                  <md-datepicker v-model="selectedTask.tocompleteon" md-immediately/>
+                </div>
+              </div>
+            </div>
+
+            <div class="md-layout">
+              <div class="md-layout-item" style="padding-right:30px">
+                <md-field>
+                  <md-select v-model="selectedTask.priority" placeholder="Priority">
+                    <md-option value="Low">Low</md-option>
+                    <md-option value="Medium">Medium</md-option>
+                    <md-option value="High">High</md-option>
+                  </md-select>
+                </md-field>
+              </div>
+              <div class="md-layout-item" style="margin-right:30px">
+                <md-field>
+                  <md-select v-model="selectedTask.userId" placeholder="Assigned to">
+                    <md-option v-for="option in users" :value="option.id" v-bind:key="option.id">{{option.user}}</md-option>
+                  </md-select>
+                </md-field>
+              </div>
+              <div class="md-layout-item">
+                <md-field>
+                  <md-select v-model="selectedTask.projectId" placeholder="Project">
+                    <md-option v-for="option in projects" :value="option.id" v-bind:key="option.id">{{option.projectname}}</md-option>
+                  </md-select>
+                </md-field>
+              </div>
+            </div>
+            
+            
+          </div>
+        </div>
+
+        <md-dialog-actions>
+          <md-button class="md-primary" @click="showDialogEdit=false">Cancel</md-button>
+          <md-button class="md-primary" @click="saveTask">Save</md-button>
+        </md-dialog-actions>
+      </md-dialog>
 
   </div>    
 </template>
@@ -201,21 +271,37 @@
   export default {
     name: 'dashboard',
     data: () => ({
+      disableDescription: true,
       noteText: "",
       notes: [blankNote],
       showDialog: false,
+      showDialogEdit: false,
       selectedUserId: 0,
       users: [{id: 0, user: ''}],
       tasksNew: [blankTask],
       tasksInProgress: [blankTask],
       tasksCompleted: [blankTask],
-      selectedTaskId: 0,
-      selectedTaskName: ''
+      selectedTask: {},
+      projects: [{id: 0, projectname: ''}],
     }),
     methods: {
+      saveTask(){
+        ipcRenderer.send('task:submit', this.selectedTask)
+        this.showDialogEdit = false
+        // if(this.selectedTask.id === 0) {
+        //   let project = this.projects.find(x=>x.id === this.selectedTask.projectId)?.projectname
+        //   this.notifySlack(this.selectedTask.taskName, project)
+        // }        
+      },
+      showEditDialog(task){
+        this.selectedTask = task
+        this.showDialogEdit=true
+      },
+      updateTask(){
+
+      },
       onLoadNotes(task){
-        this.selectedTaskId = task.id
-        this.selectedTaskName = task.taskName
+        this.selectedTask = task
         this.loadNotes(task.id)      
       },
       deleteNote(noteid){
@@ -225,7 +311,7 @@
        let newNote = {...blankNote}
        newNote.description = this.noteText
        newNote.userid = this.user.id
-       newNote.taskid = this.selectedTaskId
+       newNote.taskid = this.selectedTask.id
        newNote.createddate = new Date()
        ipcRenderer.send('note:save', newNote)
       },
@@ -292,12 +378,22 @@
       })
 
       ipcRenderer.on('note:savesuccess', () => {
-        this.loadNotes(this.selectedTaskId)
+        this.loadNotes(this.selectedTask.id)
         this.noteText = ""        
       })
 
       ipcRenderer.on('note:deletesuccess', () => {
-        this.loadNotes(this.selectedTaskId)
+        this.loadNotes(this.selectedTask.id)
+      })
+
+      ipcRenderer.on('projects:success', (e, data) => {
+        this.projects = data
+      })
+
+      ipcRenderer.on('task:submitsuccess', () => {        
+        this.statusMessage = 'Task saved successfully'
+        this.showSnackbar = true
+        this.loadTasks()
       })
 
     },
@@ -308,6 +404,7 @@
     },
     created () {      
       this.loadTasks()
+      ipcRenderer.send('projects:get')
     }
   }
 </script>

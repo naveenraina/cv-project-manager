@@ -53,7 +53,7 @@ function getTasks(filter, callback){
 
 function getTaskById(taskId, callback){
     // Perform a query
-    let query = 'SELECT t.id, t.taskName, t.status, t.startedon, t.tocompleteon, t.completedon, t.createddate, t.priority from tasks t where t.id = ?';
+    let query = 'SELECT t.id, t.taskName, t.description, t.status, t.startedon, t.tocompleteon, t.completedon, t.createddate, t.priority from tasks t where t.id = ?';
     connectionPool.query(query,[taskId], function(err, rows) {
         if(err){
             console.log("An error ocurred performing the query.");
@@ -68,7 +68,7 @@ function getTaskById(taskId, callback){
 
 function getTasksAssignedToUser(userId, callback){
     // Perform a query
-    let query = 'SELECT t.id, t.taskName, t.status, t.startedon, t.tocompleteon, t.completedon, t.createddate, t.priority from tasks t where t.userId = ? order by t.priority desc';
+    let query = 'SELECT t.id, t.taskName, t.description, t.userId, u.user, t.projectId, p.projectName, t.startedOn, t.tocompleteon, t.completedOn, t.createdDate, t.updatedDate, t.status, t.estimateddays, t.priority FROM tasks t left join users u on t.userid = u.id left join projects p on p.id = t.projectid where t.userId = ? order by t.priority desc';
     connectionPool.query(query,[userId], function(err, rows) {
         if(err){
             console.log("An error ocurred performing the query.");
