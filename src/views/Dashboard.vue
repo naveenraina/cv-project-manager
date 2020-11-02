@@ -27,8 +27,19 @@
               <md-menu-content>
                 <md-menu-item @click="onLoadNotes(item)">Notes</md-menu-item>
                 <md-divider md-menu-item></md-divider>
-                <md-menu-item @click="moveToInProgress(item)">InProgress</md-menu-item>
-                <md-menu-item @click="moveToComplete(item)">Complete</md-menu-item>
+                <md-menu-item>                  
+                  <md-menu md-direction="bottom-end" md-offset-x="280">
+                    <div md-menu-trigger style="cursor:pointer">
+                      Move To
+                      <md-icon md-menu-trigger>keyboard_arrow_right</md-icon>
+                    </div> 
+                    <md-menu-content>
+                      <md-menu-item @click="moveToInProgress(item)">InProgress</md-menu-item>
+                      <md-menu-item @click="moveToComplete(item)">Complete</md-menu-item>
+                    </md-menu-content>
+                  </md-menu>
+                </md-menu-item> 
+                
               </md-menu-content>
             </md-menu>
           </md-table-cell>
@@ -58,9 +69,20 @@
               </md-button>              
               <md-menu-content>    
                 <md-menu-item @click="onLoadNotes(item)">Notes</md-menu-item>
-                <md-divider md-menu-item></md-divider>            
-                <md-menu-item @click="moveToComplete(item)">Complete</md-menu-item>
-                <md-menu-item @click="moveToNew(item)">New</md-menu-item>
+                <md-divider md-menu-item></md-divider> 
+                <md-menu-item>                  
+                  <md-menu md-direction="bottom-end" md-offset-x="280">
+                    <div md-menu-trigger style="cursor:pointer">
+                      Move To
+                      <md-icon md-menu-trigger>keyboard_arrow_right</md-icon>
+                    </div> 
+                    <md-menu-content>
+                      <md-menu-item @click="moveToComplete(item)">Complete</md-menu-item>
+                      <md-menu-item @click="moveToNew(item)">New</md-menu-item>
+                    </md-menu-content>
+                  </md-menu>
+                </md-menu-item>           
+                
               </md-menu-content>
             </md-menu>
           </md-table-cell>
@@ -85,15 +107,26 @@
             </md-tooltip>
           </md-table-cell>
           <md-table-cell>            
-            <md-menu md-size="small">
+            <md-menu>
               <md-button class="md-icon-button" md-menu-trigger>
                 <md-icon md-menu-trigger>keyboard_arrow_down</md-icon>
               </md-button>              
               <md-menu-content>   
                 <md-menu-item @click="onLoadNotes(item)">Notes</md-menu-item>
                 <md-divider md-menu-item></md-divider>
-                <md-menu-item @click="moveToInProgress(item)">InProgress</md-menu-item>    
-                <md-menu-item @click="moveToNew(item)">New</md-menu-item>
+                <md-menu-item>                  
+                  <md-menu md-direction="bottom-end" md-offset-x="280">
+                    <div md-menu-trigger style="cursor:pointer">
+                      Move To
+                      <md-icon md-menu-trigger>keyboard_arrow_right</md-icon>
+                    </div> 
+                    <md-menu-content>
+                      <md-menu-item @click="moveToInProgress(item)">InProgress</md-menu-item>    
+                      <md-menu-item @click="moveToNew(item)">New</md-menu-item>
+                    </md-menu-content>
+                  </md-menu>
+                </md-menu-item>
+                
               </md-menu-content>
             </md-menu>
           </md-table-cell>
