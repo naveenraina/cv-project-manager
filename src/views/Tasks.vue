@@ -66,15 +66,15 @@
             </div>
 
             <div class="md-layout">
-              <!-- <div class="md-layout-item md-size-33" style="padding-right:15px">
+              <div class="md-layout-item" style="padding-right:30px">
                 <md-field>
-                  <md-select v-model="selectedTask.status" placeholder="Status">
-                    <md-option value="New">New</md-option>
-                    <md-option value="InProgress">In Progress</md-option>
-                    <md-option value="Complete">Complete</md-option>
+                  <md-select v-model="selectedTask.priority" placeholder="Priority">
+                    <md-option value="Low">Low</md-option>
+                    <md-option value="Medium">Medium</md-option>
+                    <md-option value="High">High</md-option>
                   </md-select>
                 </md-field>
-              </div> -->
+              </div>
               <div class="md-layout-item" style="margin-right:30px">
                 <md-field>
                   <md-select v-model="selectedTask.userId" placeholder="Assigned to">
@@ -160,7 +160,8 @@
         status: 'New',
         estimateddays: 1,
         userId: 0,
-        projectId: 0
+        projectId: 0,
+        priority: 'Low'
       },
       selectedTask: {}
     }),
