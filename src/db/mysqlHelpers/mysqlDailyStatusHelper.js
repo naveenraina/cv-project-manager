@@ -1,4 +1,5 @@
-const mysqlConnectionPool = require('@/db/mysqlConnectionPool'); 
+const mysqlConnectionPool = require('@/db/mysqlConnectionPool');
+const mysqlTaskHelper = require('@/db/mysqlHelpers/mysqlTaskHelper'); 
 
 let connectionPool = mysqlConnectionPool.default.createConnectionPool();
 
@@ -7,11 +8,11 @@ function savedailystatus(data, callback){
     gettodaysdailystatus(data.userId, (found)=>{
         if(found.length > 0){
             updatedailystatus(data, found[0].id, () => {
-                moveTask({id: data.taskId, status: "InProgress"}, callback)
+                mysqlTaskHelper.default.moveTask({id: data.taskId, status: "InProgress"}, callback)
             })
         } else {
             createdailystatus(data, () => {
-                moveTask({id: data.taskId, status: "InProgress"}, callback)
+                mysqlTaskHelper.default.moveTask({id: data.taskId, status: "InProgress"}, callback)
             })
         }
     })   
