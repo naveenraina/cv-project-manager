@@ -1,6 +1,6 @@
 {
   "name": "cv-project-manager",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "private": false,
   "scripts": {
     "test:unit": "vue-cli-service test:unit",
