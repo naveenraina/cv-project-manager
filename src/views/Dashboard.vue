@@ -55,15 +55,26 @@
               </div>
             </md-table-toolbar>
 
-            <md-table-row slot="md-table-row" slot-scope="{ item }">
+            <md-table-row slot="md-table-row" slot-scope="{ item }" :class="[true === true? '': 'task-delayed']">
               <!-- <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{ item.id }}</md-table-cell> -->
               <md-table-cell md-label="Name" md-sort-by="taskName">
-                {{ item.taskName }}
+                {{ item.taskName }} 
+                <div> 
+                  <strong v-if="item.tocompleteon && item.startedOn">
+                  {{ getDateDifInDays(item.tocompleteon, new Date() ) }} of {{ getDateDifInDays(item.tocompleteon, item.startedOn) }}
+                  </strong>
+                  <strong v-else>
+                  (Due date missing)
+                  </strong>
+                  days left 
+                </div>
                 <md-tooltip md-direction="bottom">
-                  Started on: {{item.startedon && item.startedon.toDateString()}} &nbsp;&nbsp;
+                  Started on: {{item.startedOn && item.startedOn.toDateString()}} &nbsp;&nbsp;
                   Due on: {{item.tocompleteon && item.tocompleteon.toDateString()}}
                 </md-tooltip>
               </md-table-cell>
+              <md-table-cell md-label="Due on" md-sort-by="tocompleteon">{{ item.tocompleteon && item.tocompleteon.toDateString() }}</md-table-cell>
+          
               <md-table-cell>
                 <md-menu md-size="small">
                   <md-button class="md-icon-button" md-menu-trigger>
@@ -293,6 +304,9 @@
       projects: [{id: 0, projectname: ''}],
     }),
     methods: {
+      getDateDifInDays(dt2, dt1){
+        return Math.floor((Date.UTC(dt2.getFullYear(), dt2.getMonth(), dt2.getDate()) - Date.UTC(dt1.getFullYear(), dt1.getMonth(), dt1.getDate()) ) /(1000 * 60 * 60 * 24))
+      },
       saveTask(){
         ipcRenderer.send('task:submit', this.selectedTask)
         this.showDialogEdit = false
@@ -425,6 +439,9 @@
   .md-table{
     width: 30%;
     display: inline-block;
+  }
+  .task-delayed{
+    background-color: red;
   }
 
 </style>
