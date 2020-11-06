@@ -116,6 +116,16 @@ const mainMenuTemplate = [
         { role: 'quit' }
       ]
     },
+    {
+      label: 'About',
+      submenu: [
+        { 
+          label: 'Version ' + app.getVersion(),
+          click: async () => {
+          }
+        }
+      ]
+    },
 ];
 
 // Add developer tools item if not in prod
