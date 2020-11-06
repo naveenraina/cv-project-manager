@@ -63,12 +63,12 @@ function gettodaysdailystatus(userId, callback){
 }
 
 function getyesterdaysdailystatus(userId, callback){
-    var date = new Date();
-    date.setDate(date.getDate() - 1);
-    let yesterday = date.toISOString().slice(0, 10)
-    let query = "select id, `didyesterday`, `willdotoday`, `anyroadblocks`, `createddate`, `UserId`, taskId from `dailystatus` where DATE(createddate) = ? and userId=?";
+    // var date = new Date();
+    // date.setDate(date.getDate() - 1);
+    // let yesterday = date.toISOString().slice(0, 10)
+    let query = "select id, `didyesterday`, `willdotoday`, `anyroadblocks`, `createddate`, `UserId`, taskId from `dailystatus` where userId=? order by createddate desc limit 1";
     
-    connectionPool.query(query,[yesterday, userId], function(err, rows) {
+    connectionPool.query(query,[userId], function(err, rows) {
         if(err){
             console.log("An error ocurred performing the query.");
             console.log(err);

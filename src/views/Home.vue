@@ -8,7 +8,7 @@
               <div class="md-title md-layout-item md-size-90">Daily Status for {{user.user}}</div>
               
               <div class="md-layout-item" style="text-align:right"  >
-                <md-button class="md-icon-button" @click="copyYesterdays" title="Yesterday's status">
+                <md-button class="md-icon-button" @click="copyYesterdays" title="Most recent status">
                   <md-icon>content_copy</md-icon>
                 </md-button>
               </div>
