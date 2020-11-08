@@ -411,7 +411,7 @@
         fetch('https://slack.com/api/chat.postMessage', {
           method: 'post',
           body: JSON.stringify({
-            "channel": "C9Z21JH9D", //"CGZNB2XRA" daily-status //"C9Z21JH9D" - random
+            "channel": "CGZNB2XRA", //"CGZNB2XRA" daily-status //"C9Z21JH9D" - random
             "text": message                 
           }),
           headers: { 
