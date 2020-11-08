@@ -311,17 +311,44 @@
       saveTask(){
         ipcRenderer.send('task:submit', this.selectedTask)
         this.showDialogEdit = false
+        // log note if vital fields are changes
+        var originallist = []
+        switch(this.selectedTask.status){
+          case "New":
+            originallist = this.tasksNew
+            break
+          case "InProgress":
+            originallist = this.tasksInProgress
+            break
+          case "Complete":
+            originallist = this.tasksCompleted
+            break
+        }
+        var original = originallist.find(x => x.id === this.selectedTask.id)
+        var message = ''
+        if(this.selectedTask.estimateddays !== original.estimateddays) {
+          message = this.user.user + ' changed estimate from ' + original.estimateddays + ' to ' + this.selectedTask.estimateddays
+        }
+        if(this.selectedTask.tocompleteon !== original.tocompleteon) {
+          let tocompleteon = original.tocompleteon ? original.tocompleteon.toDateString() : 'BLANK'
+          message = this.user.user + ' changed estimate from ' + tocompleteon + ' to ' + this.selectedTask.tocompleteon.toDateString()
+        }
+
+        if(message !== ''){
+          this.addNoteForTask(this.selectedTask, message)
+        }
+
       },
       showEditDialog(task){
-        this.selectedTask = task
+        this.selectedTask = { ...task }
         this.showDialogEdit=true
       },
       updateTask(){
 
       },
       onLoadNotes(task){
-        this.selectedTask = task
-        this.loadNotes(task.id)      
+        this.selectedTask = { ...task }
+        this.loadNotes(task.id)
       },
       deleteNote(noteid){
         ipcRenderer.send('note:delete', noteid)
