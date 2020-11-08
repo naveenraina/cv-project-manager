@@ -302,6 +302,7 @@
       tasksCompleted: [blankTask],
       selectedTask: {},
       projects: [{id: 0, projectname: ''}],
+      loadNotesAgain: false
     }),
     methods: {
       getDateDifInDays(dt2, dt1){
@@ -331,6 +332,15 @@
        newNote.userid = this.user.id
        newNote.taskid = this.selectedTask.id
        newNote.createddate = new Date()
+       this.loadNotesAgain = true
+       ipcRenderer.send('note:save', newNote)
+      },
+      addNoteForTask(task, message){
+       let newNote = {...blankNote}
+       newNote.description = message
+       newNote.userid = 11 // 11 - System
+       newNote.taskid = task.id
+       newNote.createddate = new Date()
        ipcRenderer.send('note:save', newNote)
       },
       loadNotes(taskId){
@@ -348,16 +358,19 @@
         ipcRenderer.send('task:move', {id: task.id, status: 'InProgress'})
         var message = this.formMessage(task.taskName, task.status, 'InProgress')
         this.notifySlack(message)
+        this.addNoteForTask(task, message)
       },
       moveToNew(task){
         ipcRenderer.send('task:move', {id: task.id, status: 'New'})
         var message = this.formMessage(task.taskName, task.status, 'New')
         this.notifySlack(message)
+        this.addNoteForTask(task, message)
       },
       moveToComplete(task){
         ipcRenderer.send('task:move', {id: task.id, status: 'Complete'})
         var message = this.formMessage(task.taskName, task.status, 'Complete')
         this.notifySlack(message)
+        this.addNoteForTask(task, message)
       },
       getTaskHealth(){
         // return color - gree, orange, red based on if task was completed on time
@@ -367,10 +380,11 @@
         return this.user.user + ' moved task "' + name + '" from ' + from + ' to ' + to
       }, 
       notifySlack(message){
+        console.log(message)
         fetch('https://slack.com/api/chat.postMessage', {
           method: 'post',
           body: JSON.stringify({
-            "channel": "CGZNB2XRA", //daily-status //"C9Z21JH9D" - random
+            "channel": "C9Z21JH9D", //"CGZNB2XRA" daily-status //"C9Z21JH9D" - random
             "text": message                 
           }),
           headers: { 
@@ -402,7 +416,10 @@
       })
 
       ipcRenderer.on('note:savesuccess', () => {
-        this.loadNotes(this.selectedTask.id)
+        if(this.loadNotesAgain){
+          this.loadNotes(this.selectedTask.id)
+          this.loadNotesAgain = false
+        }        
         this.noteText = ""        
       })
 
