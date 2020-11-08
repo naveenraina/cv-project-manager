@@ -310,10 +310,6 @@
       saveTask(){
         ipcRenderer.send('task:submit', this.selectedTask)
         this.showDialogEdit = false
-        // if(this.selectedTask.id === 0) {
-        //   let project = this.projects.find(x=>x.id === this.selectedTask.projectId)?.projectname
-        //   this.notifySlack(this.selectedTask.taskName, project)
-        // }        
       },
       showEditDialog(task){
         this.selectedTask = task
@@ -350,26 +346,32 @@
       },
       moveToInProgress(task){
         ipcRenderer.send('task:move', {id: task.id, status: 'InProgress'})
-        this.notifySlack(task.taskName, task.status, 'InProgress')
+        var message = this.formMessage(task.taskName, task.status, 'InProgress')
+        this.notifySlack(message)
       },
       moveToNew(task){
         ipcRenderer.send('task:move', {id: task.id, status: 'New'})
-        this.notifySlack(task.taskName, task.status, 'New')
+        var message = this.formMessage(task.taskName, task.status, 'New')
+        this.notifySlack(message)
       },
       moveToComplete(task){
         ipcRenderer.send('task:move', {id: task.id, status: 'Complete'})
-        this.notifySlack(task.taskName, task.status, 'Complete')
+        var message = this.formMessage(task.taskName, task.status, 'Complete')
+        this.notifySlack(message)
       },
       getTaskHealth(){
         // return color - gree, orange, red based on if task was completed on time
 
       },
-      notifySlack(name, from, to){
+      formMessage(name, from, to){
+        return this.user.user + ' moved task "' + name + '" from ' + from + ' to ' + to
+      }, 
+      notifySlack(message){
         fetch('https://slack.com/api/chat.postMessage', {
           method: 'post',
           body: JSON.stringify({
             "channel": "CGZNB2XRA", //daily-status //"C9Z21JH9D" - random
-            "text": this.user.user + ' moved task "' + name + '" from ' + from + ' to ' + to                 
+            "text": message                 
           }),
           headers: { 
             'Content-Type': 'application/json',
