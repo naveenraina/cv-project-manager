@@ -329,7 +329,7 @@
         if(this.selectedTask.estimateddays !== original.estimateddays) {
           message = this.user.user + ' changed estimate from ' + original.estimateddays + ' to ' + this.selectedTask.estimateddays
         }
-        if(this.selectedTask.tocompleteon !== original.tocompleteon) {
+        if(this.selectedTask.tocompleteon.toLocaleDateString() !== original.tocompleteon.toLocaleDateString()) {
           let tocompleteon = original.tocompleteon ? original.tocompleteon.toDateString() : 'BLANK'
           message = this.user.user + ' changed estimate from ' + tocompleteon + ' to ' + this.selectedTask.tocompleteon.toDateString()
         }
@@ -373,10 +373,8 @@
       loadNotes(taskId){
         ipcRenderer.send('notes:get', taskId)
       },
-      loadTasks(){
-        ipcRenderer.send('tasks:getuserassigned', this.user.id)
-        ipcRenderer.send('users:get')
-        this.selectedUserId = this.user.id
+      loadTasks(userId){
+        ipcRenderer.send('tasks:getuserassigned', userId)        
       },
       loadUserDashboard(){
         ipcRenderer.send('tasks:getuserassigned', this.selectedUserId)
@@ -434,7 +432,7 @@
       })
 
       ipcRenderer.on('task:movesuccess', () => {
-        this.loadTasks()
+        this.loadTasks(this.selectedUserId)
       })
 
       ipcRenderer.on('notes:getsuccess', (e, data) => {
@@ -461,7 +459,7 @@
       ipcRenderer.on('task:submitsuccess', () => {        
         this.statusMessage = 'Task saved successfully'
         this.showSnackbar = true
-        this.loadTasks()
+        this.loadTasks(this.selectedUserId)
       })
 
     },
@@ -470,9 +468,11 @@
         return this.$store.state.user
       }
     },
-    created () {      
-      this.loadTasks()
+    created () {
       ipcRenderer.send('projects:get')
+      ipcRenderer.send('users:get')
+      this.selectedUserId = this.user.id
+      this.loadTasks(this.selectedUserId)
     }
   }
 </script>
