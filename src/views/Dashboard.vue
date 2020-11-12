@@ -2,7 +2,7 @@
   <div>      
     <div class="md-layout-item">        
       <div class="md-layout" >
-        <div class="md-layout-item md-size-33">
+        <div class="md-layout-item md-size-30">
           <md-table v-model="tasksNew" md-card md-fixed-header md-sort="createdDate" md-sort-order="desc" style="width:100%">
             <md-table-toolbar>
               <div class="md-toolbar-section-start">
@@ -47,7 +47,7 @@
             </md-table-row>
           </md-table>
         </div>
-        <div class="md-layout-item md-size-33">
+        <div class="md-layout-item md-size-40">
           <md-table v-model="tasksInProgress" md-card md-fixed-header md-sort="startedOn" md-sort-order="desc" style="width:100%">
             <md-table-toolbar>
               <div class="md-toolbar-section-start">
@@ -103,7 +103,7 @@
             </md-table-row>
           </md-table>
         </div>  
-        <div class="md-layout-item md-size-33">
+        <div class="md-layout-item md-size-30">
           <md-table v-model="tasksCompleted" md-card md-fixed-header md-sort="completedOn" md-sort-order="desc" style="width:100%">
             <md-table-toolbar>
               <div class="md-toolbar-section-start">
