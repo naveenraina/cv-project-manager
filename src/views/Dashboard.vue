@@ -325,16 +325,14 @@
             break
         }
         var original = originallist.find(x => x.id === this.selectedTask.id)
-        var message = ''
+        
         if(this.selectedTask.estimateddays !== original.estimateddays) {
-          message = this.user.user + ' changed estimate from ' + original.estimateddays + ' to ' + this.selectedTask.estimateddays
+          let message = this.user.user + ' changed estimate from ' + original.estimateddays + ' to ' + this.selectedTask.estimateddays
+          this.addNoteForTask(this.selectedTask, message)
         }
         if(this.selectedTask.tocompleteon.toLocaleDateString() !== original.tocompleteon.toLocaleDateString()) {
           let tocompleteon = original.tocompleteon ? original.tocompleteon.toDateString() : 'BLANK'
-          message = this.user.user + ' changed estimate from ' + tocompleteon + ' to ' + this.selectedTask.tocompleteon.toDateString()
-        }
-
-        if(message !== ''){
+          let message = this.user.user + ' changed due date from ' + tocompleteon + ' to ' + this.selectedTask.tocompleteon.toDateString()
           this.addNoteForTask(this.selectedTask, message)
         }
 
