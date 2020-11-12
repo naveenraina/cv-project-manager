@@ -3,7 +3,7 @@
     <div class="md-layout-item">        
       <div class="md-layout" >
         <div class="md-layout-item md-size-33">
-          <md-table v-model="tasksNew" md-card md-fixed-header md-sort="createddate" md-sort-order="desc" style="width:100%">
+          <md-table v-model="tasksNew" md-card md-fixed-header md-sort="createdDate" md-sort-order="desc" style="width:100%">
             <md-table-toolbar>
               <div class="md-toolbar-section-start">
                 <h1 class="md-title">Tasks Assigned</h1>
@@ -15,7 +15,7 @@
               <md-table-cell md-label="Name" md-sort-by="taskName">
                 {{ item.taskName }}
                 <md-tooltip md-direction="bottom">
-                  Created on: {{item.createddate && item.createddate.toDateString()}} &nbsp;&nbsp;
+                  Created on: {{item.createdDate && item.createdDate.toDateString()}} &nbsp;&nbsp;
                   <!-- Project: {{item.tocompleteon.toDateString()}} &nbsp;&nbsp;
                   Completed on: {{item.completedon.toDateString()}} -->
                 </md-tooltip>
@@ -48,7 +48,7 @@
           </md-table>
         </div>
         <div class="md-layout-item md-size-33">
-          <md-table v-model="tasksInProgress" md-card md-fixed-header md-sort="createddate" md-sort-order="desc" style="width:100%">
+          <md-table v-model="tasksInProgress" md-card md-fixed-header md-sort="startedOn" md-sort-order="desc" style="width:100%">
             <md-table-toolbar>
               <div class="md-toolbar-section-start">
                 <h1 class="md-title">Tasks In progress</h1>
@@ -69,6 +69,7 @@
                   days left 
                 </div>
                 <md-tooltip md-direction="bottom">
+                  Created on: {{item.createdDate && item.createdDate.toDateString()}} &nbsp;&nbsp;
                   Started on: {{item.startedOn && item.startedOn.toDateString()}} &nbsp;&nbsp;
                   Due on: {{item.tocompleteon && item.tocompleteon.toDateString()}}
                 </md-tooltip>
@@ -103,7 +104,7 @@
           </md-table>
         </div>  
         <div class="md-layout-item md-size-33">
-          <md-table v-model="tasksCompleted" md-card md-fixed-header md-sort="createddate" md-sort-order="desc" style="width:100%">
+          <md-table v-model="tasksCompleted" md-card md-fixed-header md-sort="completedOn" md-sort-order="desc" style="width:100%">
             <md-table-toolbar>
               <div class="md-toolbar-section-start">
                 <h1 class="md-title">Tasks Completed</h1>
@@ -115,9 +116,10 @@
               <md-table-cell md-label="Name" md-sort-by="taskName">
                 {{ item.taskName }}
                 <md-tooltip md-direction="bottom">
-                  Start on: {{item.startedon && item.startedon.toDateString()}} &nbsp;&nbsp;
+                  Created on: {{item.createdDate && item.createdDate.toDateString()}} &nbsp;&nbsp;
+                  Started on: {{item.startedOn && item.startedOn.toDateString()}} &nbsp;&nbsp;
                   Due on: {{item.tocompleteon && item.tocompleteon.toDateString()}} &nbsp;&nbsp;
-                  Completed on: {{item.completedon && item.completedon.toDateString()}}
+                  Completed on: {{item.completedOn && item.completedOn.toDateString()}}
                 </md-tooltip>
               </md-table-cell>
               <md-table-cell>            
