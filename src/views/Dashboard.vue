@@ -1,9 +1,19 @@
 <template>  
   <div>      
-    <div class="md-layout-item">        
+    <div class="md-layout-item">    
+      <div class="md-layout md-alignment-center-right" >
+        <div class="md-layout-item"></div>
+        <div class="md-layout-item md-layout md-alignment-center-right md-size-10">
+          <md-field style="margin-bottom:10px">
+            <md-select v-model="selectedUserId" placeholder="User" @md-selected="loadUserDashboard">
+              <md-option v-for="option in users" :value="option.id" v-bind:key="option.id" >{{option.user}}</md-option>
+            </md-select>
+          </md-field> 
+        </div>        
+      </div>    
       <div class="md-layout" >
         <div class="md-layout-item md-size-30">
-          <md-table v-model="tasksNew" md-card md-fixed-header md-sort="createdDate" md-sort-order="desc" style="width:100%">
+          <md-table v-model="tasksNew" md-card md-fixed-header md-sort="createdDate" md-sort-order="desc" style="width:100%;">
             <md-table-toolbar>
               <div class="md-toolbar-section-start">
                 <h1 class="md-title">Tasks Assigned</h1>
@@ -151,16 +161,7 @@
           </md-table>
         </div>      
       </div> 
-      <div class="md-layout md-alignment-center-right" >
-        <div class="md-layout-item"></div>
-        <div class="md-layout-item md-layout md-alignment-center-right md-size-10">
-          <md-field>
-            <md-select v-model="selectedUserId" placeholder="User" @md-selected="loadUserDashboard">
-              <md-option v-for="option in users" :value="option.id" v-bind:key="option.id" >{{option.user}}</md-option>
-            </md-select>
-          </md-field> 
-        </div>        
-      </div>
+      
     </div>
    
     <md-dialog :md-active.sync="showDialog" md-close-on-esc>
