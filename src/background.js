@@ -30,14 +30,15 @@ if (!gotTheLock) {
   app.on('second-instance', (event, commandLine, workingDirectory) => {
     // Someone tried to run a second instance, we should focus our window.
     if (win) {
-      if (win.isMinimized()) win.restore()
-      win.focus()
+      if (win.isMinimized()){
+         win.restore();
+      }
+      win.maximize();
+      win.focus();
     }
   })
 
   function createWindow() {
-    
-
     // Create the browser window.
     win = new BrowserWindow({
       width: 1200,
@@ -90,8 +91,6 @@ if (!gotTheLock) {
     const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
     Menu.setApplicationMenu(mainMenu);
 
-
-
     var tray = new Tray(path.join(__static, '/icon.ico'));
     var contextMenu = Menu.buildFromTemplate([
       { 
@@ -112,10 +111,10 @@ if (!gotTheLock) {
     tray.setContextMenu(contextMenu)
     tray.setToolTip('cv-project-manager');
 
-    const activationShortcut = globalShortcut.register(
-      'CommandOrControl+C+V',
-      () => { tray.popUpContextMenu(); }
-    );
+    // const activationShortcut = globalShortcut.register(
+    //   'CommandOrControl+C+V',
+    //   () => { tray.popUpContextMenu(); }
+    // );
 
     new ipcTaskEvents().init(ipcMain, win)
     new ipcProjectEvents().init(ipcMain, win)
