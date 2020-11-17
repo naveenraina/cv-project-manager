@@ -17,6 +17,7 @@ autoUpdater.checkForUpdatesAndNotify()
 // be closed automatically when the JavaScript object is garbage collected.
 let win
 let isQuiting = false;
+let tray = null;
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -41,8 +42,6 @@ if (!gotTheLock) {
   function createWindow() {
     // Create the browser window.
     win = new BrowserWindow({
-      width: 1200,
-      height: 800,
       webPreferences: {
         // Use pluginOptions.nodeIntegration, leave this alone
         // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
@@ -91,7 +90,7 @@ if (!gotTheLock) {
     const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
     Menu.setApplicationMenu(mainMenu);
 
-    var tray = new Tray(path.join(__static, '/icon.ico'));
+    tray = new Tray(path.join(__static, '/icon.ico'));
     var contextMenu = Menu.buildFromTemplate([
       { 
         label: 'Show App', 
@@ -100,7 +99,7 @@ if (!gotTheLock) {
         } 
       },
       { 
-        label: 'Quit', 
+        label: 'Exit', 
         click:  function(){
           isQuiting = true;
           app.quit();
@@ -176,7 +175,13 @@ if (!gotTheLock) {
     {
         label: 'File',
         submenu: [
-          { role: 'quit' }
+          { 
+            label: 'Exit', 
+            click:  function(){
+              isQuiting = true;
+              app.quit();
+            }
+          }
         ]
       },
       {
