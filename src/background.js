@@ -175,6 +175,12 @@ if (!gotTheLock) {
     {
         label: 'File',
         submenu: [
+          {
+            label: 'My Profile',
+            click: async () => {
+              win.webContents.send('navigate:profile');
+            }
+          },
           { 
             label: 'Exit', 
             click:  function(){

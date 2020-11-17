@@ -5,6 +5,7 @@ import Home from '@/views/Home.vue'
 import Dashboard from '@/views/Dashboard.vue'
 import Projects from '@/views/Projects.vue'
 import Tasks from '@/views/Tasks.vue'
+import Profile from '@/views/Profile.vue'
 import store from '@/store'
 
 Vue.use(VueRouter)
@@ -34,6 +35,11 @@ const routes = [
     path: '/tasks',
     name: 'Tasks',
     component: Tasks
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: Profile
   },
   // {
   //   path: '/about',

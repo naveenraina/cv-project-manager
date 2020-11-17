@@ -28,6 +28,7 @@
 
 <script>
 import { mapMutations } from 'vuex'
+const ipcRenderer = require('electron').ipcRenderer
 
 export default {
   name: 'App',
@@ -54,6 +55,11 @@ export default {
   },
   mounted(){    
     
+  },
+  created(){
+    ipcRenderer.on('navigate:profile', () => {
+      this.$router.replace('/profile')
+    })
   }
 }
 </script>
