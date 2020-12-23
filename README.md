@@ -1,5 +1,13 @@
 # cv-project-manager
 
+## Configurations
+After you clone the repo, rename following two files and remove .bak entension
+
+/config.js.bak
+/src/db/mysqlconfig.js.bak
+
+Enter the valid values in these files in order to run the app
+
 ## Project setup
 ```
 yarn install
