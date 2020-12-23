@@ -2,9 +2,9 @@
 
 ## Configurations
 After you clone the repo, copy following two files and rename them to .js
+
 ```
 /src/config.js.bak
-```
 /src/db/mysqlconfig.js.bak
 ```
 
