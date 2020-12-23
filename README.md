@@ -1,9 +1,9 @@
 # cv-project-manager
 
 ## Configurations
-After you clone the repo, rename following two files and remove .bak entension
+After you clone the repo, copy following two files and rename them to .js (remove .bak)
 
-/config.js.bak
+/src/config.js.bak
 /src/db/mysqlconfig.js.bak
 
 Enter the valid values in these files in order to run the app
