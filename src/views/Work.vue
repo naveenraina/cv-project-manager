@@ -43,64 +43,68 @@
     <md-content>
      <md-card>
        <md-card-header>
-         <h3>Basic-Inforation</h3>
+         <h3>Work-Information</h3>
          <md-divider></md-divider>
        </md-card-header>
        <div class="md-layout md-gutter md-alignment-center">
     <div class="md-layout-item md-medium-size-45 ">
       <md-field>
-            <label>First Name</label>
-            <md-input v-model="user.fname"></md-input>
+            <label>Employee Name</label>
+            <md-input v-model="user.ename"></md-input>
           </md-field>
         </div>
     <div class="md-layout-item md-medium-size-45 ">
       <md-field>
-            <label>Last Name</label>
-            <md-input v-model="user.lname"></md-input>
-          </md-field>
-        </div>
-        </div>
-     <div class="md-layout md-gutter md-alignment-center">
-    <div class="md-layout-item md-medium-size-45 ">
-               <md-datepicker v-model="dob">
-      <label>D.O.B</label>
-    </md-datepicker>
-        </div>
-    <div class="md-layout-item md-medium-size-45 ">
-      <md-field>
-            <label>Personal Contact Number</label>
-            <md-input v-model="user.contact"></md-input>
+            <label>Employee ID</label>
+            <md-input v-model="user.eid"></md-input>
           </md-field>
         </div>
         </div>
      <div class="md-layout md-gutter md-alignment-center">
     <div class="md-layout-item md-medium-size-45 ">
       <md-field>
-            <label>Personal E-mail Address</label>
-            <md-input v-model="user.email"></md-input>
+            <label>Employee Title</label>
+            <md-input v-model="user.title"></md-input>
           </md-field>
         </div>
-        <div class="md-layout-item md-medium-size-45 ">
+    <div class="md-layout-item md-medium-size-45 ">
       <md-field>
-            <label>Address</label>
-            <md-input v-model="user.address"></md-input>
+            <label>Department</label>
+            <md-input v-model="user.department"></md-input>
           </md-field>
         </div>
         </div>
     <div class="md-layout md-gutter md-alignment-center">
     <div class="md-layout-item md-medium-size-45 ">
       <md-field>
-            <label>City</label>
-            <md-input v-model="user.city"></md-input>
+            <label>Official contact number</label>
+            <md-input v-model="user.contact"></md-input>
           </md-field>
         </div>
-        <div class="md-layout-item md-medium-size-45 ">
+    <div class="md-layout-item md-medium-size-45 ">
       <md-field>
-            <label>Country</label>
-            <md-input v-model="user.country"></md-input>
+            <label>Officail E-mail Id</label>
+            <md-input v-model="user.email"></md-input>
           </md-field>
         </div>
         </div>
+    <div class="md-layout md-gutter md-alignment-center">
+    <div class="md-layout-item md-medium-size-45 ">
+      <md-field>
+            <label>Employee Skype Id</label>
+            <md-input v-model="user.skype"></md-input>
+          </md-field>
+        </div>
+    <div class="md-layout-item md-medium-size-45 ">
+      <md-field>
+            <label>Upwork Id</label>
+            <md-input v-model="user.upwork"></md-input>
+          </md-field>
+        </div>
+        </div>
+        <div class="md-layout md-gutter md-alignment-center">
+        <md-button class="md-dense md-raised md-default">Submit</md-button>
+    </div>
      </md-card>
     </md-content>
   </div>
@@ -111,18 +115,17 @@ export default {
     name: 'profile',
     data: () => ({
       user: {
-        fname:'',
-        lname:'',
+        ename:'',
+        eid:'',
+        title:'',
+        department:'',
+        skype:'',
+        upwork:'',
         contact:'',
-        dob:'',
-        address:'',
-        city:'',
-        country:'',
+        email:'',
       },
       showNavigation: false,
       showSidepanel: false,
-      placeholder:null,
-      dob:null,
     })
   }
 </script>

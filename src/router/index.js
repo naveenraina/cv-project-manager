@@ -6,6 +6,8 @@ import Dashboard from '@/views/Dashboard.vue'
 import Projects from '@/views/Projects.vue'
 import Tasks from '@/views/Tasks.vue'
 import Profile from '@/views/Profile.vue'
+import Work from '@/views/Work.vue'
+import Experience from '@/views/Experience.vue'
 import store from '@/store'
 
 Vue.use(VueRouter)
@@ -40,6 +42,16 @@ const routes = [
     path: '/profile',
     name: 'Profile',
     component: Profile
+  },
+  {
+    path: '/work',
+    name: 'Work',
+    component: Work
+  },
+  {
+    path: '/experience',
+    name: 'Experience',
+    component: Experience
   },
   // {
   //   path: '/about',
