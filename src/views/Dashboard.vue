@@ -13,49 +13,58 @@
       </div>    
       <div class="md-layout" >
         <div class="md-layout-item md-size-30">
-          <md-table v-model="tasksNew" md-card md-fixed-header md-sort="createdDate" md-sort-order="desc" style="width:100%;">
+          <div md-card md-fixed-header style="width:100%;background:white;">
             <md-table-toolbar>
               <div class="md-toolbar-section-start">
                 <h1 class="md-title">Tasks Assigned</h1>
               </div>          
-            </md-table-toolbar>
-
-            <md-table-row slot="md-table-row" slot-scope="{ item }">
-              <!-- <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{ item.id }}</md-table-cell> -->
-              <md-table-cell md-label="Name" md-sort-by="taskName">
-                {{ item.taskName }}
-                <md-tooltip md-direction="bottom">
-                  Created on: {{item.createdDate && item.createdDate.toDateString()}} &nbsp;&nbsp;
-                  <!-- Project: {{item.tocompleteon.toDateString()}} &nbsp;&nbsp;
-                  Completed on: {{item.completedon.toDateString()}} -->
-                </md-tooltip>
-              </md-table-cell>
-              <md-table-cell>
-                <md-menu md-size="small">
-                  <md-button class="md-icon-button" md-menu-trigger>
-                    <md-icon md-menu-trigger>keyboard_arrow_down</md-icon>
-                  </md-button>              
-                  <md-menu-content>
-                    <md-menu-item @click="showEditDialog(item)">Edit</md-menu-item>
-                    <md-menu-item @click="onLoadNotes(item)">Notes</md-menu-item>
-                    <md-menu-item>                  
-                      <md-menu md-direction="bottom-end" md-offset-x=280>
-                        <div md-menu-trigger style="cursor:pointer">
-                          Move To
-                          <md-icon md-menu-trigger>keyboard_arrow_right</md-icon>
-                        </div> 
+            </md-table-toolbar>     
+            <div style="height: 460px; max-height: 460px;overflow-y:auto">       
+              <SlickList lockAxis="y" v-model="tasksNew" tag="ul"  style="list-style-type:none;margin-left: -40px;" @input="saveSequence" @sort-end="dragEnd">
+                <SlickItem v-for="(item, index) in tasksNew" :index="index" :key="index" tag="li" class="card" style="list-style-type:none;border: 1px solid #efefef;">
+                  <md-card>
+                    <md-card-header>
+                      <md-card-header-text>
+                        <div class="md-title" style="cursor:context-menu">{{item.taskName}}</div>
+                        <div class="md-subhead" style="cursor:context-menu">Created on: {{item.createdDate && item.createdDate.toDateString()}}</div>
+                      </md-card-header-text>
+                      <md-menu md-size="small">
+                        <md-button class="md-icon-button" md-menu-trigger>
+                          <md-icon md-menu-trigger>keyboard_arrow_down</md-icon>
+                        </md-button>              
                         <md-menu-content>
-                          <md-menu-item @click="moveToInProgress(item)">InProgress</md-menu-item>
-                          <md-menu-item @click="moveToComplete(item)">Complete</md-menu-item>
+                          <md-menu-item @click="showEditDialog(item)">Edit</md-menu-item>
+                          <md-menu-item @click="onLoadNotes(item)">Notes</md-menu-item>
+                          <md-menu-item>                  
+                            <md-menu md-direction="bottom-end" md-offset-x=280>
+                              <div md-menu-trigger style="cursor:pointer">
+                                Move To
+                                <md-icon md-menu-trigger>keyboard_arrow_right</md-icon>
+                              </div> 
+                              <md-menu-content>
+                                <md-menu-item @click="moveToInProgress(item)">InProgress</md-menu-item>
+                                <md-menu-item @click="moveToComplete(item)">Complete</md-menu-item>
+                              </md-menu-content>
+                            </md-menu>
+                          </md-menu-item> 
+                          
                         </md-menu-content>
                       </md-menu>
-                    </md-menu-item> 
-                    
-                  </md-menu-content>
-                </md-menu>
-              </md-table-cell>
-            </md-table-row>
-          </md-table>
+                    </md-card-header>
+                    <md-card-content>
+                      <div class="md-list-item-text">
+                        <span></span>
+                      </div>
+                    </md-card-content>
+                    <md-card-actions>
+                     
+                    </md-card-actions>
+                  </md-card>                 
+                  
+                </SlickItem>
+              </SlickList>
+            </div>
+          </div>          
         </div>
         <div class="md-layout-item md-size-40">
           <md-table v-model="tasksInProgress" md-card md-fixed-header md-sort="startedOn" md-sort-order="desc" style="width:100%">
@@ -277,6 +286,7 @@
   const fetch = require('node-fetch')
   const config = require('@/config')
   const ipcRenderer = require('electron').ipcRenderer
+  import { SlickList, SlickItem } from 'vue-slicksort'
   var blankTask = {
     id: 0,
     taskName: "",
@@ -305,9 +315,22 @@
       tasksCompleted: [blankTask],
       selectedTask: {},
       projects: [{id: 0, projectname: ''}],
-      loadNotesAgain: false
+      loadNotesAgain: false,
+      isDrag: false,
     }),
-    methods: {
+    methods: {      
+      dragEnd(data){
+        if(data.newIndex !== data.oldIndex){
+          this.isDrag = true
+        } else {
+          this.isDrag = false
+        }
+      },
+      saveSequence(){
+        if(this.isDrag){
+          alert('save')
+        }
+      },
       getDateDifInDays(dt2, dt1){
         return Math.floor((Date.UTC(dt2.getFullYear(), dt2.getMonth(), dt2.getDate()) - Date.UTC(dt1.getFullYear(), dt1.getMonth(), dt1.getDate()) ) /(1000 * 60 * 60 * 24))
       },
@@ -474,7 +497,11 @@
       ipcRenderer.send('users:get')
       this.selectedUserId = this.user.id
       this.loadTasks(this.selectedUserId)
-    }
+    },
+    components: {
+    SlickItem,
+    SlickList,
+  },
   }
 </script>
 
