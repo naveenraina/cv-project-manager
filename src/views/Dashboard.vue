@@ -23,38 +23,35 @@
               <SlickList lockAxis="y" v-model="tasksNew" tag="ul"  style="list-style-type:none;margin-left: -40px;" @input="saveSequence" @sort-end="dragEnd">
                 <SlickItem v-for="(item, index) in tasksNew" :index="index" :key="index" tag="li" class="card" style="list-style-type:none;border: 1px solid #efefef;">
                   <md-card>
-                    <md-card-header>
-                      <md-card-header-text>
-                        <div class="md-title" style="cursor:context-menu">{{item.taskName}}</div>
-                        <div class="md-subhead" style="cursor:context-menu">Created on: {{item.createdDate && item.createdDate.toDateString()}}</div>
-                      </md-card-header-text>
-                      <md-menu md-size="small">
-                        <md-button class="md-icon-button" md-menu-trigger>
-                          <md-icon md-menu-trigger>keyboard_arrow_down</md-icon>
-                        </md-button>              
-                        <md-menu-content>
-                          <md-menu-item @click="showEditDialog(item)">Edit</md-menu-item>
-                          <md-menu-item @click="onLoadNotes(item)">Notes</md-menu-item>
-                          <md-menu-item>                  
-                            <md-menu md-direction="bottom-end" md-offset-x=280>
-                              <div md-menu-trigger style="cursor:pointer">
-                                Move To
-                                <md-icon md-menu-trigger>keyboard_arrow_right</md-icon>
-                              </div> 
-                              <md-menu-content>
-                                <md-menu-item @click="moveToInProgress(item)">InProgress</md-menu-item>
-                                <md-menu-item @click="moveToComplete(item)">Complete</md-menu-item>
-                              </md-menu-content>
-                            </md-menu>
-                          </md-menu-item> 
-                          
-                        </md-menu-content>
-                      </md-menu>
-                    </md-card-header>
                     <md-card-content>
-                      <div class="md-list-item-text">
-                        <span></span>
+                      <div class="row" style="display:inline-flex">
+                        <div class="col" style="max-width:250px">
+                          <div class="" style="cursor:context-menu">{{item.taskName}}</div>
+                          <div class="md-subhead" style="cursor:context-menu">Created on: {{item.createdDate && item.createdDate.toDateString()}}</div>
+                        </div>
                       </div>
+                      <md-menu md-size="small" style="float:right">
+                            <md-button class="md-icon-button" md-menu-trigger>
+                              <md-icon md-menu-trigger>keyboard_arrow_down</md-icon>
+                            </md-button>              
+                            <md-menu-content>
+                              <md-menu-item @click="showEditDialog(item)">Edit</md-menu-item>
+                              <md-menu-item @click="onLoadNotes(item)">Notes</md-menu-item>
+                              <md-menu-item>                  
+                                <md-menu md-direction="bottom-end" md-offset-x=280>
+                                  <div md-menu-trigger style="cursor:pointer">
+                                    Move To
+                                    <md-icon md-menu-trigger>keyboard_arrow_right</md-icon>
+                                  </div> 
+                                  <md-menu-content>
+                                    <md-menu-item @click="moveToInProgress(item)">InProgress</md-menu-item>
+                                    <md-menu-item @click="moveToComplete(item)">Complete</md-menu-item>
+                                  </md-menu-content>
+                                </md-menu>
+                              </md-menu-item> 
+                              
+                            </md-menu-content>
+                          </md-menu>
                     </md-card-content>
                     <md-card-actions>
                      
