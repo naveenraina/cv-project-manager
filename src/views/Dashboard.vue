@@ -13,13 +13,13 @@
       </div>    
       <div class="md-layout" >
         <div class="md-layout-item md-size-30">
-          <div md-card md-fixed-header style="width:100%;background:white;">
+          <div md-fixed-header style="width:100%;background-color:white">
             <md-table-toolbar>
               <div class="md-toolbar-section-start">
                 <h1 class="md-title">Tasks Assigned</h1>
               </div>          
             </md-table-toolbar>     
-            <div style="height: 460px; max-height: 460px;overflow-y:auto">       
+            <md-content style="height: 460px; max-height: 460px;overflow:auto" class="md-scrollbar">       
               <SlickList lockAxis="y" v-model="tasksNew" tag="ul"  style="list-style-type:none;margin-left: -40px;" @input="saveSequence" @sort-end="dragEnd">
                 <SlickItem v-for="(item, index) in tasksNew" :index="index" :key="index" tag="li" class="card" style="list-style-type:none;border: 1px solid #efefef;">
                   <md-card>
@@ -31,93 +31,92 @@
                         </div>
                       </div>
                       <md-menu md-size="small" style="float:right">
-                            <md-button class="md-icon-button" md-menu-trigger>
-                              <md-icon md-menu-trigger>keyboard_arrow_down</md-icon>
-                            </md-button>              
-                            <md-menu-content>
-                              <md-menu-item @click="showEditDialog(item)">Edit</md-menu-item>
-                              <md-menu-item @click="onLoadNotes(item)">Notes</md-menu-item>
-                              <md-menu-item>                  
-                                <md-menu md-direction="bottom-end" md-offset-x=280>
-                                  <div md-menu-trigger style="cursor:pointer">
-                                    Move To
-                                    <md-icon md-menu-trigger>keyboard_arrow_right</md-icon>
-                                  </div> 
-                                  <md-menu-content>
-                                    <md-menu-item @click="moveToInProgress(item)">InProgress</md-menu-item>
-                                    <md-menu-item @click="moveToComplete(item)">Complete</md-menu-item>
-                                  </md-menu-content>
-                                </md-menu>
-                              </md-menu-item> 
-                              
-                            </md-menu-content>
-                          </md-menu>
+                        <md-button class="md-icon-button" md-menu-trigger>
+                          <md-icon md-menu-trigger>keyboard_arrow_down</md-icon>
+                        </md-button>              
+                        <md-menu-content>
+                          <md-menu-item @click="showEditDialog(item)">Edit</md-menu-item>
+                          <md-menu-item @click="onLoadNotes(item)">Notes</md-menu-item>
+                          <md-menu-item>                  
+                            <md-menu md-direction="bottom-end" md-offset-x=280>
+                              <div md-menu-trigger style="cursor:pointer">
+                                Move To
+                                <md-icon md-menu-trigger>keyboard_arrow_right</md-icon>
+                              </div> 
+                              <md-menu-content>
+                                <md-menu-item @click="moveToInProgress(item)">InProgress</md-menu-item>
+                                <md-menu-item @click="moveToComplete(item)">Complete</md-menu-item>
+                              </md-menu-content>
+                            </md-menu>
+                          </md-menu-item> 
+                          
+                        </md-menu-content>
+                      </md-menu>
                     </md-card-content>
-                    <md-card-actions>
-                     
+                    <md-card-actions>                     
                     </md-card-actions>
-                  </md-card>                 
-                  
+                  </md-card>
                 </SlickItem>
               </SlickList>
-            </div>
+            </md-content>
           </div>          
         </div>
         <div class="md-layout-item md-size-40">
-          <md-table v-model="tasksInProgress" md-card md-fixed-header md-sort="startedOn" md-sort-order="desc" style="width:100%">
+          <div md-fixed-header style="width:100%;;background-color:white">
             <md-table-toolbar>
               <div class="md-toolbar-section-start">
                 <h1 class="md-title">Tasks In progress</h1>
-              </div>
-            </md-table-toolbar>
-
-            <md-table-row slot="md-table-row" slot-scope="{ item }" :class="[true === true? '': 'task-delayed']">
-              <!-- <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{ item.id }}</md-table-cell> -->
-              <md-table-cell md-label="Name" md-sort-by="taskName">
-                {{ item.taskName }} 
-                <div> 
-                  <strong v-if="item.tocompleteon && item.startedOn">
-                  {{ getDateDifInDays(item.tocompleteon, new Date() ) }} of {{ getDateDifInDays(item.tocompleteon, item.startedOn) }}
-                  </strong>
-                  <strong v-else>
-                  (Due date missing)
-                  </strong>
-                  days left 
-                </div>
-                <md-tooltip md-direction="bottom">
-                  Created on: {{item.createdDate && item.createdDate.toDateString()}} &nbsp;&nbsp;
-                  Started on: {{item.startedOn && item.startedOn.toDateString()}} &nbsp;&nbsp;
-                  Due on: {{item.tocompleteon && item.tocompleteon.toDateString()}}
-                </md-tooltip>
-              </md-table-cell>
-              <md-table-cell md-label="Due on" md-sort-by="tocompleteon">{{ item.tocompleteon && item.tocompleteon.toDateString() }}</md-table-cell>
-          
-              <md-table-cell>
-                <md-menu md-size="small">
-                  <md-button class="md-icon-button" md-menu-trigger>
-                    <md-icon md-menu-trigger>keyboard_arrow_down</md-icon>
-                  </md-button>              
-                  <md-menu-content>   
-                    <md-menu-item @click="showEditDialog(item)">Edit</md-menu-item> 
-                    <md-menu-item @click="onLoadNotes(item)">Notes</md-menu-item>
-                    <md-menu-item>                  
-                      <md-menu md-direction="bottom-end" md-offset-x=280>
-                        <div md-menu-trigger style="cursor:pointer">
-                          Move To
-                          <md-icon md-menu-trigger>keyboard_arrow_right</md-icon>
-                        </div> 
+              </div>          
+            </md-table-toolbar>     
+            <md-content style="height: 460px; max-height: 460px;overflow:auto" class="md-scrollbar">       
+              <SlickList lockAxis="y" tag="ul" v-model="tasksInProgress" style="list-style-type:none;margin-left: -40px;" @input="saveSequence" @sort-end="dragEnd">
+                <SlickItem v-for="(item, index) in tasksInProgress" :index="index" :key="index" tag="li" class="card" style="list-style-type:none;border: 1px solid #efefef;">
+                  <md-card>
+                    <md-card-content>
+                      <div class="row" style="display:inline-flex">
+                        <div class="col" style="max-width:250px">
+                          <div class="" style="cursor:context-menu">{{item.taskName}}</div>
+                          <div class="md-subhead" style="cursor:context-menu">
+                            <strong v-if="item.tocompleteon && item.startedOn">
+                            {{ getDateDifInDays(item.tocompleteon, new Date() ) }} of {{ getDateDifInDays(item.tocompleteon, item.startedOn) }}
+                            </strong>
+                            <strong v-else>
+                            (Due date missing)
+                            </strong>
+                            days left 
+                          </div>
+                        </div>
+                      </div>
+                      <md-menu md-size="small" style="float:right">
+                        <md-button class="md-icon-button" md-menu-trigger>
+                          <md-icon md-menu-trigger>keyboard_arrow_down</md-icon>
+                        </md-button>              
                         <md-menu-content>
-                          <md-menu-item @click="moveToComplete(item)">Complete</md-menu-item>
-                          <md-menu-item @click="moveToNew(item)">New</md-menu-item>
+                          <md-menu-item @click="showEditDialog(item)">Edit</md-menu-item>
+                          <md-menu-item @click="onLoadNotes(item)">Notes</md-menu-item>
+                          <md-menu-item>                  
+                            <md-menu md-direction="bottom-end" md-offset-x=280>
+                              <div md-menu-trigger style="cursor:pointer">
+                                Move To
+                                <md-icon md-menu-trigger>keyboard_arrow_right</md-icon>
+                              </div> 
+                              <md-menu-content>
+                                <md-menu-item @click="moveToInProgress(item)">InProgress</md-menu-item>
+                                <md-menu-item @click="moveToComplete(item)">Complete</md-menu-item>
+                              </md-menu-content>
+                            </md-menu>
+                          </md-menu-item> 
+                          
                         </md-menu-content>
                       </md-menu>
-                    </md-menu-item>           
-                    
-                  </md-menu-content>
-                </md-menu>
-              </md-table-cell>
-            </md-table-row>
-          </md-table>
+                    </md-card-content>
+                    <md-card-actions>                     
+                    </md-card-actions>
+                  </md-card>
+                </SlickItem>
+              </SlickList>
+            </md-content>
+          </div> 
         </div>  
         <div class="md-layout-item md-size-30">
           <md-table v-model="tasksCompleted" md-card md-fixed-header md-sort="completedOn" md-sort-order="desc" style="width:100%">
@@ -323,9 +322,9 @@
           this.isDrag = false
         }
       },
-      saveSequence(){
+      saveSequence(newArry){
         if(this.isDrag){
-          alert('save')
+          console.log(newArry)
         }
       },
       getDateDifInDays(dt2, dt1){
