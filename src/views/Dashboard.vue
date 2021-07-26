@@ -13,7 +13,7 @@
       </div>    
       <div class="md-layout" >
         <div class="md-layout-item md-size-30">
-          <div md-fixed-header style="width:100%;background-color:white">
+          <div md-fixed-header style="width:100%;background-color:white;border-right: #ccc solid 1px;">
             <md-table-toolbar>
               <div class="md-toolbar-section-start">
                 <h1 class="md-title">Tasks Assigned</h1>
@@ -62,7 +62,7 @@
           </div>          
         </div>
         <div class="md-layout-item md-size-40">
-          <div md-fixed-header style="width:100%;;background-color:white">
+          <div md-fixed-header style="width:100%;;background-color:white;border-right: #ccc solid 1px;">
             <md-table-toolbar>
               <div class="md-toolbar-section-start">
                 <h1 class="md-title">Tasks In progress</h1>
@@ -444,7 +444,15 @@
       ipcRenderer.on('tasks:userassignedsuccess', (e, data) => {          
         this.tasksNew = data.filter(x=> x.status === 'New')
         this.tasksInProgress = data.filter(x=> x.status === 'InProgress')
-        this.tasksCompleted = data.filter(x=> x.status === 'Complete')
+        this.tasksCompleted = data.filter(x=> x.status === 'Complete').sort((a,b) => {
+          if(a.completedOn.getTime() > b.completedOn.getTime()){
+            return -1
+          } else if(a.completedOn.getTime() < b.completedOn.getTime()){
+            return 1
+          } else {
+            return 0
+          }
+        })
       })
 
       ipcRenderer.on('users:success', (e, data) => {
