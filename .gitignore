@@ -26,3 +26,6 @@ pnpm-debug.log*
 /dist_electron
 src/config.js
 src/db/mysqlconfig.js
+
+config.js
+mysqlconfig.js
