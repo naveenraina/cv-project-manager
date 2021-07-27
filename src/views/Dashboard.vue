@@ -324,7 +324,16 @@
       },
       saveSequence(newArry){
         if(this.isDrag){
-          console.log(newArry)
+          var toSave = newArry.map(x => {
+            return {
+              taskId: x.id,
+              previousId: newArry.indexOf(x),
+              taskName: x.taskName
+            }
+          })
+          console.log(toSave)
+          //call new method to save toSave
+          ipcRenderer.send('task:saveSequence', toSave)
         }
       },
       getDateDifInDays(dt2, dt1){
@@ -442,8 +451,32 @@
     mounted(){        
       //Register IPC Renderer event handles once for this control
       ipcRenderer.on('tasks:userassignedsuccess', (e, data) => {          
-        this.tasksNew = data.filter(x=> x.status === 'New')
-        this.tasksInProgress = data.filter(x=> x.status === 'InProgress')
+        this.tasksNew = data.filter(x=> x.status === 'New').sort((a,b) => {
+          if(!a.previousId && !b.previousId){
+            return 0;
+          } else if(!a.previousId){
+            return -1;
+          } else if(a.previousId > b.previousId){
+            return 1
+          } else if(a.previousId < b.previousId){
+            return -1
+          } else {
+            return 0
+          }
+        })
+        this.tasksInProgress = data.filter(x=> x.status === 'InProgress').sort((a,b) => {
+          if(!a.previousId && !b.previousId){
+            return 0;
+          } else if(!a.previousId){
+            return -1;
+          } else if(a.previousId > b.previousId){
+            return 1
+          } else if(a.previousId < b.previousId){
+            return -1
+          } else {
+            return 0
+          }
+        })
         this.tasksCompleted = data.filter(x=> x.status === 'Complete').sort((a,b) => {
           if(a.completedOn.getTime() > b.completedOn.getTime()){
             return -1
@@ -488,6 +521,11 @@
         this.statusMessage = 'Task saved successfully'
         this.showSnackbar = true
         this.loadTasks(this.selectedUserId)
+      })
+
+      ipcRenderer.on('task:saveSequencesuccess', () => {
+        //console.log('sequence updated')
+        //this.loadTasks(this.selectedUserId)
       })
 
     },

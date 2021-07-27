@@ -50,6 +50,12 @@ export default class ipcTaskEvents {
       })
     })
 
+    ipcMain.on('task:saveSequence', function(e, data){
+      mysqlTaskHelper.default.saveSequence(data, function(response){
+          win.webContents.send('task:saveSequencesuccess', response)
+      })
+    })
+
   }
 
 }

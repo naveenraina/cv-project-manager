@@ -68,7 +68,7 @@ function getTaskById(taskId, callback){
 
 function getTasksAssignedToUser(userId, callback){
     // Perform a query
-    let query = 'SELECT t.id, t.taskName, t.description, t.userId, u.user, t.projectId, p.projectName, t.startedOn, t.tocompleteon, t.completedOn, t.createdDate, t.updatedDate, t.status, t.estimateddays, t.priority FROM tasks t left join users u on t.userid = u.id left join projects p on p.id = t.projectid where t.userId = ? order by t.priority desc';
+    let query = 'SELECT t.id, t.taskName, t.description, t.userId, u.user, t.projectId, p.projectName, t.startedOn, t.tocompleteon, t.completedOn, t.createdDate, t.updatedDate, t.status, t.estimateddays, t.priority, t.previousId FROM tasks t left join users u on t.userid = u.id left join projects p on p.id = t.projectid where t.userId = ? order by t.priority desc';
     connectionPool.query(query,[userId], function(err, rows) {
         if(err){
             console.log("An error ocurred performing the query.");
@@ -179,7 +179,24 @@ function deleteNote(id, callback){
     });  
 }
 
+function saveSequence(data, callback){ 
+    data.forEach(element => {
+        let query = 'update `tasks` set PreviousId=? where ID=?';
+        connectionPool.query(query, [element.previousId, element.taskId ], function(err, rows) {
+            if(err){
+                console.log("An error ocurred performing the query.");
+                console.log(err);
+                return;
+            } else {
+                callback(rows)
+            }
+        });
+    });
+    
+}
+
 export default {    
     saveTask, getTasks, getTasksAssignedToUser, deleteTask, moveTask,
-    getNotes, saveNote, deleteNote
+    getNotes, saveNote, deleteNote,
+    saveSequence
 }
