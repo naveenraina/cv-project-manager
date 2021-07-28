@@ -25,7 +25,7 @@
                   <md-card>
                     <md-card-content>
                       <div class="row" style="display:inline-flex">
-                        <div class="col" style="max-width:250px">
+                        <div class="col" style="max-width:245px">
                           <div class="" style="cursor:context-menu">{{item.taskName}}</div>
                           <div class="md-subhead" style="cursor:context-menu">Created on: {{item.createdDate && item.createdDate.toDateString()}}</div>
                         </div>
@@ -74,7 +74,7 @@
                   <md-card>
                     <md-card-content>
                       <div class="row" style="display:inline-flex">
-                        <div class="col" style="max-width:250px">
+                        <div class="col" style="max-width:245px">
                           <div class="" style="cursor:context-menu">{{item.taskName}}</div>
                           <div class="md-subhead" style="cursor:context-menu">
                             <strong v-if="item.tocompleteon && item.startedOn">

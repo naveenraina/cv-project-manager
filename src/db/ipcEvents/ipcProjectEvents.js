@@ -27,13 +27,6 @@ export default class ipcProjectEvents {
           win.webContents.send('project:deletesuccess', response)
       })
     })
-
-    ipcMain.on('project:new', function(e, data){    
-      mysqlhelper.default.saveproject(data, function(data){
-        win.webContents.send('project:newsuccess', data)
-      })
-    })
-
   }
 
 }
