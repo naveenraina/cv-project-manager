@@ -1,6 +1,6 @@
-<template>  
-  <div>      
-    <div class="md-layout-item">    
+<template>
+  <div>
+    <div class="md-layout-item">
       <div class="md-layout md-alignment-center-right" >
         <div class="md-layout-item"></div>
         <div class="md-layout-item md-layout md-alignment-center-right md-size-10">
@@ -8,18 +8,18 @@
             <md-select v-model="selectedUserId" placeholder="User" @md-selected="loadUserDashboard">
               <md-option v-for="option in users" :value="option.id" v-bind:key="option.id" >{{option.user}}</md-option>
             </md-select>
-          </md-field> 
-        </div>        
-      </div>    
+          </md-field>
+        </div>
+      </div>
       <div class="md-layout" >
         <div class="md-layout-item md-size-30">
           <div md-fixed-header style="width:100%;background-color:white;border-right: #ccc solid 1px;">
             <md-table-toolbar>
               <div class="md-toolbar-section-start">
                 <h1 class="md-title">Tasks Assigned</h1>
-              </div>          
-            </md-table-toolbar>     
-            <md-content style="height: 460px; max-height: 460px;overflow:auto" class="md-scrollbar">       
+              </div>
+            </md-table-toolbar>
+            <md-content style="height: 460px; max-height: 460px;overflow:auto" class="md-scrollbar">
               <SlickList lockAxis="y" v-model="tasksNew" tag="ul"  style="list-style-type:none;margin-left: -40px;" @input="saveSequence" @sort-end="dragEnd">
                 <SlickItem v-for="(item, index) in tasksNew" :index="index" :key="index" tag="li" class="card" style="list-style-type:none;border: 1px solid #efefef;">
                   <md-card>
@@ -33,42 +33,42 @@
                       <md-menu md-size="small" style="float:right">
                         <md-button class="md-icon-button" md-menu-trigger>
                           <md-icon md-menu-trigger>keyboard_arrow_down</md-icon>
-                        </md-button>              
+                        </md-button>
                         <md-menu-content>
                           <md-menu-item @click="showEditDialog(item)">Edit</md-menu-item>
                           <md-menu-item @click="onLoadNotes(item)">Notes</md-menu-item>
-                          <md-menu-item>                  
+                          <md-menu-item>
                             <md-menu md-direction="bottom-end" md-offset-x=280>
                               <div md-menu-trigger style="cursor:pointer">
                                 Move To
                                 <md-icon md-menu-trigger>keyboard_arrow_right</md-icon>
-                              </div> 
+                              </div>
                               <md-menu-content>
                                 <md-menu-item @click="moveToInProgress(item)">InProgress</md-menu-item>
                                 <md-menu-item @click="moveToComplete(item)">Complete</md-menu-item>
                               </md-menu-content>
                             </md-menu>
-                          </md-menu-item> 
-                          
+                          </md-menu-item>
+
                         </md-menu-content>
                       </md-menu>
                     </md-card-content>
-                    <md-card-actions>                     
+                    <md-card-actions>
                     </md-card-actions>
                   </md-card>
                 </SlickItem>
               </SlickList>
             </md-content>
-          </div>          
+          </div>
         </div>
         <div class="md-layout-item md-size-40">
           <div md-fixed-header style="width:100%;;background-color:white;border-right: #ccc solid 1px;">
             <md-table-toolbar>
               <div class="md-toolbar-section-start">
                 <h1 class="md-title">Tasks In progress</h1>
-              </div>          
-            </md-table-toolbar>     
-            <md-content style="height: 460px; max-height: 460px;overflow:auto" class="md-scrollbar">       
+              </div>
+            </md-table-toolbar>
+            <md-content style="height: 460px; max-height: 460px;overflow:auto" class="md-scrollbar">
               <SlickList lockAxis="y" tag="ul" v-model="tasksInProgress" style="list-style-type:none;margin-left: -40px;" @input="saveSequence" @sort-end="dragEnd">
                 <SlickItem v-for="(item, index) in tasksInProgress" :index="index" :key="index" tag="li" class="card" style="list-style-type:none;border: 1px solid #efefef;">
                   <md-card>
@@ -83,41 +83,41 @@
                             <strong v-else>
                             (Due date missing)
                             </strong>
-                            days left 
+                            days left
                           </div>
                         </div>
                       </div>
                       <md-menu md-size="small" style="float:right">
                         <md-button class="md-icon-button" md-menu-trigger>
                           <md-icon md-menu-trigger>keyboard_arrow_down</md-icon>
-                        </md-button>              
+                        </md-button>
                         <md-menu-content>
                           <md-menu-item @click="showEditDialog(item)">Edit</md-menu-item>
                           <md-menu-item @click="onLoadNotes(item)">Notes</md-menu-item>
-                          <md-menu-item>                  
+                          <md-menu-item>
                             <md-menu md-direction="bottom-end" md-offset-x=280>
                               <div md-menu-trigger style="cursor:pointer">
                                 Move To
                                 <md-icon md-menu-trigger>keyboard_arrow_right</md-icon>
-                              </div> 
+                              </div>
                               <md-menu-content>
                                 <md-menu-item @click="moveToInProgress(item)">InProgress</md-menu-item>
                                 <md-menu-item @click="moveToComplete(item)">Complete</md-menu-item>
                               </md-menu-content>
                             </md-menu>
-                          </md-menu-item> 
-                          
+                          </md-menu-item>
+
                         </md-menu-content>
                       </md-menu>
                     </md-card-content>
-                    <md-card-actions>                     
+                    <md-card-actions>
                     </md-card-actions>
                   </md-card>
                 </SlickItem>
               </SlickList>
             </md-content>
-          </div> 
-        </div>  
+          </div>
+        </div>
         <div class="md-layout-item md-size-30">
           <md-table v-model="tasksCompleted" md-card md-fixed-header md-sort="completedOn" md-sort-order="desc" style="width:100%">
             <md-table-toolbar>
@@ -137,43 +137,43 @@
                   Completed on: {{item.completedOn && item.completedOn.toDateString()}}
                 </md-tooltip>
               </md-table-cell>
-              <md-table-cell>            
+              <md-table-cell>
                 <md-menu>
                   <md-button class="md-icon-button" md-menu-trigger>
                     <md-icon md-menu-trigger>keyboard_arrow_down</md-icon>
-                  </md-button>              
+                  </md-button>
                   <md-menu-content>
                     <md-menu-item @click="showEditDialog(item)">Edit</md-menu-item>
                     <md-menu-item @click="onLoadNotes(item)">Notes</md-menu-item>
-                    <md-menu-item>                  
+                    <md-menu-item>
                       <md-menu md-direction="bottom-end" md-offset-x=280>
                         <div md-menu-trigger style="cursor:pointer">
                           Move To
                           <md-icon md-menu-trigger>keyboard_arrow_right</md-icon>
-                        </div> 
+                        </div>
                         <md-menu-content>
-                          <md-menu-item @click="moveToInProgress(item)">InProgress</md-menu-item>    
+                          <md-menu-item @click="moveToInProgress(item)">InProgress</md-menu-item>
                           <md-menu-item @click="moveToNew(item)">New</md-menu-item>
                         </md-menu-content>
                       </md-menu>
                     </md-menu-item>
-                    
-                  </md-menu-content>  
+
+                  </md-menu-content>
                 </md-menu>
               </md-table-cell>
-            
+
             </md-table-row>
           </md-table>
-        </div>      
-      </div> 
-      
+        </div>
+      </div>
+
     </div>
-   
+
     <md-dialog :md-active.sync="showDialog" md-close-on-esc>
       <md-dialog-title>Notes for ({{selectedTask.taskName}})</md-dialog-title>
 
-      <div class="md-dialog-content md-layout" style="width:800px"> 
-        
+      <div class="md-dialog-content md-layout" style="width:800px">
+
         <md-field >
           <label>Add Note</label>
           <md-textarea md-autogrow v-model="noteText"></md-textarea>
@@ -181,7 +181,7 @@
             <md-icon>send</md-icon>
           </md-button>
         </md-field>
-        
+
         <md-list class="md-triple-line" style="padding-top:20px;width:100%">
           <template v-for="note in notes">
             <md-list-item :key="note.id">
@@ -205,16 +205,16 @@
         <div v-if="notes.length === 0" style="color:grey"><span> No notes found </span></div>
       </div>
 
-      <md-dialog-actions style="">        
+      <md-dialog-actions style="">
         <md-button class="md-primary" @click="showDialog = false">Cancel</md-button>
       </md-dialog-actions>
     </md-dialog>
 
 
-    <md-dialog :md-active.sync="showDialogEdit" md-close-on-esc>
+    <md-dialog   :md-active.sync="showDialogEdit" md-close-on-esc>
       <md-dialog-title>Edit ({{selectedTask.taskName}})</md-dialog-title>
 
-      <div class="md-dialog-content md-layout">      
+      <div class="md-dialog-content md-layout">
           <div class="md-layout-item" style="width:600px">
             <md-field>
               <label>Task name</label>
@@ -264,18 +264,32 @@
                 </md-field>
               </div>
             </div>
-            
-            
+
+
           </div>
         </div>
 
+
         <md-dialog-actions>
+          <md-button class="md-primary"  style="margin-right:420px" @click="ondelete(selectedTask.id)">Delete</md-button>
           <md-button class="md-primary" @click="showDialogEdit=false">Cancel</md-button>
           <md-button class="md-primary" @click="saveTask">Save</md-button>
         </md-dialog-actions>
-    </md-dialog>
 
-  </div>    
+    </md-dialog>
+    <md-dialog-confirm
+      :md-active.sync="showDialogDeleteConfirmaton"
+      md-title="Are you sure"
+      md-content="This will permanently delete this item"
+      md-confirm-text="Agree"
+      md-cancel-text="Disagree"
+      @md-confirm="deleteTask" />
+        <md-snackbar md-position="center" :md-duration="4000" :md-active.sync="showSnackbar" md-persistent>
+        <span>{{statusMessage}}</span>
+      </md-snackbar>
+
+
+  </div>
 </template>
 
 <script>
@@ -287,7 +301,7 @@
     id: 0,
     taskName: "",
     description: ""
-  } 
+  }
   let blankNote = {
     id: 0,
     description: null,
@@ -304,6 +318,9 @@
       notes: [blankNote],
       showDialog: false,
       showDialogEdit: false,
+      showDialogDeleteConfirmaton: false,
+       showSnackbar: false,
+       tasks: [{ taskName: ''}],
       selectedUserId: 0,
       users: [{id: 0, user: ''}],
       tasksNew: [blankTask],
@@ -314,7 +331,7 @@
       loadNotesAgain: false,
       isDrag: false,
     }),
-    methods: {      
+    methods: {
       dragEnd(data){
         if(data.newIndex !== data.oldIndex){
           this.isDrag = true
@@ -356,7 +373,7 @@
             break
         }
         var original = originallist.find(x => x.id === this.selectedTask.id)
-        
+
         if(this.selectedTask.estimateddays !== original.estimateddays) {
           let message = this.user.user + ' changed estimate from ' + original.estimateddays + ' to ' + this.selectedTask.estimateddays
           this.addNoteForTask(this.selectedTask, message)
@@ -371,6 +388,14 @@
       showEditDialog(task){
         this.selectedTask = { ...task }
         this.showDialogEdit=true
+      },
+      ondelete(taskId){
+        this.showDialogEdit=false;
+        this.taskDeleteId = taskId
+        this.showDialogDeleteConfirmaton = true;
+      },
+      deleteTask(){
+        ipcRenderer.send('task:delete', {id: this.taskDeleteId})
       },
       updateTask(){
 
@@ -403,7 +428,7 @@
         ipcRenderer.send('notes:get', taskId)
       },
       loadTasks(userId){
-        ipcRenderer.send('tasks:getuserassigned', userId)        
+        ipcRenderer.send('tasks:getuserassigned', userId)
       },
       loadUserDashboard(){
         ipcRenderer.send('tasks:getuserassigned', this.selectedUserId)
@@ -432,25 +457,25 @@
       },
       formMessage(name, from, to){
         return this.user.user + ' moved task "' + name + '" from ' + from + ' to ' + to
-      }, 
+      },
       notifySlack(message){
         console.log(message)
         fetch('https://slack.com/api/chat.postMessage', {
           method: 'post',
           body: JSON.stringify({
             "channel": "CGZNB2XRA", //"CGZNB2XRA" daily-status //"C9Z21JH9D" - random
-            "text": message                 
+            "text": message
           }),
-          headers: { 
+          headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + config.default.slackToken
           }
         })
       }
     },
-    mounted(){        
+    mounted(){
       //Register IPC Renderer event handles once for this control
-      ipcRenderer.on('tasks:userassignedsuccess', (e, data) => {          
+      ipcRenderer.on('tasks:userassignedsuccess', (e, data) => {
         this.tasksNew = data.filter(x=> x.status === 'New').sort((a,b) => {
           if(!a.previousId && !b.previousId){
             return 0;
@@ -505,8 +530,8 @@
         if(this.loadNotesAgain){
           this.loadNotes(this.selectedTask.id)
           this.loadNotesAgain = false
-        }        
-        this.noteText = ""        
+        }
+        this.noteText = ""
       })
 
       ipcRenderer.on('note:deletesuccess', () => {
@@ -517,11 +542,16 @@
         this.projects = data
       })
 
-      ipcRenderer.on('task:submitsuccess', () => {        
+      ipcRenderer.on('task:submitsuccess', () => {
         this.statusMessage = 'Task saved successfully'
         this.showSnackbar = true
         this.loadTasks(this.selectedUserId)
       })
+        ipcRenderer.on('task:deletesuccess', () => {
+          this.statusMessage = 'Task removed successfully'
+          this.showSnackbar = true
+          this.loadTasks(this.selectedUserId)
+        })
 
       ipcRenderer.on('task:saveSequencesuccess', () => {
         //console.log('sequence updated')
@@ -548,7 +578,7 @@
 </script>
 
 <style lang="less" scoped>
-   
+
   .main-div{
     margin-top: 40px;
   }
