@@ -1,18 +1,56 @@
 const mysqlConnectionPool = require('@/db/mysqlConnectionPool'); 
 
 let connectionPool = mysqlConnectionPool.default.createConnectionPool();
+function saveUser(data, callback){
+  let query = 'INSERT INTO `users` (user, password, status, role) VALUES(?, ?, ?, ?)';
+    connectionPool.query(query, [data.userName, data.password, data.status, data.role], function(err, rows) {
+        if(err){
+            console.log("An error ocurred performing the query.");
+            console.log(err);
+            
+            return;
+        } else {
+            callback(rows)
+        }
+    });
+}
 
+function editUser(data, callback) {
+ let query ='update `users` set user=?,password=?,status=?,role=? where id=?';
+    connectionPool.query(query, [data.name,data.password,data.status,data.role,data.id], function(err, rows){
+        if(err){
+           console.log("An error ocurred performing the query.")
+            console.log(err);
+             callback();
+        return;
+    }else {
+        callback(rows)
+     }
+    });
+}
 function getUsers(callback){
-    // Perform a query
-    let query = 'SELECT id, user FROM `users`';
+    let query = 'SELECT id, user, password, status, role FROM `users`';
     connectionPool.query(query, function(err, rows) {
         if(err){
             console.log("An error ocurred performing the query.");
             console.log(err);
             return;
         }
-        callback(rows)        
+        callback(rows)         
     });          
+}
+
+function deleteUser(data, callback){
+    let query = 'delete from `users` where id=?';
+    connectionPool.query(query, [data.id], function(err, rows) {
+        if(err){
+            console.log("An error ocurred performing the query.");
+            console.log(err);
+            return;
+        } else {
+            callback('success')    
+        }            
+    });  
 }
 
 function login(username, password, callback){
@@ -21,7 +59,7 @@ function login(username, password, callback){
     connectionPool.query(query,[username, password], function(err, rows) {
         if(err){
             console.log("An error ocurred performing the query.");
-            console.log(err);
+            console.log(err);            
             return;
         }
         if(rows.length > 0){
@@ -33,5 +71,5 @@ function login(username, password, callback){
 }
 
 export default {    
-    login, getUsers
+    login, getUsers, deleteUser, saveUser , editUser
 }
