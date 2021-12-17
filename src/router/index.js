@@ -7,7 +7,7 @@ import Projects from '@/views/Projects.vue'
 import Tasks from '@/views/Tasks.vue'
 import Profile from '@/views/Profile.vue'
 import Work from '@/views/Work.vue'
-import Experience from '@/views/Experience.vue'
+import Education from '@/views/Education.vue'
 import store from '@/store'
 
 Vue.use(VueRouter)
@@ -49,9 +49,9 @@ const routes = [
     component: Work
   },
   {
-    path: '/experience',
-    name: 'Experience',
-    component: Experience
+    path: '/education',
+    name: 'Education',
+    component: Education
   },
   // {
   //   path: '/about',
