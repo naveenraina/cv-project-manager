@@ -28,9 +28,13 @@ function editUser(data, callback) {
      }
     });
 }
-function getUsers(callback){
-    let query = 'SELECT id, user, password, status, role FROM `users`';
-    connectionPool.query(query, function(err, rows) {
+function getUsers(filter,callback){
+    let query = 'SELECT id, user, password, status, role FROM `users` where status in (?,?)';
+    let inClause =[
+        filter.showActive===true ? "Active" : "",
+        filter.inActiveStatus===true ? "InActive" : ""
+    ]
+    connectionPool.query(query,inClause, function(err, rows) {
         if(err){
             console.log("An error ocurred performing the query.");
             console.log(err);
@@ -55,7 +59,7 @@ function deleteUser(data, callback){
 
 function login(username, password, callback){
     // Perform a query
-    let query = "SELECT id, user, password FROM `users` where user=? and password=?";
+    let query = "SELECT id, user, password, role FROM `users` where user=? and password=?";
     connectionPool.query(query,[username, password], function(err, rows) {
         if(err){
             console.log("An error ocurred performing the query.");

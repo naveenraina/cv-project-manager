@@ -226,7 +226,11 @@
       this.searched = this.tasks 
       this.loadTasks()
       ipcRenderer.send('projects:get')
-      ipcRenderer.send('users:get')
+      let filter={
+        showActive: true,
+        inActiveStatus: false
+      }
+      ipcRenderer.send('users:get',filter)
     },
     mounted(){        
       //Register IPC Renderer event handles once for this control
