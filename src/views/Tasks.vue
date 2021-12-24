@@ -26,6 +26,7 @@
           <md-table-cell md-label="Assigned to" width="200px" md-sort-by="user">{{ item.user }}</md-table-cell>
           <md-table-cell md-label="Project" width="200px" md-sort-by="projectName">{{ item.projectName }}</md-table-cell>
           <md-table-cell md-label="Status" width="200px" md-sort-by="status">{{ item.status }}</md-table-cell>
+          <md-table-cell md-label="Feedback" width="200px" md-sort-by="feedback">{{ item.Feedback }}</md-table-cell>
           <md-table-cell md-label="">
             
               <md-chip md-clickable @click="onedit(item.id)"><md-icon>edit</md-icon></md-chip>
