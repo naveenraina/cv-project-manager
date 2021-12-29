@@ -60,6 +60,10 @@ export default {
     ipcRenderer.on('navigate:profile', () => {
       this.$router.replace('/profile')
     })
+    ipcRenderer.on('navigate:admin', () => {
+      this.$router.replace('/admin')
+    })
+     
   }
 }
 </script>

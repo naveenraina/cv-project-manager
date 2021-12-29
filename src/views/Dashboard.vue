@@ -536,7 +536,11 @@
     },
     created () {
       ipcRenderer.send('projects:get')
-      ipcRenderer.send('users:get')
+      let filter={
+        showActive: true,
+        inActiveStatus: false
+      }
+      ipcRenderer.send('users:get',filter)
       this.selectedUserId = this.user.id
       this.loadTasks(this.selectedUserId)
     },
