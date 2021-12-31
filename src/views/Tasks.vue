@@ -1,4 +1,4 @@
-<template>  
+<template>
   <div class="md-layout">
     <div class="md-layout-item md-alignment-top-left">
       <md-table v-model="searched" md-card md-fixed-header>
@@ -27,20 +27,20 @@
           <md-table-cell md-label="Project" width="200px" md-sort-by="projectName">{{ item.projectName }}</md-table-cell>
           <md-table-cell md-label="Status" width="200px" md-sort-by="status">{{ item.status }}</md-table-cell>
           <md-table-cell md-label="">
-            
+
               <md-chip md-clickable @click="onedit(item.id)"><md-icon>edit</md-icon></md-chip>
               <md-chip md-clickable @click="ondelete(item.id)"><md-icon class="md-size-1x">delete</md-icon></md-chip>
-           
+
           </md-table-cell>
-          
+
         </md-table-row>
-      </md-table> 
+      </md-table>
       <md-button class="md-default md-raised" @click="onCreateTask">Create New Task</md-button>
 
       <md-dialog :md-active.sync="showDialog">
         <md-dialog-title>Task</md-dialog-title>
 
-        <div class="md-dialog-content md-layout">      
+        <div class="md-dialog-content md-layout">
           <div class="md-layout-item" style="width:600px">
             <md-field>
               <label>Task name</label>
@@ -90,8 +90,8 @@
                 </md-field>
               </div>
             </div>
-            
-            
+
+
           </div>
         </div>
 
@@ -113,11 +113,11 @@
         <span>{{statusMessage}}</span>
       </md-snackbar>
     </div>
-  </div>    
+  </div>
 </template>
 
 <script>
-  
+
   const ipcRenderer = require('electron').ipcRenderer
   const fetch = require('node-fetch')
   const config = require('@/config')
@@ -128,7 +128,7 @@
   const searchByName = (items, term) => {
 
     if (term) {
-      return items.filter(item => toLower(item.taskName).includes(toLower(term)) 
+      return items.filter(item => toLower(item.taskName).includes(toLower(term))
       || ( item.user && toLower(item.user).includes(toLower(term)))
       ||( item.projectName &&  toLower(item.projectName).includes(toLower(term))))
     }
@@ -179,7 +179,7 @@
         // if(this.selectedTask.id === 0) {
         //   let project = this.projects.find(x=>x.id === this.selectedTask.projectId)?.projectname
         //   this.notifySlack(this.selectedTask.taskName, project)
-        // }        
+        // }
       },
       onedit(id){
         var found = this.tasks.find(item => item.id === id)
@@ -208,9 +208,9 @@
           method: 'post',
           body: JSON.stringify({
             "channel": "CGZNB2XRA", //daily-status //"C9Z21JH9D" - random
-            "text": this.user.user + ' created a new task "' + name + '" for "' + project + '"'                
+            "text": this.user.user + ' created a new task "' + name + '" for "' + project + '"'
           }),
-          headers: { 
+          headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + config.default.slackToken
           }
@@ -223,12 +223,16 @@
       }
     },
     created () {
-      this.searched = this.tasks 
+      let filter = {
+        showActive: true,
+        inActiveStatus: false,
+      };
+      this.searched = this.tasks
       this.loadTasks()
-      ipcRenderer.send('projects:get')
+      ipcRenderer.send('projects:get', filter)
       ipcRenderer.send('users:get')
     },
-    mounted(){        
+    mounted(){
       //Register IPC Renderer event handles once for this control
       ipcRenderer.on('tasks:success', (e, data) => {
         this.tasks = data
@@ -243,7 +247,7 @@
       ipcRenderer.on('users:success', (e, data) => {
         this.users = data
       })
-      ipcRenderer.on('task:submitsuccess', () => {        
+      ipcRenderer.on('task:submitsuccess', () => {
         this.statusMessage = 'Task saved successfully'
         this.showSnackbar = true
         this.loadTasks()
@@ -258,12 +262,12 @@
 </script>
 
 <style lang="less" scoped>
-   
+
   .main-div{
     margin-top: 40px;
   }
   .md-chip{
     background-color: rgba(0,0,0,0) !important;
   }
-  
+
 </style>

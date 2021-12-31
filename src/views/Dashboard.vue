@@ -565,11 +565,16 @@
       }
     },
     created () {
-      ipcRenderer.send('projects:get')
+       let filter = {
+        showActive: true,
+        inActiveStatus: false,
+      };
+      ipcRenderer.send('projects:get', filter)
       ipcRenderer.send('users:get')
       this.selectedUserId = this.user.id
       this.loadTasks(this.selectedUserId)
     },
+
     components: {
     SlickItem,
     SlickList,

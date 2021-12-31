@@ -157,7 +157,7 @@ export default {
     },
       checkContactNo() {
       var contactResult = this.newUser.contact;
-     var filter = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i
+     var filter = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
   if (filter.test(contactResult))
     this.contactNotValid = false;
   else {
