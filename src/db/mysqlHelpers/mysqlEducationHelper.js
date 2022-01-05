@@ -73,8 +73,21 @@ function getEducation(userId, callback) {
     }
   });
 }
+function deleteEducation(data, callback){
+  let query = 'delete from `education-profile` where id=?';
+  connectionPool.query(query, [data.id], function(err, rows) {
+      if(err){
+          console.log("An error ocurred performing the query.");
+          console.log(err);
+          return;
+      } else {
+          callback('success')
+      }
+  });
+}
 
 export default {
   saveEducation,
   getEducation,
+  deleteEducation,
 };
