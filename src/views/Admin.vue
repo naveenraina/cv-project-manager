@@ -25,6 +25,10 @@
             <md-icon>verified_user</md-icon>
             <span class="md-list-item-text">Reminders</span>
           </md-list-item>
+             <md-list-item to="/taskReport">
+          <md-icon>verified_user</md-icon>
+          <span class="md-list-item-text">Task Report</span>
+        </md-list-item>
         </md-list>
       </md-drawer>
 
