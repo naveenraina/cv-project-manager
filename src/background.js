@@ -186,6 +186,11 @@ if (!gotTheLock) {
             click: async () => {
               win.webContents.send('navigate:profile');
             }
+          },{
+            label: 'Admin',
+            click: async () => {
+              win.webContents.send('navigate:admin');
+            }
           },
           {
             label: 'Exit',
@@ -207,8 +212,8 @@ if (!gotTheLock) {
         ]
       }
   ];
-
-  // Add developer tools item if not in prod
+  
+// Add developer tools item if not in prod
   if(process.env.NODE_ENV !== "production"){
     mainMenuTemplate.push({
         label: "Developer Tools",

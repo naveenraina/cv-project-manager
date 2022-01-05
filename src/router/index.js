@@ -8,6 +8,8 @@ import Tasks from '@/views/Tasks.vue'
 import Profile from '@/views/Profile.vue'
 import Work from '@/views/Work.vue'
 import Education from '@/views/Education.vue'
+import Reminders from '@/views/Reminders.vue'
+import Admin from '@/views/Admin.vue'
 import store from '@/store'
 
 Vue.use(VueRouter)
@@ -53,6 +55,15 @@ const routes = [
     name: 'Education',
     component: Education
   },
+  {
+    path: '/reminders',
+    name: 'Reminders',
+    component: Reminders
+  },{
+    path: '/admin',
+    name: 'Admin',
+    component: Admin
+  }
   // {
   //   path: '/about',
   //   name: 'About',
