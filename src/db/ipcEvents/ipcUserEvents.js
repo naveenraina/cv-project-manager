@@ -11,8 +11,8 @@ export default class ipcUserEvents {
         })
     })
 
-    ipcMain.on('users:get', function(e,filter){
-      mysqlhelper.default.getUsers(filter,function(users){
+    ipcMain.on('users:get', function(e, filter){
+      mysqlhelper.default.getUsers(filter, function(users){
           win.webContents.send('users:success', users)
       })
     })
