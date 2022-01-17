@@ -35,8 +35,11 @@
             <md-table-toolbar>
               <div class="md-toolbar-section-start">
                 <h1 class="md-title">Tasks Assigned</h1>
+                <md-chip md-clickable @click="onCreateTask"><md-icon >add</md-icon></md-chip>
               </div>
             </md-table-toolbar>
+            
+            
             <md-content
               style="height: 460px; max-height: 460px; overflow: auto"
               class="md-scrollbar"
@@ -354,7 +357,9 @@
     </md-dialog>
 
     <md-dialog :md-active.sync="showDialogEdit" md-close-on-esc>
-      <md-dialog-title>Edit ({{ selectedTask.taskName }})</md-dialog-title>
+      <md-dialog-title v-if="selectedTask.taskName===''">Task</md-dialog-title>
+      <md-dialog-title v-else>Edit ({{ selectedTask.taskName }})</md-dialog-title>
+      
 
       <div class="md-dialog-content md-layout">
         <div class="md-layout-item" style="width: 600px">
@@ -482,6 +487,7 @@
       </div>
       
     </md-dialog>
+   
   </div>
 </template>
 
@@ -526,8 +532,25 @@ export default {
     loadNotesAgain: false,
     isDrag: false,
     taskData: {},
+    
+    newTask: {
+        id: 0,
+        taskName: '',
+        description: '',
+        createdDate: new Date(),
+        updatedDate: new Date(),
+        status: 'New',
+        estimateddays: 1,
+        userId: 0,
+        projectId: 0,
+        priority: ''
+      }, 
   }),
   methods: {
+     onCreateTask(){
+        this.selectedTask = {...this.newTask}
+        this.showDialogEdit = true
+      },
     dragEnd(data) {
       if (data.newIndex !== data.oldIndex) {
         this.isDrag = true;
@@ -678,6 +701,7 @@ export default {
     },
     cancelDialog() {
       this.showDialog1 = false;
+      this.showDialogEdit= false;
     },
     getTaskHealth() {
       // return color - gree, orange, red based on if task was completed on time

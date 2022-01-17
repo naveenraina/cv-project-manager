@@ -61,7 +61,7 @@
                 />
               </md-field>
             </md-table-toolbar>
-            <md-table v-model="users" md-card md-fixed-header>
+            <md-table v-model="users" md-card md-fixed-header style="height:350px; max-height:350px;">
               <md-table-row slot="md-table-row" slot-scope="{ item }">
                 <!-- <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{ item.id }}</md-table-cell> -->
                 <md-table-cell md-label="User Name" md-sort-by="user">
