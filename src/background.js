@@ -7,6 +7,9 @@ import ipcTaskEvents from '@/db/ipcEvents/ipcTaskEvents'
 import ipcUserEvents from '@/db/ipcEvents/ipcUserEvents'
 import ipcProjectEvents from '@/db/ipcEvents/ipcProjectEvents'
 import ipcDailyStatusEvents from '@/db/ipcEvents/ipcDailyStatusEvents'
+import ipcProfileEvents from '@/db/ipcEvents/ipcProfileEvents'
+import ipcWorkEvents from '@/db/ipcEvents/ipcWorkEvents'
+import ipcEducationEvents from '@/db/ipcEvents/ipcEducationEvents'
 
 var path = require('path')
 const isDevelopment = process.env.NODE_ENV !== 'production'
@@ -92,18 +95,18 @@ if (!gotTheLock) {
 
     tray = new Tray(path.join(__static, '/icon.ico'));
     var contextMenu = Menu.buildFromTemplate([
-      { 
-        label: 'Show App', 
+      {
+        label: 'Show App',
         click:  function(){
           win.show();
-        } 
+        }
       },
-      { 
-        label: 'Exit', 
+      {
+        label: 'Exit',
         click:  function(){
           isQuiting = true;
           app.quit();
-        } 
+        }
       }
     ])
     // tray.on('click', tray.popUpContextMenu);
@@ -119,7 +122,10 @@ if (!gotTheLock) {
     new ipcProjectEvents().init(ipcMain, win)
     new ipcUserEvents().init(ipcMain, win)
     new ipcDailyStatusEvents().init(ipcMain, win)
-    
+    new ipcProfileEvents().init(ipcMain, win)
+    new ipcWorkEvents().init(ipcMain, win)
+    new ipcEducationEvents().init(ipcMain, win)
+
   }
 
   // Quit when all windows are closed.
@@ -137,7 +143,7 @@ if (!gotTheLock) {
     if (win === null) {
       createWindow()
     }
-    
+
   })
 
   // This method will be called when Electron has finished
@@ -152,7 +158,7 @@ if (!gotTheLock) {
         console.error('Vue Devtools failed to install:', e.toString())
       }
     }
-    createWindow()  
+    createWindow()
   })
 
   // Exit cleanly on request from parent process in development mode.
@@ -186,8 +192,8 @@ if (!gotTheLock) {
               win.webContents.send('navigate:admin');
             }
           },
-          { 
-            label: 'Exit', 
+          {
+            label: 'Exit',
             click:  function(){
               isQuiting = true;
               app.quit();
@@ -198,7 +204,7 @@ if (!gotTheLock) {
       {
         label: 'About',
         submenu: [
-          { 
+          {
             label: 'Version ' + app.getVersion(),
             click: async () => {
             }
@@ -222,7 +228,7 @@ if (!gotTheLock) {
                 role: "reload"
             }
         ]
-        
+
     });
   }
 }

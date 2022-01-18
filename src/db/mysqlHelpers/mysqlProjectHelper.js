@@ -1,31 +1,36 @@
-const mysqlConnectionPool = require('@/db/mysqlConnectionPool'); 
+const mysqlConnectionPool = require('@/db/mysqlConnectionPool');
 
 let connectionPool = mysqlConnectionPool.default.createConnectionPool();
 
-function getProjects(callback){
+
+function getProjects(filter, callback){
     // Perform a query
-    let query = 'SELECT id, projectname FROM `projects`';
-    connectionPool.query(query, function(err, rows) {
+    let query = 'SELECT id, projectname, projectstatus FROM `projects` where projectstatus in (?,?)';
+     let inClause = [
+        filter.showActive===true ? "Active" : "",
+        filter.inActiveStatus===true ? "InActive" : ""
+    ]
+    connectionPool.query(query,inClause, function(err, rows) {
         if(err){
             console.log("An error ocurred performing the query.");
             console.log(err);
             return;
         }
-        callback(rows)        
-    });          
+        callback(rows)
+    });
 }
 
-function editProject(data, callback){
-    let query = 'update `projects` set projectname=? where id=?';
-    connectionPool.query(query, [data.name, data.id], function(err, rows) {
+function editProject(data, callback){ 
+    let query = 'update `projects` set projectname=?, projectstatus=? where id=?';
+    connectionPool.query(query, [data.name, data.status, data.id], function(err, rows) {
         if(err){
             console.log("An error ocurred performing the query.");
             console.log(err);
             return;
         } else {
-            callback('success')    
-        }            
-    });  
+            callback('success')
+        }
+    });
 }
 
 function deleteProject(data, callback){
@@ -36,16 +41,16 @@ function deleteProject(data, callback){
             console.log(err);
             return;
         } else {
-            callback('success')    
-        }            
-    });  
+            callback('success')
+        }
+    });
 }
 
 function saveproject(data, callback){
     // Perform a query
-    let query = "INSERT INTO `projects`(`ProjectName`) VALUES(?)";
+    let query = "INSERT INTO `projects`(`ProjectName`,`ProjectStatus`) VALUES(?, ?)";
     console.log(query)
-    connectionPool.query(query,[data.name], function(err) {
+    connectionPool.query(query,[data.name, data.status], function(err) {
         if(err){
             console.log("An error ocurred performing the query.");
             console.log(err);

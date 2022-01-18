@@ -7,7 +7,7 @@ import Projects from '@/views/Projects.vue'
 import Tasks from '@/views/Tasks.vue'
 import Profile from '@/views/Profile.vue'
 import Work from '@/views/Work.vue'
-import Experience from '@/views/Experience.vue'
+import Education from '@/views/Education.vue'
 import Reminders from '@/views/Reminders.vue'
 import TaskReport from '@/views/task-report.vue'
 import Admin from '@/views/Admin.vue'
@@ -52,9 +52,9 @@ const routes = [
     component: Work
   },
   {
-    path: '/experience',
-    name: 'Experience',
-    component: Experience
+    path: '/education',
+    name: 'Education',
+    component: Education
   },
   {
     path: '/reminders',

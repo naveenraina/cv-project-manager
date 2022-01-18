@@ -439,11 +439,27 @@
         </div>
       </div>
 
-      <md-dialog-actions>
-        <md-button class="md-primary" @click="cancelDialog">Cancel</md-button>
-        <md-button class="md-primary" @click="saveTask">Save</md-button>
-      </md-dialog-actions>
+
+        <md-dialog-actions>
+          <md-button class="md-primary"  style="margin-right:420px" @click="ondelete(selectedTask.id)">Delete</md-button>
+          <md-button class="md-primary" @click="showDialogEdit=false">Cancel</md-button>
+          <md-button class="md-primary" @click="saveTask">Save</md-button>
+        </md-dialog-actions>
+
     </md-dialog>
+    <md-dialog-confirm
+      :md-active.sync="showDialogDeleteConfirmaton"
+      md-title="Are you sure"
+      md-content="This will permanently delete this item"
+      md-confirm-text="Agree"
+      md-cancel-text="Disagree"
+      @md-confirm="deleteTask" />
+        <md-snackbar md-position="center" :md-duration="4000" :md-active.sync="showSnackbar" md-persistent>
+        <span>{{statusMessage}}</span>
+      </md-snackbar>
+
+
+
     <md-dialog :md-active.sync="showDialog1">
       <md-dialog-title>Feedback</md-dialog-title>
 
@@ -463,21 +479,21 @@
             <md-input
               type="radio"
               class="custom-control-input"
-              id ="2" 
-              @change="handleChange('Semi-autopilot mode')" 
+              id ="2"
+              @change="handleChange('Semi-autopilot mode')"
               name="same"
             ></md-input>
-            <label class="custom-control-label" for="2" >Semi-autopilot mode(Task complete with verbal and technical help)</label>
+            <label class="custom-control-label" for="2" >Semi-autopilot mode(Task complete with verbal help)</label>
           </div>
           <div class="custom-control custom-radio" style="padding:10px">
             <md-input
               type="radio"
               class="custom-control-input"
               id ="3"
-              @change="handleChange('Manual mode')" 
+              @change="handleChange('Manual mode')"
               name="same"
             ></md-input>
-            <label class="custom-control-label" for="3">Manual mode(Task complete with verbal help)</label >
+            <label class="custom-control-label" for="3">Manual mode(Task complete with verbal and technical help)</label >
           </div>
           <md-dialog-actions>
             <md-button class="md-primary" @click="showDialog1= false">Cancel</md-button >
@@ -485,7 +501,7 @@
           </md-dialog-actions>
         </div>
       </div>
-      
+
     </md-dialog>
    
   </div>
@@ -522,6 +538,9 @@ export default {
     showDialog: false,
     showDialog1: false,
     showDialogEdit: false,
+    showDialogDeleteConfirmaton: false,
+    showSnackbar: false,
+    tasks: [{ taskName: ''}],
     selectedUserId: 0,
     users: [{ id: 0, user: "" }],
     tasksNew: [blankTask],
@@ -626,6 +645,14 @@ export default {
       this.selectedTask = { ...task };
       this.showDialogEdit = true;
     },
+    ondelete(taskId){
+        this.showDialogEdit=false;
+        this.taskDeleteId = taskId
+        this.showDialogDeleteConfirmaton = true;
+      },
+      deleteTask(){
+        ipcRenderer.send('task:delete', {id: this.taskDeleteId})
+      },
     updateTask() {},
     onLoadNotes(task) {
       this.selectedTask = { ...task };
@@ -793,27 +820,37 @@ export default {
       this.showDialog = true;
     });
 
-    ipcRenderer.on("note:savesuccess", () => {
-      if (this.loadNotesAgain) {
-        this.loadNotes(this.selectedTask.id);
-        this.loadNotesAgain = false;
-      }
-      this.noteText = "";
-    });
+      ipcRenderer.on('note:savesuccess', () => {
+        if(this.loadNotesAgain){
+          this.loadNotes(this.selectedTask.id)
+          this.loadNotesAgain = false
+        }
+        this.noteText = ""
+      })
+
+      ipcRenderer.on('note:deletesuccess', () => {
+        this.loadNotes(this.selectedTask.id)
+      })
 
     ipcRenderer.on("note:deletesuccess", () => {
       this.loadNotes(this.selectedTask.id);
     });
 
+      ipcRenderer.on('task:submitsuccess', () => {
+        this.statusMessage = 'Task saved successfully'
+        this.showSnackbar = true
+        this.loadTasks(this.selectedUserId)
+      })
+        ipcRenderer.on('task:deletesuccess', () => {
+          this.statusMessage = 'Task removed successfully'
+          this.showSnackbar = true
+          this.loadTasks(this.selectedUserId)
+        })
     ipcRenderer.on("projects:success", (e, data) => {
       this.projects = data;
     });
 
-    ipcRenderer.on("task:submitsuccess", () => {
-      this.statusMessage = "Task saved successfully";
-      this.showSnackbar = true;
-      this.loadTasks(this.selectedUserId);
-    });
+
 
     ipcRenderer.on("task:saveSequencesuccess", () => {
       //console.log('sequence updated')
@@ -826,11 +863,12 @@ export default {
     },
   },
   created() {
-    ipcRenderer.send("projects:get");
+
     let filter = {
       showActive: true,
       inActiveStatus: false,
     };
+    ipcRenderer.send("projects:get", filter);
     ipcRenderer.send("users:get", filter);
     this.selectedUserId = this.user.id;
     this.loadTasks(this.selectedUserId);
