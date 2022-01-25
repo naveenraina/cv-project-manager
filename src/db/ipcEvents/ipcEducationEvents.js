@@ -16,7 +16,11 @@ export default class ipcEducationEvents {
                win.webContents.send('education:success', education)
            })
          })
-
+         ipcMain.on('education:delete', function(e, id){
+          mysqlEducationHelper.default.deleteEducation(id, function(response){
+              win.webContents.send('education:deletesuccess', response)
+          })
+        })
 
     }
 }

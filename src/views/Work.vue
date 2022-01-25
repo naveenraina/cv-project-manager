@@ -32,76 +32,93 @@
 </md-drawer>
 
     <md-content>
-     <md-card>
+       <md-button
+        class="md-primary md-dense md-raised md-default"
+        style="margin-left:1095px; background:green"
+       @click="addField()"
+        >Add work Experience</md-button
+      >
+     <md-card v-for="(input, index) in workArray" :key="{ input }" :id="{index}">
        <md-card-header>
          <h3>Work-Information</h3>
-         <md-divider></md-divider>
+           <md-button v-if="workArray.length > 1 && index !=0"  @click="deleteWork(input.ID, index)" style="margin-left:1095px; "> X</md-button>
+       <md-divider></md-divider>
        </md-card-header>
        <div class="md-layout md-gutter md-alignment-center">
-    <div class="md-layout-item md-medium-size-45 ">
+    <div class="md-layout-item md-medium-size-45 "  style="margin-left:20px;">
       <md-field>
             <label>Employee ID</label>
-            <md-input v-model="newUser.eid"></md-input>
+            <md-input :value="input.EmployeeID"  @change="handleInputChange($event, 'EmployeeID', index)"></md-input>
           </md-field>
         </div>
-    <div class="md-layout-item md-medium-size-45 ">
+    <div class="md-layout-item md-medium-size-45 "  style="margin-right:20px;">
       <md-field>
             <label>Employee Name</label>
-            <md-input v-model="newUser.ename"></md-input>
+            <md-input :value="input.EmployeeName"  @change="handleInputChange($event, 'EmployeeName', index)"></md-input>
           </md-field>
         </div>
         </div>
      <div class="md-layout md-gutter md-alignment-center">
-    <div class="md-layout-item md-medium-size-45 ">
+    <div class="md-layout-item md-medium-size-45 " style="margin-left:20px;">
       <md-field>
             <label>Employee Title</label>
-            <md-input v-model="newUser.title"></md-input>
+            <md-input :value="input.EmployeeTitle"  @change="handleInputChange($event, 'EmployeeTitle', index)"></md-input>
           </md-field>
         </div>
-    <div class="md-layout-item md-medium-size-45 ">
+    <div class="md-layout-item md-medium-size-45 "  style="margin-right:20px;">
       <md-field>
             <label>Department</label>
-            <md-input v-model="newUser.department"></md-input>
+            <md-input :value="input.Department"  @change="handleInputChange($event, 'Department', index)"></md-input>
           </md-field>
         </div>
         </div>
     <div class="md-layout md-gutter md-alignment-center">
-    <div class="md-layout-item md-medium-size-45 ">
+    <div class="md-layout-item md-medium-size-45 "  style="margin-left:20px;">
       <md-field>
             <label>Official contact number</label>
-            <md-input v-model="newUser.contact"></md-input>
+            <md-input :value="input.ContactNo"  @change="handleInputChange($event, 'ContactNo', index)"></md-input>
           </md-field>
         </div>
-    <div class="md-layout-item md-medium-size-45 ">
+    <div class="md-layout-item md-medium-size-45 "  style="margin-right:20px;">
       <md-field>
             <label>Officail E-mail Id</label>
-            <md-input v-model="newUser.email"></md-input>
+            <md-input :value="input.EmailID"  @change="handleInputChange($event, 'EmailID', index)"></md-input>
           </md-field>
         </div>
         </div>
     <div class="md-layout md-gutter md-alignment-center">
-    <div class="md-layout-item md-medium-size-45 ">
+    <div class="md-layout-item md-medium-size-45 "  style="margin-left:20px;">
       <md-field>
             <label>Employee Skype Id</label>
-            <md-input v-model="newUser.skype"></md-input>
+            <md-input :value="input.SkypeeID"  @change="handleInputChange($event, 'SkypeeID', index)"></md-input>
           </md-field>
         </div>
-    <div class="md-layout-item md-medium-size-45 ">
+    <div class="md-layout-item md-medium-size-45 "  style="margin-right:20px;">
       <md-field>
             <label>Upwork Id</label>
-            <md-input v-model="newUser.upwork"></md-input>
+            <md-input :value="input.UpworkID"  @change="handleInputChange($event, 'UpworkID', index)"></md-input>
           </md-field>
         </div>
         </div>
+        </md-card>
         <div class="md-layout md-gutter md-alignment-center">
         <md-button class=" md-primary md-dense md-raised md-default" @click="saveWork">Submit</md-button>
     </div>
-     </md-card>
+     
     </md-content>
       <md-snackbar md-position="center" :md-duration="4000" :md-active.sync="showSnackbar" md-persistent>
         <span>{{statusMessage}}</span>
       </md-snackbar>
+      <md-dialog-confirm
+      :md-active.sync="showDialogDeleteConfirmaton"
+      md-title="Are you sure"
+      md-content="This will permanently delete this item"
+      md-confirm-text="Agree"
+      md-cancel-text="Disagree"
+      @md-confirm="deleteWorks" />
+      
   </div>
+  
 </template>
 
 <script>
@@ -127,6 +144,10 @@ export default {
       statusMessage: '',
       showNavigation: false,
       showSidepanel: false,
+      workArray:[],
+      selectedWork:{},
+      showDialogDeleteConfirmaton: false,
+      indexdelete:""
     }),
     computed: {
     user () {
@@ -134,14 +155,61 @@ export default {
     }
   },
     methods: {
-      saveWork(){
-        ipcRenderer.send('work:submit', this.newUser)
+       handleInputChange(event, label, index) {
+      var myVal = event.target.value;
+//var myVal = event.target.value;
+      if (label == "EmployeeID") {
+        this.workArray[index].EmployeeID = myVal;
+      } else if (label == "EmployeeName") {
+        this.workArray[index].EmployeeName = myVal;
+        }else if (label == "EmployeeTitle") {
+        this.workArray[index].EmployeeTitle = myVal;
+        }else if (label == "Department") {
+        this.workArray[index].Department = myVal;
+        }else if (label == "ContactNo") {
+        this.workArray[index].ContactNo = myVal;
+        }else if (label == "EmailID") {
+        this.workArray[index].EmailID = myVal;
+        }else if (label == "SkypeeID") {
+        this.workArray[index].SkypeeID = myVal;
+        }else if (label == "UpworkID") {
+        this.workArray[index].UpworkID = myVal;
+        } else {
+        console.log("no value");
       }
+      if (!this.workArray[index].ID) {
+        this.workArray[index].ID = "";
+      }
+      this.workArray[index].userId = this.$store.state.user.id;
+      
+      },
+      
+      saveWork(){
+        ipcRenderer.send('work:submit', this.workArray)
+      },
+      addField() {
+      this.workArray.push({});
+      this.workArray = this.workArray.reverse()
+    },
+     deleteWork(id, index){
+      if(id){
+        var found = this.workArray.find(input => input.ID === id)
+        this.selectedWork = found
+        
+         
+      }
+      this.indexdelete = index;
+      this.showDialogDeleteConfirmaton = true;
+     
+    },
+     deleteWorks(){
+       this.workArray.splice(this.indexdelete, 1);
+        ipcRenderer.send('work:delete', {id: this.selectedWork.ID})
+      },
     },
     created(){
       var userId = this.$store.state.user.id;
-    this.newUser.userId = this.$store.state.user.id;
-    console.log(this.newUser.userId);
+   console.log(this.newUser.userId);
     ipcRenderer.send('work:get',userId)
   },
     mounted(){
@@ -151,19 +219,17 @@ export default {
         this.showSnackbar = true
 
       })
+      const vm= this;
            ipcRenderer.on('work:success', (e, data) => {
-        // this.newUser. = data;
-      this.newUser.id =  data[0].ID
-      this.newUser.eid =  data[0].EmployeeID
-      this.newUser.ename =  data[0].EmployeeName
-      this.newUser.title =  data[0].EmployeeTitle
-      this.newUser.department =  data[0].Department
-      this.newUser.contact =  data[0].ContactNo
-      this.newUser.email =  data[0].EmailID
-      this.newUser.skype =  data[0].SkypeeID
-      this.newUser.upwork = data[0].UpworkID
-      this.newUser.userId = data[0].UserID
+           vm.workArray = data;
+           if(vm.workArray.length == 0){
+                 vm.workArray.push({})
+      }
     })
+    ipcRenderer.on('work:deletesuccess', () => {
+          this.statusMessage = 'Work removed successfully'
+             this.showSnackbar = true;
+        })
 
     }
   }

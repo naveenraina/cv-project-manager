@@ -37,13 +37,13 @@
           <md-divider></md-divider>
         </md-card-header>
         <div class="md-layout md-gutter md-alignment-center">
-          <div class="md-layout-item md-medium-size-45 ">
+          <div class="md-layout-item md-medium-size-45 " style="margin-left:20px;">
             <md-field>
               <label>First Name</label>
               <md-input v-model="newUser.fname"></md-input>
             </md-field>
           </div>
-          <div class="md-layout-item md-medium-size-45 ">
+          <div class="md-layout-item md-medium-size-45 " style="margin-right:20px">
             <md-field>
               <label>Last Name</label>
               <md-input v-model="newUser.lname"></md-input>
@@ -51,12 +51,12 @@
           </div>
         </div>
         <div class="md-layout md-gutter md-alignment-center">
-          <div class="md-layout-item md-medium-size-45 ">
+          <div class="md-layout-item md-medium-size-45 " style="margin-left:20px;">
             <md-datepicker v-model="newUser.dob">
               <label>D.O.B</label>
             </md-datepicker>
           </div>
-          <div class="md-layout-item md-medium-size-45 ">
+          <div class="md-layout-item md-medium-size-45 " style="margin-right:20px">
             <md-field>
               <label>Personal Contact Number</label>
               <md-input @blur="checkContactNo" v-model="newUser.contact"></md-input>
@@ -65,14 +65,14 @@
           </div>
         </div>
         <div class="md-layout md-gutter md-alignment-center">
-          <div class="md-layout-item md-medium-size-45 ">
+          <div class="md-layout-item md-medium-size-45 " style="margin-left:20px;">
             <md-field>
               <label>Personal E-mail Address</label>
               <md-input @blur="checkEmail" v-model="newUser.email"></md-input>
               <span v-if="emailNotValid"> Email is not valid</span>
             </md-field>
           </div>
-          <div class="md-layout-item md-medium-size-45 ">
+          <div class="md-layout-item md-medium-size-45 " style="margin-right:20px">
             <md-field>
               <label>Address</label>
               <md-input v-model="newUser.address"></md-input>
@@ -80,19 +80,28 @@
           </div>
         </div>
         <div class="md-layout md-gutter md-alignment-center">
-          <div class="md-layout-item md-medium-size-45 ">
+          <div class="md-layout-item md-medium-size-45 " style="margin-left:20px;">
             <md-field>
               <label>City</label>
               <md-input v-model="newUser.city"></md-input>
             </md-field>
           </div>
-          <div class="md-layout-item md-medium-size-45 ">
+          <div class="md-layout-item md-medium-size-45 " style="margin-right:20px">
             <md-field>
               <label>Country</label>
               <md-input v-model="newUser.country"></md-input>
             </md-field>
           </div>
         </div>
+        <div class="md-layout md-gutter md-alignment-center">
+          <div class="md-layout-item md-medium-size-45 " style="margin-left:20px; margin-right:700px;">
+            <md-field>
+              <label>Pin Code</label>
+              <md-input v-model="newUser.pinCode"></md-input>
+            </md-field>
+          </div>
+          
+         </div>
         <div class="md-layout md-gutter md-alignment-center">
           <md-button
             class=" md-primary md-dense md-raised md-default"
@@ -130,6 +139,7 @@ export default {
       city: "",
       country: "",
       userId: 0,
+      pinCode:""
 
     },
     // profile: [],

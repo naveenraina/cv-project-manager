@@ -15,6 +15,11 @@ export default class ipcWorkEvents {
                win.webContents.send('work:success', work)
            })
          })
+         ipcMain.on('work:delete', function(e, id){
+          mysqlWorkHelper.default.deleteWork(id, function(response){
+              win.webContents.send('work:deletesuccess', response)
+          })
+        })
 
     }
 
