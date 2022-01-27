@@ -35,7 +35,7 @@ function saveTask(task, callback){
 
 function getTasks(filter, callback){
     // Perform a query
-    let query = 'SELECT t.id, t.taskName, t.description, t.userId, u.user, t.projectId, p.projectName, t.startedOn, t.tocompleteon, t.completedOn, t.createdDate, t.updatedDate, t.status, t.estimateddays, t.priority FROM tasks t left join users u on t.userid = u.id left join projects p on p.id = t.projectid where t.status in (?,?,?)  order by t.priority desc';
+    let query = 'SELECT t.id, t.taskName, t.description, t.userId, u.user, t.projectId, p.projectName, t.startedOn, t.tocompleteon, t.completedOn, t.createdDate, t.updatedDate, t.status, t.estimateddays, t.priority, t.Feedback FROM tasks t left join users u on t.userid = u.id left join projects p on p.id = t.projectid where t.status in (?,?,?)  order by t.priority desc';
     let inClause = [
         filter.showNew===true ? 'New' : '',
         filter.showInProgress===true ? 'InProgress' : '', 
@@ -53,7 +53,7 @@ function getTasks(filter, callback){
 
 function getTaskById(taskId, callback){
     // Perform a query
-    let query = 'SELECT t.id, t.taskName, t.description, t.status, t.startedon, t.tocompleteon, t.completedon, t.createddate, t.priority from tasks t where t.id = ?';
+    let query = 'SELECT t.id, t.taskName, t.description, t.status, t.startedon, t.tocompleteon, t.completedon, t.createddate, t.priority, t.Feedback from tasks t where t.id = ?';
     connectionPool.query(query,[taskId], function(err, rows) {
         if(err){
             console.log("An error ocurred performing the query.");
@@ -68,7 +68,7 @@ function getTaskById(taskId, callback){
 
 function getTasksAssignedToUser(userId, callback){
     // Perform a query
-    let query = 'SELECT t.id, t.taskName, t.description, t.userId, u.user, t.projectId, p.projectName, t.startedOn, t.tocompleteon, t.completedOn, t.createdDate, t.updatedDate, t.status, t.estimateddays, t.priority, t.previousId FROM tasks t left join users u on t.userid = u.id left join projects p on p.id = t.projectid where t.userId = ? order by t.priority desc';
+    let query = 'SELECT t.id, t.taskName, t.description, t.userId, u.user, t.projectId, p.projectName, t.startedOn, t.tocompleteon, t.completedOn, t.createdDate, t.updatedDate, t.status, t.estimateddays, t.priority, t.previousId, t.Feedback FROM tasks t left join users u on t.userid = u.id left join projects p on p.id = t.projectid where t.userId = ? order by t.priority desc';
     connectionPool.query(query,[userId], function(err, rows) {
         if(err){
             console.log("An error ocurred performing the query.");
@@ -93,20 +93,20 @@ function deleteTask(data, callback){
 }
 
 function moveTask(data, callback){
-    let query = 'update `tasks` set status=?, startedon=?, completedon=? where id=?';
+    let query = 'update `tasks` set status=?, startedon=?, completedon=?, Feedback=? where id=?';
     let params = []
 
     getTaskById(data.id, (task) => {        
         if(task.status === "New" && data.status === "InProgress" ) {
-            params = [data.status, new Date(), null, data.id]
+            params = [data.status, new Date(), null, data.feedback, data.id]
         } else  if(task.status === "Complete" && data.status === "InProgress" ) {
-            params = [data.status, task.startedon, null, data.id]
+            params = [data.status, task.startedon, null, data.feedback, data.id]
         } else if(task.status === "New" && data.status === "Complete") {
-            params = [data.status, null, new Date(), data.id]
+            params = [data.status, null, new Date(), data.feedback, data.id]
         } else if(task.status === "InProgress" && data.status === "Complete") {
-            params = [data.status, task.startedon, new Date(), data.id]
+            params = [data.status, task.startedon, new Date(), data.feedback, data.id]
         } else if(data.status === "New") {
-            params = [data.status, null, null, data.id]
+            params = [data.status, null, null, data.feedback, data.id]
         }
 
         if(task.status === data.status){ // just return. no need to update status
@@ -200,3 +200,8 @@ export default {
     getNotes, saveNote, deleteNote,
     saveSequence
 }
+
+
+
+
+

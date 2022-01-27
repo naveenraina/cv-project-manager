@@ -33,20 +33,31 @@
     <md-content>
       <md-button
         class="md-primary md-dense md-raised md-default"
-        style="margin-left:1095px; background:green"
-       @click="addField()"
+        style="margin-left: 1095px; background: green"
+        @click="addField()"
         >Add more education</md-button
       >
-
-      <!-- <md-card v-for="(input, index) in qualificationArray" :key="{ input }"> -->
-        <md-card v-for="(input, index) in qualificationArray" :key="{ input }" :id="{index}">
+      <md-card
+        v-for="(input, index) in qualificationArray"
+        :key="{ input }"
+        :id="{ index }"
+      >
         <md-card-header>
           <h3>Education</h3>
-          <md-button v-if="qualificationArray.length > 1 && index !=0"  @click="deleteEducation(input.ID, index)" style="margin-left:1095px; "> X</md-button>
+          <md-button
+            v-if="qualificationArray.length > 1  && index !=0"
+            @click="deleteEducation(input.ID, index)"
+            style="margin-left: 980px"
+          >
+            X</md-button
+          >
           <md-divider></md-divider>
         </md-card-header>
         <div class="md-layout md-gutter md-alignment-center">
-          <div class="md-layout-item md-medium-size-45 "  style="margin-left:20px;">
+          <div
+            class="md-layout-item md-medium-size-45"
+            style="margin-left: 20px"
+          >
             <md-field>
               <label>Qualification</label>
               <md-input
@@ -55,7 +66,10 @@
               ></md-input>
             </md-field>
           </div>
-          <div class="md-layout-item md-medium-size-45 "  style="margin-right:20px;">
+          <div
+            class="md-layout-item md-medium-size-45"
+            style="margin-right: 20px"
+          >
             <md-field>
               <label>Course name</label>
               <md-input
@@ -66,7 +80,10 @@
           </div>
         </div>
         <div class="md-layout md-gutter md-alignment-center">
-          <div class="md-layout-item md-medium-size-45 "  style="margin-left:20px;">
+          <div
+            class="md-layout-item md-medium-size-45"
+            style="margin-left: 20px"
+          >
             <md-field>
               <label>Course specialization</label>
               <md-input
@@ -75,7 +92,10 @@
               ></md-input>
             </md-field>
           </div>
-          <div class="md-layout-item md-medium-size-45 "  style="margin-right:20px;">
+          <div
+            class="md-layout-item md-medium-size-45"
+            style="margin-right: 20px"
+          >
             <md-field>
               <label>University/Institute name </label>
               <md-input
@@ -86,9 +106,12 @@
           </div>
         </div>
         <div class="md-layout md-gutter md-alignment-center">
-          <div class="md-layout-item md-medium-size-45 "  style="margin-left:20px;">
+          <div
+            class="md-layout-item md-medium-size-45"
+            style="margin-left: 20px"
+          >
             <md-field>
-             <label>Passing out year</label>
+              <label>Passing out year</label>
               <md-select
                 :value="input.PassingYear"
                 placeholder="year"
@@ -122,7 +145,10 @@
               </md-select>
             </md-field>
           </div>
-          <div class="md-layout-item md-medium-size-45 "  style="margin-right:20px;">
+          <div
+            class="md-layout-item md-medium-size-45"
+            style="margin-right: 20px"
+          >
             <md-field>
               <label>Percantage/CGPA</label>
               <md-input
@@ -133,7 +159,10 @@
           </div>
         </div>
         <div class="md-layout md-gutter md-alignment-center">
-          <div class="md-layout-item md-medium-size-45 "  style="margin-left:20px;">
+          <div
+            class="md-layout-item md-medium-size-45"
+            style="margin-left: 20px"
+          >
             <md-field>
               <label>Technical Skills</label>
               <md-input
@@ -142,7 +171,10 @@
               ></md-input>
             </md-field>
           </div>
-          <div class="md-layout-item md-medium-size-45 "  style="margin-right:20px;">
+          <div
+            class="md-layout-item md-medium-size-45"
+            style="margin-right: 20px"
+          >
             <md-field>
               <label>Any Certification</label>
               <md-input
@@ -161,13 +193,14 @@
         >
       </div>
     </md-content>
-     <md-dialog-confirm
+    <md-dialog-confirm
       :md-active.sync="showDialogDeleteConfirmaton"
       md-title="Are you sure"
       md-content="This will permanently delete this item"
       md-confirm-text="Agree"
       md-cancel-text="Disagree"
-      @md-confirm="deleteTask" />
+      @md-confirm="deleteTask"
+    />
 
     <md-snackbar
       md-position="center"
@@ -175,8 +208,6 @@
       :md-active.sync="showSnackbar"
       md-persistent
     >
-
-   
       <span>{{ statusMessage }}</span>
     </md-snackbar>
   </div>
@@ -188,7 +219,6 @@ const ipcRenderer = require("electron").ipcRenderer;
 export default {
   name: "profile",
   data: () => ({
-    
     qualificationArray: [],
     selectedEducation: {},
     showSnackbar: false,
@@ -196,7 +226,7 @@ export default {
     showNavigation: false,
     showSidepanel: false,
     showDialogDeleteConfirmaton: false,
-    indexdelete:""
+    indexdelete: "",
   }),
 
   computed: {
@@ -234,26 +264,23 @@ export default {
     saveEducation() {
       ipcRenderer.send("education:submit", this.qualificationArray);
     },
-     deleteEducation(id, index){
-      if(id){
-        var found = this.qualificationArray.find(input => input.ID === id)
-        this.selectedEducation = found
-        
-         
+    deleteEducation(id, index) {
+      if (id) {
+        var found = this.qualificationArray.find((input) => input.ID === id);
+        this.selectedEducation = found;
       }
       this.indexdelete = index;
       this.showDialogDeleteConfirmaton = true;
       //this.qualificationArray.splice(index, 1);
-      
     },
-     deleteTask(){
-       this.qualificationArray.splice(this.indexdelete, 1);
-        ipcRenderer.send('education:delete', {id: this.selectedEducation.ID})
-      },
+    deleteTask() {
+      this.qualificationArray.splice(this.indexdelete, 1);
+      ipcRenderer.send("education:delete", { id: this.selectedEducation.ID });
+    },
 
     addField() {
       this.qualificationArray.push({});
-      this.qualificationArray = this.qualificationArray.reverse()
+      this.qualificationArray = this.qualificationArray.reverse();
     },
     sortArray() {
       this.qualificationArray = this.qualificationArray.sort((a, b) =>
@@ -267,7 +294,6 @@ export default {
   },
   created() {
     var userId = this.$store.state.user.id;
-   // this.newUser.userId = this.$store.state.user.id;
     ipcRenderer.send("education:get", userId);
   },
   mounted() {
@@ -280,15 +306,15 @@ export default {
     var vm = this;
     ipcRenderer.on("education:success", (e, data) => {
       vm.qualificationArray = data;
-      if(vm.qualificationArray.length == 0){
-        vm.qualificationArray.push({})
+      if (vm.qualificationArray.length == 0) {
+        vm.qualificationArray.push({});
       }
       this.sortArray();
     });
-     ipcRenderer.on('education:deletesuccess', () => {
-          this.statusMessage = 'education removed successfully'
-             this.showSnackbar = true;
-        })
+    ipcRenderer.on("education:deletesuccess", () => {
+      this.statusMessage = "education removed successfully";
+      this.showSnackbar = true;
+    });
   },
 };
 </script>
