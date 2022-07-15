@@ -304,10 +304,10 @@ export default {
     //ipcRenderer.send("tasks:get", filterOld);
     let filter = {
       showActive: true,
-      inActiveStatus: false,
+      inActiveStatus: true,
     };
     ipcRenderer.send("users:get", filter);
-    ipcRenderer.send("projects:get");
+    ipcRenderer.send("projects:get", filter);
   },
   mounted() {
     ipcRenderer.on("tasks:success", (e, data) => {
