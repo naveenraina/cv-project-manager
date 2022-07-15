@@ -9,6 +9,7 @@ import Profile from '@/views/Profile.vue'
 import Work from '@/views/Work.vue'
 import Education from '@/views/Education.vue'
 import Reminders from '@/views/Reminders.vue'
+import TaskReport from '@/views/task-report.vue'
 import Admin from '@/views/Admin.vue'
 import store from '@/store'
 
@@ -63,6 +64,10 @@ const routes = [
     path: '/admin',
     name: 'Admin',
     component: Admin
+  },{
+    path: '/taskReport',
+    name: 'TaskReport',
+    component: TaskReport
   }
   // {
   //   path: '/about',

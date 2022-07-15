@@ -9,6 +9,11 @@ export default class ipcTaskEvents {
           win.webContents.send('tasks:success', tasks)
       })
     })
+    ipcMain.on('tasks:report', function(e, filter){
+      mysqlTaskHelper.default.searchOnDate(filter, function(tasks){
+          win.webContents.send('tasks:success', tasks)
+      })
+    })
 
     ipcMain.on('tasks:getuserassigned', function(e, userId){
       mysqlTaskHelper.default.getTasksAssignedToUser(userId, function(tasks){
