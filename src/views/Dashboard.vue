@@ -465,30 +465,30 @@
               type="radio"
               class="custom-control-input"
               id ="1"
-              @change="handleChange('Autopilot Mode')"
+              @change="handleChange('Exceptional')"
               name="same"
             ></md-input>
-            <label class="custom-control-label" for="1">Autopilot mode(Task completed without supervision)</label>
+            <label class="custom-control-label" for="1">Exceptional</label>
           </div>
-          <div class="custom-control custom-radio" style="padding:10px">
+          <div class="custom-control custom-radio"  style="padding:10px">
             <md-input
               type="radio"
               class="custom-control-input"
-              id ="2"
-              @change="handleChange('Semi-autopilot mode')"
+              id ="1"
+              @change="handleChange('Good')"
               name="same"
             ></md-input>
-            <label class="custom-control-label" for="2" >Semi-autopilot mode(Task complete with verbal help)</label>
+            <label class="custom-control-label" for="1">Good</label>
           </div>
           <div class="custom-control custom-radio" style="padding:10px">
             <md-input
               type="radio"
               class="custom-control-input"
               id ="3"
-              @change="handleChange('Manual mode')"
+              @change="handleChange('Needs Improvement')"
               name="same"
             ></md-input>
-            <label class="custom-control-label" for="3">Manual mode(Task complete with verbal and technical help)</label >
+            <label class="custom-control-label" for="3">Needs improvement</label >
           </div>
           <md-dialog-actions>
             <md-button class="md-primary" @click="showDialog1= false">Cancel</md-button >
