@@ -1,4 +1,5 @@
 # cv-project-manager
+This is an open source project for a task management system. It allows teams to focus on the most important tasks though a dashboard that shows the active, in-progress and completed items. It also allows team members to drop daily status that is broadcasted to slack channel as group notification. 
 
 ## Configurations
 After you clone the repo, copy following two files and rename them to .js
